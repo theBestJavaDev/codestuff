@@ -1,297 +1,1649 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Quantum Dynamic NLP Engine</title>
-    <style>
-        :root {
-            --bg-color: #0b0c10;
-            --terminal-bg: #1f2833;
-            --primary-glow: #66fcf1;
-            --text-color: #c5c6c7;
-            --accent-color: #45f3ff;
-            --dim-text: #c5c6c788;
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Omniscience · Universal Scientific Analyzer</title>
+<meta name="description" content="An adaptive scientific analyzer that interprets any prompt and produces text, graphs, simulations, and calculations." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400;500;700&display=swap" rel="stylesheet" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M16 2 L20 12 L30 12 L22 18 L25 28 L16 22 L7 28 L10 18 L2 12 L12 12 Z' fill='none' stroke='%237c5cff' stroke-width='1.5'/><circle cx='16' cy='16' r='3' fill='%2336f0c8'/></svg>" />
+<style>
+/* =========================================================================
+   OMNISCIENCE — UNIVERSAL SCIENTIFIC ANALYZER
+   Aesthetic: "deep-space lab" — dark surfaces, neon data accents, monospace
+   readouts. Designed for dense scientific output across many modalities.
+   ========================================================================= */
+:root,
+[data-theme='light'] {
+  --color-bg: #06070d;
+  --color-surface: #0b0e18;
+  --color-panel: rgba(18, 22, 36, 0.72);
+  --color-panel-solid: #121624;
+  --color-border: #232a40;
+  --color-border-soft: #1a2033;
+  --color-divider: #1c2236;
+  --color-text: #e6e9f5;
+  --color-text-muted: #9aa3c0;
+  --color-text-faint: #5a6280;
+  --color-primary: #7c5cff;
+  --color-primary-hover: #9176ff;
+  --color-primary-glow: rgba(124, 92, 255, 0.45);
+  --color-cyan: #36f0c8;
+  --color-cyan-glow: rgba(54, 240, 200, 0.4);
+  --color-magenta: #ff4d8d;
+  --color-amber: #ffb648;
+  --color-blue: #4d8dff;
+  --color-green: #5cf08a;
+  --color-red: #ff5c5c;
+  --color-orange: #ff8a3d;
+  --radius-sm: 6px; --radius-md: 10px; --radius-lg: 16px; --radius-full: 9999px;
+  --space-1: .25rem; --space-2: .5rem; --space-3: .75rem; --space-4: 1rem;
+  --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem; --space-12: 3rem;
+  --text-xs: .75rem; --text-sm: .875rem; --text-base: 1rem; --text-lg: 1.25rem; --text-xl: 1.5rem; --text-2xl: 2rem;
+  --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  --shadow-md: 0 8px 28px rgba(0,0,0,.45);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,.55);
+  --font-display: 'Space Grotesk','Satoshi',system-ui,sans-serif;
+  --font-body: 'Satoshi','Space Grotesk',system-ui,sans-serif;
+  --font-mono: 'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,monospace;
+}
+[data-theme='light'] {
+  --color-bg: #eef0f7; --color-surface: #fff;
+  --color-panel: rgba(255,255,255,.85); --color-panel-solid: #fff;
+  --color-border: #d3d8e8; --color-border-soft: #e2e6f0; --color-divider: #e8ebf3;
+  --color-text: #1a1f33; --color-text-muted: #5b6483; --color-text-faint: #9aa3c0;
+  --color-primary: #6240ff; --color-primary-hover: #4d2dff; --color-primary-glow: rgba(98,64,255,.3);
+  --color-cyan: #00b894; --color-cyan-glow: rgba(0,184,148,.3);
+  --shadow-md: 0 8px 28px rgba(30,40,80,.12); --shadow-lg: 0 20px 60px rgba(30,40,80,.16);
+}
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; scroll-behavior: smooth; }
+body {
+  min-height: 100dvh; font-family: var(--font-body); font-size: var(--text-base);
+  line-height: 1.55; color: var(--color-text); background-color: var(--color-bg);
+  background-image:
+    radial-gradient(1100px 700px at 12% -10%, rgba(124,92,255,.16), transparent 60%),
+    radial-gradient(900px 600px at 95% 0%, rgba(54,240,200,.10), transparent 55%),
+    radial-gradient(800px 800px at 50% 120%, rgba(77,141,255,.10), transparent 60%);
+  background-attachment: fixed; overflow-x: hidden;
+}
+[data-theme='light'] body {
+  background-image:
+    radial-gradient(1100px 700px at 12% -10%, rgba(98,64,255,.10), transparent 60%),
+    radial-gradient(900px 600px at 95% 0%, rgba(0,184,148,.08), transparent 55%);
+}
+img,canvas,svg { display:block; max-width:100%; }
+button { cursor:pointer; background:none; border:none; color:inherit; font:inherit; }
+input,textarea,select { font:inherit; color:inherit; }
+::selection { background: var(--color-primary-glow); color: var(--color-text); }
+:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; border-radius: var(--radius-sm); }
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation-duration:.01ms!important; transition-duration:.01ms!important; } }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: 'Courier New', Courier, monospace;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            box-sizing: border-box;
-        }
+.app { max-width: 1640px; margin: 0 auto; padding: var(--space-5) var(--space-5) var(--space-12); min-height:100dvh; display:flex; flex-direction:column; gap: var(--space-5); }
 
-        .terminal-container {
-            width: 100%;
-            max-width: 900px;
-            background-color: var(--terminal-bg);
-            border: 1px solid var(--primary-glow);
-            border-radius: 4px;
-            box-shadow: 0 0 15px rgba(102, 252, 241, 0.2);
-            display: flex;
-            flex-direction: column;
-            height: 85vh;
-        }
+/* header */
+.topbar { display:flex; align-items:center; gap: var(--space-4); flex-wrap:wrap; padding: var(--space-4) var(--space-5); background: var(--color-panel); border:1px solid var(--color-border); border-radius: var(--radius-lg); backdrop-filter: blur(14px); box-shadow: var(--shadow-md); }
+.brand { display:flex; align-items:center; gap: var(--space-3); margin-right:auto; }
+.brand-mark { width:42px; height:42px; flex-shrink:0; }
+.brand-mark svg { width:100%; height:100%; }
+.brand-mark .spin { animation: spin 18s linear infinite; transform-origin:center; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.brand-title { font-family: var(--font-display); font-weight:700; font-size: var(--text-lg); letter-spacing:-.01em; line-height:1; }
+.brand-sub { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted); letter-spacing:.08em; text-transform:uppercase; margin-top:3px; }
+.stat-cluster { display:flex; gap: var(--space-5); align-items:center; }
+.stat { display:flex; flex-direction:column; align-items:flex-end; }
+.stat-label { font-family: var(--font-mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color: var(--color-text-faint); }
+.stat-value { font-family: var(--font-mono); font-size: var(--text-sm); font-weight:700; color: var(--color-cyan); }
+.stat-value.pulse { animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.55;} }
+.icon-btn { width:38px; height:38px; display:grid; place-items:center; border:1px solid var(--color-border); border-radius: var(--radius-md); color: var(--color-text-muted); transition: var(--transition-interactive); }
+.icon-btn:hover { color: var(--color-text); border-color: var(--color-primary); background: var(--color-primary-glow); }
+.icon-btn svg { width:18px; height:18px; }
 
-        .terminal-header {
-            background-color: rgba(0, 0, 0, 0.4);
-            padding: 12px 20px;
-            border-bottom: 1px solid rgba(102, 252, 241, 0.3);
-            font-size: 0.85rem;
-            color: var(--primary-glow);
-            letter-spacing: 1px;
-        }
+/* layout */
+.workspace { display:grid; grid-template-columns: minmax(330px, 400px) 1fr; gap: var(--space-5); align-items:start; }
+@media (max-width: 1080px) { .workspace { grid-template-columns: 1fr; } }
 
-        .terminal-body {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            font-size: 0.95rem;
-        }
+/* panels */
+.panel { background: var(--color-panel); border:1px solid var(--color-border); border-radius: var(--radius-lg); backdrop-filter: blur(14px); box-shadow: var(--shadow-md); overflow:hidden; }
+.panel-head { display:flex; align-items:center; gap: var(--space-3); padding: var(--space-4) var(--space-5); border-bottom:1px solid var(--color-border-soft); }
+.panel-title { font-family: var(--font-display); font-weight:600; font-size: var(--text-sm); letter-spacing:.04em; text-transform:uppercase; }
+.panel-tag { font-family: var(--font-mono); font-size:10px; color: var(--color-text-faint); margin-left:auto; letter-spacing:.1em; }
+.panel-body { padding: var(--space-5); }
 
-        .log-entry { margin: 2px 0; }
-        .user-line { color: #ffaa00; }
-        .ai-line { color: var(--primary-glow); }
-        .analysis-data { color: #a8b2c1; font-size: 0.85rem; background: rgba(0,0,0,0.2); padding: 8px; border-radius: 4px; }
+/* prompt */
+.prompt-area { display:flex; flex-direction:column; gap: var(--space-3); }
+.prompt-input { width:100%; min-height:130px; resize:vertical; padding: var(--space-4); font-family: var(--font-mono); font-size: var(--text-sm); line-height:1.55; color: var(--color-text); background: rgba(6,8,16,.55); border:1px solid var(--color-border); border-radius: var(--radius-md); transition: var(--transition-interactive); }
+[data-theme='light'] .prompt-input { background:#f6f8fc; }
+.prompt-input::placeholder { color: var(--color-text-faint); }
+.prompt-input:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px var(--color-primary-glow); outline:none; }
+.run-row { display:flex; gap: var(--space-2); align-items:center; }
+.btn { display:inline-flex; align-items:center; justify-content:center; gap: var(--space-2); padding: var(--space-3) var(--space-5); font-family: var(--font-display); font-weight:600; font-size: var(--text-sm); border-radius: var(--radius-md); border:1px solid transparent; transition: var(--transition-interactive); letter-spacing:.02em; }
+.btn-primary { background: linear-gradient(135deg, var(--color-primary), #5b3dff); color:#fff; box-shadow:0 6px 20px var(--color-primary-glow); flex:1; }
+.btn-primary:hover { transform: translateY(-1px); box-shadow:0 10px 28px var(--color-primary-glow); }
+.btn-primary:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+.btn-ghost { background:transparent; border-color: var(--color-border); color: var(--color-text-muted); }
+.btn-ghost:hover { color: var(--color-text); border-color: var(--color-primary); }
+.btn svg { width:16px; height:16px; }
 
-        .input-area {
-            display: flex;
-            padding: 15px;
-            background-color: rgba(0, 0, 0, 0.3);
-            border-top: 1px solid rgba(102, 252, 241, 0.2);
-            gap: 10px;
-        }
+.examples { display:flex; flex-direction:column; gap: var(--space-2); margin-top: var(--space-3); }
+.examples-label { font-family: var(--font-mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color: var(--color-text-faint); }
+.chips { display:flex; flex-wrap:wrap; gap: var(--space-2); }
+.chip { font-family: var(--font-mono); font-size:11px; padding:5px 10px; border:1px solid var(--color-border); border-radius: var(--radius-full); color: var(--color-text-muted); transition: var(--transition-interactive); background: rgba(6,8,16,.4); }
+[data-theme='light'] .chip { background:#eef1f8; }
+.chip:hover { color: var(--color-cyan); border-color: var(--color-cyan); background: var(--color-cyan-glow); }
 
-        input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            color: #fff;
-            font-family: inherit;
-            font-size: 1rem;
-            outline: none;
-        }
+/* analysis trace */
+.analysis { margin-top: var(--space-4); padding: var(--space-4); border-radius: var(--radius-md); border:1px dashed var(--color-border); background: rgba(6,8,16,.4); font-family: var(--font-mono); font-size: var(--text-xs); line-height:1.6; color: var(--color-text-muted); display:none; }
+[data-theme='light'] .analysis { background:#f4f6fc; }
+.analysis.show { display:block; max-height:220px; overflow-y:auto; }
+.analysis .a-head { font-size:10px; letter-spacing:.12em; text-transform:uppercase; color: var(--color-cyan); margin-bottom: var(--space-2); display:flex; align-items:center; gap: var(--space-2); }
+.analysis .a-head::before { content:''; width:6px; height:6px; border-radius:50%; background: var(--color-cyan); box-shadow:0 0 8px var(--color-cyan); }
+.analysis ul { list-style:none; display:flex; flex-direction:column; gap:4px; }
+.analysis .err { color: var(--color-red); }
+.analysis .ok { color: var(--color-green); }
 
-        button {
-            background: transparent;
-            border: 1px solid var(--primary-glow);
-            color: var(--primary-glow);
-            padding: 5px 20px;
-            cursor: pointer;
-            font-family: inherit;
-        }
+/* output area */
+.output-stage { position:relative; min-height: 420px; }
+.output-empty { display:flex; flex-direction:column; align-items:center; justify-content:center; gap: var(--space-3); min-height:420px; color: var(--color-text-faint); text-align:center; padding: var(--space-8); }
+.output-empty svg { width:56px; height:56px; opacity:.4; }
+.output-empty h3 { font-family: var(--font-display); font-weight:600; font-size: var(--text-lg); color: var(--color-text-muted); }
+.output-empty p { font-family: var(--font-mono); font-size: var(--text-xs); max-width: 46ch; line-height:1.7; }
 
-        button:hover {
-            background-color: var(--primary-glow);
-            color: var(--terminal-bg);
-        }
-    </style>
+.out-title { font-family: var(--font-display); font-weight:600; font-size: var(--text-lg); margin-bottom: var(--space-2); }
+.out-subtitle { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted); margin-bottom: var(--space-4); letter-spacing:.04em; }
+.out-canvas-wrap { position:relative; width:100%; background: rgba(6,8,16,.5); border:1px solid var(--color-border-soft); border-radius: var(--radius-md); overflow:hidden; }
+[data-theme='light'] .out-canvas-wrap { background:#f6f8fc; }
+.out-canvas-wrap canvas { width:100%; height:auto; display:block; }
+
+/* text answer */
+.text-answer { font-family: var(--font-body); font-size: var(--text-base); line-height:1.7; color: var(--color-text); max-width: 80ch; }
+.text-answer h4 { font-family: var(--font-display); font-weight:600; font-size: var(--text-lg); margin: var(--space-4) 0 var(--space-2); color: var(--color-cyan); }
+.text-answer p { margin-bottom: var(--space-3); }
+.text-answer ul, .text-answer ol { margin: 0 0 var(--space-3) var(--space-5); }
+.text-answer li { margin-bottom: var(--space-1); }
+.text-answer code { font-family: var(--font-mono); font-size: .9em; background: rgba(124,92,255,.15); padding:1px 5px; border-radius:4px; color: var(--color-primary-hover); }
+.text-answer .lead { font-size: var(--text-lg); color: var(--color-text); margin-bottom: var(--space-4); }
+.text-answer .formula { font-family: var(--font-mono); background: rgba(6,8,16,.5); border:1px solid var(--color-border-soft); border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); margin: var(--space-3) 0; color: var(--color-cyan); overflow-x:auto; }
+[data-theme='light'] .text-answer .formula { background:#eef1f8; }
+.kbd { font-family: var(--font-mono); font-size:11px; padding:1px 6px; border:1px solid var(--color-border); border-radius:4px; background: rgba(6,8,16,.5); color: var(--color-amber); }
+
+/* data table */
+.data-table { width:100%; font-family: var(--font-mono); font-size: var(--text-xs); border-collapse:collapse; margin-top: var(--space-3); }
+.data-table th, .data-table td { padding:7px 10px; text-align:left; border-bottom:1px solid var(--color-divider); }
+.data-table th { color: var(--color-text-faint); font-size:10px; letter-spacing:.08em; text-transform:uppercase; font-weight:500; }
+.data-table td.v { color: var(--color-cyan); }
+.data-table td.k { color: var(--color-text-muted); }
+
+/* metric grid */
+.metric-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: var(--space-3); margin-bottom: var(--space-4); }
+.metric { padding: var(--space-3) var(--space-4); border:1px solid var(--color-border-soft); border-radius: var(--radius-md); background: rgba(6,8,16,.4); }
+[data-theme='light'] .metric { background:#f6f8fc; }
+.metric-label { font-family: var(--font-mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color: var(--color-text-faint); }
+.metric-value { font-family: var(--font-mono); font-size: var(--text-base); font-weight:700; color: var(--color-text); margin-top:2px; word-break:break-word; }
+.metric-value.accent { color: var(--color-cyan); }
+.metric-value.warn { color: var(--color-amber); }
+.metric-value.ok { color: var(--color-green); }
+
+/* sim controls */
+.sim-controls { display:flex; gap: var(--space-3); align-items:center; flex-wrap:wrap; margin-top: var(--space-3); padding: var(--space-3); background: rgba(6,8,16,.4); border:1px solid var(--color-border-soft); border-radius: var(--radius-md); }
+[data-theme='light'] .sim-controls { background:#f6f8fc; }
+.sim-controls label { font-family: var(--font-mono); font-size:11px; color: var(--color-text-muted); display:flex; align-items:center; gap:6px; }
+.sim-controls input[type=range] { width:120px; accent-color: var(--color-primary); }
+.sim-controls input[type=number] { width:64px; padding:3px 6px; background: rgba(6,8,16,.5); border:1px solid var(--color-border); border-radius:6px; font-family: var(--font-mono); font-size:11px; }
+.sim-controls .sim-stat { font-family: var(--font-mono); font-size:11px; color: var(--color-cyan); margin-left:auto; }
+
+/* console */
+.log { font-family: var(--font-mono); font-size: var(--text-xs); line-height:1.65; max-height:200px; overflow-y:auto; padding: var(--space-3) var(--space-4); background: rgba(6,8,16,.6); border-radius: var(--radius-md); border:1px solid var(--color-border-soft); }
+[data-theme='light'] .log { background:#f4f6fc; }
+.log-line { display:flex; gap: var(--space-3); padding:2px 0; }
+.log-time { color: var(--color-text-faint); flex-shrink:0; }
+.log-tag { flex-shrink:0; font-weight:700; min-width:64px; }
+.log-tag.info { color: var(--color-blue); } .log-tag.analyze { color: var(--color-primary-hover); }
+.log-tag.ok { color: var(--color-green); } .log-tag.warn { color: var(--color-amber); }
+.log-tag.err { color: var(--color-red); } .log-tag.result { color: var(--color-cyan); }
+.log-msg { color: var(--color-text-muted); }
+
+.foot { text-align:center; font-family: var(--font-mono); font-size:11px; color: var(--color-text-faint); padding: var(--space-4); letter-spacing:.06em; }
+.foot span { color: var(--color-cyan); }
+
+/* toast */
+.toast-wrap { position:fixed; bottom: var(--space-6); left:50%; transform:translateX(-50%); z-index:100; display:flex; flex-direction:column; gap: var(--space-2); pointer-events:none; }
+.toast { pointer-events:auto; padding: var(--space-3) var(--space-5); border-radius: var(--radius-md); background: var(--color-panel-solid); border:1px solid var(--color-border); box-shadow: var(--shadow-lg); font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text); animation: toastIn 240ms cubic-bezier(.16,1,.3,1); }
+.toast.err { border-color: var(--color-red); } .toast.ok { border-color: var(--color-green); }
+@keyframes toastIn { from { opacity:0; transform: translateY(12px);} to {opacity:1; transform: translateY(0);} }
+
+/* tabs for output */
+.mode-badge { display:inline-flex; align-items:center; gap:6px; font-family: var(--font-mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; padding:3px 10px; border-radius: var(--radius-full); border:1px solid var(--color-border); color: var(--color-cyan); background: rgba(54,240,200,.08); }
+.mode-badge .dot { width:6px; height:6px; border-radius:50%; background: var(--color-cyan); box-shadow:0 0 8px var(--color-cyan); }
+
+::-webkit-scrollbar { width:9px; height:9px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: var(--radius-full); }
+::-webkit-scrollbar-thumb:hover { background: var(--color-primary); }
+
+.intents { display:flex; flex-wrap:wrap; gap:6px; margin-top: var(--space-3); }
+.intent-tag { font-family: var(--font-mono); font-size:10px; padding:2px 8px; border-radius: var(--radius-full); border:1px solid var(--color-border-soft); color: var(--color-text-faint); }
+.intent-tag.win { color: var(--color-cyan); border-color: var(--color-cyan); background: rgba(54,240,200,.08); }
+</style>
 </head>
 <body>
+<div class="app">
 
-<div class="terminal-container">
-    <div class="terminal-header">
-        SYSTEM // DYNAMIC QUANTUM-SEMANTIC INTERFACE OPERATIONAL
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 48 48" fill="none">
+          <g class="spin">
+            <circle cx="24" cy="24" r="20" fill="none" stroke="var(--color-primary)" stroke-width="1.4" opacity=".55" stroke-dasharray="4 4"/>
+            <ellipse cx="24" cy="24" rx="20" ry="8" stroke="var(--color-cyan)" stroke-width="1.4" opacity=".5"/>
+            <ellipse cx="24" cy="24" rx="20" ry="8" stroke="var(--color-blue)" stroke-width="1.4" opacity=".4" transform="rotate(60 24 24)"/>
+          </g>
+          <path d="M16 18 L24 10 L32 18 L32 30 L24 38 L16 30 Z" fill="none" stroke="var(--color-primary-hover)" stroke-width="1.4"/>
+          <circle cx="24" cy="24" r="4" fill="var(--color-cyan)"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-title">Omniscience</div>
+        <div class="brand-sub">universal scientific analyzer</div>
+      </div>
     </div>
-    
-    <div class="terminal-body" id="terminalBody">
-        <div class="log-entry ai-line">Core initialized. Input sentences completely untethered from static paths.</div>
-        <div class="log-entry ai-line">Type natively. The engine will decompose syntax, map linguistic components onto a 3-qubit wave vector, and algorithmically synthesize custom responses.</div>
+    <div class="stat-cluster">
+      <div class="stat"><div class="stat-label">Engines</div><div class="stat-value">12</div></div>
+      <div class="stat"><div class="stat-label">Constants</div><div class="stat-value" id="constCount">—</div></div>
+      <div class="stat"><div class="stat-label">Status</div><div class="stat-value pulse" id="statusVal">READY</div></div>
     </div>
+    <button class="icon-btn" id="clearBtn" title="Clear" aria-label="Clear output">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>
+    </button>
+    <button class="icon-btn" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </header>
 
-    <div class="input-area">
-        <span style="color:var(--primary-glow)">&gt;</span>
-        <input type="text" id="userInput" placeholder="Type an original phrase here..." autofocus autocomplete="off">
-        <button id="sendBtn">PROCESS</button>
+  <div class="workspace">
+    <section class="panel">
+      <div class="panel-head">
+        <span class="panel-title">Prompt Analyzer</span>
+        <span class="panel-tag">NL → ENGINE</span>
+      </div>
+      <div class="panel-body prompt-area">
+        <textarea id="promptInput" class="prompt-input" spellcheck="false"
+          placeholder="Ask anything scientific... e.g. 'plot sin(x)*exp(-x/5)' or 'simulate a double pendulum' or 'what is a black hole'"></textarea>
+        <div class="run-row">
+          <button class="btn btn-primary" id="runBtn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            Analyze
+          </button>
+          <button class="btn btn-ghost" id="clearPromptBtn" title="Clear prompt">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </button>
+        </div>
+        <div class="examples">
+          <div class="examples-label">Example prompts</div>
+          <div class="chips" id="chips"></div>
+          <div class="intents" id="intentRow"></div>
+        </div>
+        <div class="analysis" id="analysis">
+          <div class="a-head">Analyzer trace</div>
+          <ul id="analysisList"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <span class="panel-title" id="outPanelTitle">Output</span>
+        <span class="panel-tag" id="outPanelTag">awaiting prompt</span>
+        <span class="mode-badge" id="modeBadge" style="display:none"><span class="dot"></span><span id="modeText"></span></span>
+      </div>
+      <div class="panel-body">
+        <div class="output-stage" id="outputStage">
+          <div class="output-empty" id="outputEmpty">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="3"/></svg>
+            <h3>Ready to analyze</h3>
+            <p>Describe a function to plot, a system to simulate, data to crunch, a unit to convert, an element to inspect, or a concept to explain. The analyzer routes your prompt to the right engine.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="panel">
+    <div class="panel-head">
+      <span class="panel-title">Execution Console</span>
+      <span class="panel-tag">live log</span>
+      <button class="btn btn-ghost" id="clearLogBtn" style="padding:4px 12px; margin-left:auto; font-size:11px">Clear</button>
     </div>
+    <div class="panel-body">
+      <div class="log" id="log"></div>
+    </div>
+  </section>
+
+  <div class="foot">
+    Omniscience — a self-contained analyzer with <span>12 scientific engines</span>. Math parsing, function plotting, live simulations, statistics, units, constants, the periodic table, equation solving, and a knowledge base — all running locally in your browser.
+  </div>
 </div>
 
+<div class="toast-wrap" id="toastWrap"></div>
+
 <script>
-/**
- * ============================================================================
- * LINGUISTIC DICTIONARY MATRIX FOR PART-OF-SPEECH DEDUCTION
- * ============================================================================
- */
-const Lexicon = {
-    verbs: ['run', 'code', 'think', 'make', 'create', 'is', 'are', 'am', 'feel', 'want', 'like', 'love', 'destroy', 'build', 'speak', 'write', 'change', 'simulate', 'know', 'see'],
-    nouns: ['computer', 'human', 'quantum', 'file', 'code', 'program', 'ai', 'robot', 'world', 'game', 'school', 'car', 'dog', 'cat', 'mind', 'thought', 'data', 'future', 'time', 'system'],
-    adjectives: ['smart', 'slow', 'fast', 'quantum', 'broken', 'beautiful', 'scary', 'cool', 'weird', 'large', 'massive', 'small', 'complex', 'simple', 'digital', 'organic', 'bad', 'good'],
-    pronouns: ['i', 'you', 'he', 'she', 'they', 'we', 'it', 'myself']
+"use strict";
+/* PART1: math engine, analyzer, data (constants, periodic table, knowledge base) */
+/* ========================= MATH EXPRESSION ENGINE =========================
+   Shunting-yard parser → RPN → evaluator. Supports variables, functions,
+   constants, and operators. Backbone for plotting, calculations, sims.
+   ========================================================================= */
+const M = {
+  CONSTS: { pi: Math.PI, e: Math.E, tau: Math.PI*2, phi: (1+Math.sqrt(5))/2, inf: Infinity, nan: NaN, g: 9.80665, c: 299792458, h: 6.62607015e-34 },
+  FUNCS: {
+    sin: Math.sin, cos: Math.cos, tan: Math.tan,
+    asin: Math.asin, acos: Math.acos, atan: Math.atan, atan2: Math.atan2,
+    sinh: Math.sinh, cosh: Math.cosh, tanh: Math.tanh,
+    exp: Math.exp, log: Math.log, ln: Math.log, log10: (x)=>Math.log(x)/Math.LN10, log2: Math.log2,
+    sqrt: Math.sqrt, cbrt: Math.cbrt, abs: Math.abs, sign: Math.sign,
+    floor: Math.floor, ceil: Math.ceil, round: Math.round, trunc: Math.trunc,
+    pow: Math.pow, max: Math.max, min: Math.min, mod: (a,b)=>((a%b)+b)%b,
+    gamma: (x)=>M.gamma(x), fact: (n)=>M.fact(n), erf: (x)=>M.erf(x),
+    sec: (x)=>1/Math.cos(x), csc: (x)=>1/Math.sin(x), cot: (x)=>1/Math.tan(x),
+    deg: (x)=>x*Math.PI/180, rad: (x)=>x*180/Math.PI,
+    heaviside:(x)=>x<0?0:1, rect:(x)=>(Math.abs(x)<=0.5?1:0), sinc:(x)=>x===0?1:Math.sin(Math.PI*x)/(Math.PI*x),
+  },
+  gamma(x){
+    if(x<0.5) return Math.PI/(Math.sin(Math.PI*x)*this.gamma(1-x));
+    const g=7, c=[0.99999999999980993,676.5203681218851,-1259.1392167224028,771.32342877765313,-176.61502916214059,12.507343278686905,-0.13857109526572012,9.9843695780195716e-6,1.5056327351493116e-7];
+    x-=1; let a=c[0]; for(let i=1;i<g+2;i++) a+=c[i]/(x+i);
+    const t=x+g+0.5; return Math.sqrt(2*Math.PI)*Math.pow(t,x+0.5)*Math.exp(-t)*a;
+  },
+  fact(n){ if(n<0) return NaN; n=Math.floor(n); let r=1; for(let i=2;i<=n;i++) r*=i; return r; },
+  erf(x){
+    const t=1/(1+0.3275911*Math.abs(x));
+    const y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);
+    return x>=0?y:-y;
+  },
+  tokenize(src){
+    const t=[]; let i=0; src=src.replace(/\s+/g,'');
+    while(i<src.length){
+      const ch=src[i];
+      if(/[0-9.]/.test(ch)){ let j=i+1; while(j<src.length && /[0-9.]/.test(src[j])) j++;
+        if((src[j]==='e'||src[j]==='E') && src[j+1] && /[0-9\-+]/.test(src[j+1])){ j+=2; while(j<src.length && /[0-9]/.test(src[j])) j++; }
+        t.push({t:'num',v:parseFloat(src.slice(i,j))}); i=j; continue; }
+      if(/[a-zA-Z_]/.test(ch)){ let j=i+1; while(j<src.length && /[a-zA-Z0-9_]/.test(src[j])) j++; t.push({t:'id',v:src.slice(i,j)}); i=j; continue; }
+      if('+-*/^%(),'.includes(ch)){ t.push({t:'op',v:ch}); i++; continue; }
+      throw new Error('Unexpected character: '+ch);
+    }
+    return t;
+  },
+  prec(op){ return {'^':4,'*':3,'/':3,'%':3,'+':2,'-':2,'==':1}[op]||0; },
+  rightAssoc(op){ return op==='^'; },
+  toRPN(tokens){
+    const out=[], ops=[]; let prev=null;
+    for(let k=0;k<tokens.length;k++){ const tk=tokens[k];
+      if(tk.t==='num'){ out.push(tk); prev=tk; continue; }
+      if(tk.t==='id'){
+        if(tokens[k+1] && tokens[k+1].t==='op' && tokens[k+1].v==='('){ ops.push({t:'fn',v:tk.v}); }
+        else { out.push(tk); } prev=tk; continue;
+      }
+      if(tk.t==='op'){
+        if(tk.v==='('){ ops.push(tk); prev=tk; continue; }
+        if(tk.v===')'){ while(ops.length && ops[ops.length-1].v!=='(') out.push(ops.pop()); if(!ops.length) throw new Error('Mismatched parenthesis'); ops.pop(); if(ops.length && ops[ops.length-1].t==='fn') out.push(ops.pop()); prev=tk; continue; }
+        if(tk.v===','){ while(ops.length && ops[ops.length-1].v!=='(') out.push(ops.pop()); prev=tk; continue; }
+        const isUnary=(tk.v==='-'||tk.v==='+') && (!prev || prev.t==='op' && prev.v!==')');
+        if(isUnary){ ops.push({t:'op',v: tk.v==='-'?'u-':'u+'}); prev=tk; continue; }
+        while(ops.length){ const top=ops[ops.length-1]; if(top.v==='(') break; if(this.prec(top.v)>this.prec(tk.v) || (this.prec(top.v)===this.prec(tk.v) && !this.rightAssoc(tk.v))) out.push(ops.pop()); else break; }
+        ops.push(tk); prev=tk;
+      }
+    }
+    while(ops.length){ const o=ops.pop(); if(o.v==='('||o.v===')') throw new Error('Mismatched parenthesis'); out.push(o); }
+    return out;
+  },
+  evalRPN(rpn, vars={}){
+    const st=[];
+    for(const tk of rpn){
+      if(tk.t==='num'){ st.push(tk.v); continue; }
+      if(tk.t==='id'){
+        if(tk.v in vars){ st.push(vars[tk.v]); continue; }
+        if(tk.v in this.CONSTS){ st.push(this.CONSTS[tk.v]); continue; }
+        throw new Error('Unknown variable: '+tk.v);
+      }
+      if(tk.t==='fn'){ const f=this.FUNCS[tk.v]; if(!f) throw new Error('Unknown function: '+tk.v); const n=f.length; const args=[]; for(let i=0;i<n;i++) args.unshift(st.pop()); st.push(f(...args)); continue; }
+      if(tk.t==='op'){
+        if(tk.v==='u-'){ st.push(-st.pop()); continue; }
+        if(tk.v==='u+'){ st.push(st.pop()); continue; }
+        const b=st.pop(), a=st.pop();
+        switch(tk.v){ case '+': st.push(a+b); break; case '-': st.push(a-b); break; case '*': st.push(a*b); break; case '/': st.push(a/b); break; case '%': st.push(a%b); break; case '^': st.push(Math.pow(a,b)); break; case '==': st.push(a===b?1:0); break; }
+      }
+    }
+    return st.length===1?st[0]:NaN;
+  },
+  compile(expr){ const rpn=this.toRPN(this.tokenize(expr)); return (vars)=>this.evalRPN(rpn,vars); },
+  eval(expr, vars={}){ return this.evalRPN(this.toRPN(this.tokenize(expr)), vars); },
+  isValid(expr){ try{ this.compile(expr); return true; }catch(e){ return false; } },
+  findVars(expr){ const t=this.tokenize(expr); const v=new Set(); for(let i=0;i<t.length;i++){ if(t[i].t==='id'){ if(t[i+1]&&t[i+1].t==='op'&&t[i+1].v==='('){} else if(!(t[i].v in this.FUNCS)){ v.add(t[i].v); } } } return [...v].filter(x=>!(x in this.CONSTS)); }
 };
 
-class Complex {
-    constructor(r, i) { this.real = r; this.imag = i; }
-    multiply(o) { return new Complex(this.real * o.real - this.imag * o.imag, this.real * o.imag + this.imag * o.real); }
-    add(o) { return new Complex(this.real + o.real, this.imag + o.imag); }
-    magSq() { return this.real * this.real + this.imag * this.imag; }
-}
+/* ========================= SCIENTIFIC CONSTANTS ========================== */
+const CONSTS = [
+  ['Speed of light in vacuum','c','299792458','m/s', 'exact'],
+  ['Planck constant','h','6.62607015e-34','J·s','exact'],
+  ['Reduced Planck constant','hbar','1.054571817e-34','J·s',''],
+  ['Elementary charge','e','1.602176634e-19','C','exact'],
+  ['Boltzmann constant','kB','1.380649e-23','J/K','exact'],
+  ['Avogadro number','NA','6.02214076e23','1/mol','exact'],
+  ['Gas constant','R','8.314462618','J/(mol·K)',''],
+  ['Gravitational constant','G','6.67430e-11','m^3/(kg·s^2)',''],
+  ['Standard gravity','g','9.80665','m/s^2',''],
+  ['Electron mass','me','9.1093837e-31','kg',''],
+  ['Proton mass','mp','1.67262192e-27','kg',''],
+  ['Neutron mass','mn','1.6749275e-27','kg',''],
+  ['Atomic mass unit','u','1.66053907e-27','kg',''],
+  ['Permittivity of vacuum','eps0','8.85418781e-12','F/m',''],
+  ['Permeability of vacuum','mu0','1.25663706e-6','N/A^2',''],
+  ['Fine-structure constant','alpha','7.29735257e-3','',''],
+  ['Rydberg constant','Rinf','1.09737316e7','1/m',''],
+  ['Bohr radius','a0','5.29177211e-11','m',''],
+  ['Stefan-Boltzmann constant','sigma','5.67037e-8','W/(m^2·K^4)',''],
+  ['Wien displacement constant','b','2.897772e-3','m·K',''],
+  ['Planck length','lP','1.616255e-35','m',''],
+  ['Planck time','tP','5.391247e-44','s',''],
+  ['Planck mass','mP','2.176434e-8','kg',''],
+  ['Magnetic flux quantum','Phi0','2.06783385e-15','Wb',''],
+  ['Electronvolt','eV','1.602176634e-19','J','exact'],
+  ['Bohr magneton','muB','9.27401008e-24','J/T',''],
+  ['Nuclear magneton','muN','5.050784e-27','J/T',''],
+  ['Faraday constant','F','9.64853321e4','C/mol',''],
+  ['Hubble constant','H0','2.2e-18','1/s',''],
+  ['Earth mass','Mearth','5.9722e24','kg',''],
+  ['Earth radius (mean)','Rearth','6.371e6','m',''],
+  ['Sun mass','Msun','1.98847e30','kg',''],
+  ['Sun radius','Rsun','6.9634e8','m',''],
+  ['Astronomical unit','AU','1.49597871e11','m',''],
+  ['Light-year','ly','9.46073e15','m',''],
+  ['Parsec','pc','3.085678e16','m',''],
+];
 
-// Quantum State Machine mapping semantic attributes onto register spaces
-class QuantumSemanticCircuit {
-    constructor() {
-        this.size = 8; // 3 Qubits
-        this.state = new Array(this.size).fill(null).map(() => new Complex(0,0));
-        this.state[0] = new Complex(1, 0); // Baseline default state
+/* ========================= PERIODIC TABLE =============================== */
+const ELEMENTS = [
+  ['H','Hydrogen',1,1.008,1,1,'nonmetal'],['He','Helium',2,4.003,18,1,'noble'],['Li','Lithium',3,6.94,1,2,'alkali'],['Be','Beryllium',4,9.012,2,2,'alkaline'],['B','Boron',5,10.81,13,2,'metalloid'],['C','Carbon',6,12.011,14,2,'nonmetal'],['N','Nitrogen',7,14.007,15,2,'nonmetal'],['O','Oxygen',8,15.999,16,2,'nonmetal'],['F','Fluorine',9,18.998,17,2,'halogen'],['Ne','Neon',10,20.180,18,2,'noble'],
+  ['Na','Sodium',11,22.990,1,3,'alkali'],['Mg','Magnesium',12,24.305,2,3,'alkaline'],['Al','Aluminium',13,26.982,13,3,'post'],['Si','Silicon',14,28.085,14,3,'metalloid'],['P','Phosphorus',15,30.974,15,3,'nonmetal'],['S','Sulfur',16,32.06,16,3,'nonmetal'],['Cl','Chlorine',17,35.45,17,3,'halogen'],['Ar','Argon',18,39.948,18,3,'noble'],
+  ['K','Potassium',19,39.098,1,4,'alkali'],['Ca','Calcium',20,40.078,2,4,'alkaline'],['Sc','Scandium',21,44.956,3,4,'transition'],['Ti','Titanium',22,47.867,4,4,'transition'],['V','Vanadium',23,50.942,5,4,'transition'],['Cr','Chromium',24,51.996,6,4,'transition'],['Mn','Manganese',25,54.938,7,4,'transition'],['Fe','Iron',26,55.845,8,4,'transition'],['Co','Cobalt',27,58.933,9,4,'transition'],['Ni','Nickel',28,58.693,10,4,'transition'],['Cu','Copper',29,63.546,11,4,'transition'],['Zn','Zinc',30,65.38,12,4,'transition'],['Ga','Gallium',31,69.723,13,4,'post'],['Ge','Germanium',32,72.630,14,4,'metalloid'],['As','Arsenic',33,74.922,15,4,'metalloid'],['Se','Selenium',34,78.971,16,4,'nonmetal'],['Br','Bromine',35,79.904,17,4,'halogen'],['Kr','Krypton',36,83.798,18,4,'noble'],
+  ['Rb','Rubidium',37,85.468,1,5,'alkali'],['Sr','Strontium',38,87.62,2,5,'alkaline'],['Y','Yttrium',39,88.906,3,5,'transition'],['Zr','Zirconium',40,91.224,4,5,'transition'],['Nb','Niobium',41,92.906,5,5,'transition'],['Mo','Molybdenum',42,95.95,6,5,'transition'],['Tc','Technetium',43,98,7,5,'transition'],['Ru','Ruthenium',44,101.07,8,5,'transition'],['Rh','Rhodium',45,102.91,9,5,'transition'],['Pd','Palladium',46,106.42,10,5,'transition'],['Ag','Silver',47,107.87,11,5,'transition'],['Cd','Cadmium',48,112.41,12,5,'transition'],['In','Indium',49,114.82,13,5,'post'],['Sn','Tin',50,118.71,14,5,'post'],['Sb','Antimony',51,121.76,15,5,'metalloid'],['Te','Tellurium',52,127.60,16,5,'metalloid'],['I','Iodine',53,126.90,17,5,'halogen'],['Xe','Xenon',54,131.29,18,5,'noble'],
+  ['Cs','Caesium',55,132.91,1,6,'alkali'],['Ba','Barium',56,137.33,2,6,'alkaline'],['La','Lanthanum',57,138.91,3,6,'lanthanide'],['Ce','Cerium',58,140.12,3,6,'lanthanide'],['Pr','Praseodymium',59,140.91,3,6,'lanthanide'],['Nd','Neodymium',60,144.24,3,6,'lanthanide'],['Pm','Promethium',61,145,3,6,'lanthanide'],['Sm','Samarium',62,150.36,3,6,'lanthanide'],['Eu','Europium',63,151.96,3,6,'lanthanide'],['Gd','Gadolinium',64,157.25,3,6,'lanthanide'],['Tb','Terbium',65,158.93,3,6,'lanthanide'],['Dy','Dysprosium',66,162.50,3,6,'lanthanide'],['Ho','Holmium',67,164.93,3,6,'lanthanide'],['Er','Erbium',68,167.26,3,6,'lanthanide'],['Tm','Thulium',69,168.93,3,6,'lanthanide'],['Yb','Ytterbium',70,173.05,3,6,'lanthanide'],['Lu','Lutetium',71,174.97,3,6,'lanthanide'],['Hf','Hafnium',72,178.49,4,6,'transition'],['Ta','Tantalum',73,180.95,5,6,'transition'],['W','Tungsten',74,183.84,6,6,'transition'],['Re','Rhenium',75,186.21,7,6,'transition'],['Os','Osmium',76,190.23,8,6,'transition'],['Ir','Iridium',77,192.22,9,6,'transition'],['Pt','Platinum',78,195.08,10,6,'transition'],['Au','Gold',79,196.97,11,6,'transition'],['Hg','Mercury',80,200.59,12,6,'transition'],['Tl','Thallium',81,204.38,13,6,'post'],['Pb','Lead',82,207.2,14,6,'post'],['Bi','Bismuth',83,208.98,15,6,'post'],['Po','Polonium',84,209,16,6,'post'],['At','Astatine',85,210,17,6,'halogen'],['Rn','Radon',86,222,18,6,'noble'],
+  ['Fr','Francium',87,223,1,7,'alkali'],['Ra','Radium',88,226,2,7,'alkaline'],['Ac','Actinium',89,227,3,7,'actinide'],['Th','Thorium',90,232.04,3,7,'actinide'],['Pa','Protactinium',91,231.04,3,7,'actinide'],['U','Uranium',92,238.03,3,7,'actinide'],['Np','Neptunium',93,237,3,7,'actinide'],['Pu','Plutonium',94,244,3,7,'actinide'],['Am','Americium',95,243,3,7,'actinide'],['Cm','Curium',96,247,3,7,'actinide'],['Bk','Berkelium',97,247,3,7,'actinide'],['Cf','Californium',98,251,3,7,'actinide'],['Es','Einsteinium',99,252,3,7,'actinide'],['Fm','Fermium',100,257,3,7,'actinide'],['Md','Mendelevium',101,258,3,7,'actinide'],['No','Nobelium',102,259,3,7,'actinide'],['Lr','Lawrencium',103,266,3,7,'actinide'],
+  ['Rf','Rutherfordium',104,267,4,7,'transition'],['Db','Dubnium',105,268,5,7,'transition'],['Sg','Seaborgium',106,269,6,7,'transition'],['Bh','Bohrium',107,270,7,7,'transition'],['Hs','Hassium',108,269,8,7,'transition'],['Mt','Meitnerium',109,278,9,7,'transition'],['Ds','Darmstadtium',110,281,10,7,'transition'],['Rg','Roentgenium',111,282,11,7,'transition'],['Cn','Copernicium',112,285,12,7,'transition'],['Nh','Nihonium',113,286,13,7,'post'],['Fl','Flerovium',114,289,14,7,'post'],['Mc','Moscovium',115,290,15,7,'post'],['Lv','Livermorium',116,293,16,7,'post'],['Ts','Tennessine',117,294,17,7,'halogen'],['Og','Oganesson',118,294,18,7,'noble'],
+];
+const CAT_COLORS = { nonmetal:'#36f0c8', noble:'#4d8dff', alkali:'#ff4d8d', alkaline:'#ff8a3d', metalloid:'#ffb648', halogen:'#5cf08a', transition:'#7c5cff', post:'#9176ff', lanthanide:'#ff4d8d', actinide:'#ff8a3d' };
+
+/* ========================= KNOWLEDGE BASE =============================== */
+const KNOWLEDGE = {
+  'black hole': 'A black hole is a region of spacetime where gravity is so strong that nothing — not even light — can escape once it crosses the event horizon. It forms when a massive star collapses at the end of its life. The event horizon marks the point of no return; inside lies the singularity where general relativity predicts infinite density. The Schwarzschild radius is r_s = 2GM/c^2. Despite their name, black holes can radiate via Hawking radiation, a quantum effect that lets them slowly lose mass and evaporate over cosmic timescales.',
+  'entropy': 'Entropy (S) measures disorder or the number of microscopic configurations consistent with a macroscopic state. The second law of thermodynamics states that the total entropy of an isolated system never decreases. Boltzmann defined it statistically: S = k_B * ln(W), where W is the number of microstates. Entropy explains why heat flows from hot to cold, why time has a direction, and why perpetual motion machines are impossible. It bridges thermodynamics and information theory.',
+  'photosynthesis': 'Photosynthesis converts light energy into chemical energy stored in glucose. Plants use chlorophyll in chloroplasts to capture photons, splitting water (H2O) and releasing oxygen while reducing CO2. The overall reaction is 6CO2 + 6H2O + light -> C6H12O6 + 6O2. It occurs in two stages: the light-dependent reactions (producing ATP and NADPH) and the Calvin cycle (fixing carbon into sugar). It is the foundation of nearly every food chain and the source of Earth\'s atmospheric oxygen.',
+  'relativity': 'Einstein\'s theory of relativity has two parts. Special relativity (1905) holds that the laws of physics are the same in all inertial frames and the speed of light is constant, leading to time dilation, length contraction, and E=mc^2. General relativity (1915) describes gravity not as a force but as curvature of spacetime caused by mass and energy. It predicts black holes, gravitational waves, and the expansion of the universe, all since confirmed experimentally.',
+  'quantum mechanics': 'Quantum mechanics describes matter at atomic and subatomic scales. Key ideas: energy is quantized in discrete packets, particles exhibit wave-particle duality (de Broglie wavelength = h/p), and measurement collapses wavefunctions probabilistically. The Schrodinger equation governs how quantum states evolve. The Heisenberg uncertainty principle limits simultaneous knowledge of conjugate variables. Entanglement links particles so that measuring one instantly determines the other — the basis of quantum computing.',
+  'evolution': 'Evolution is the change in heritable traits of biological populations over generations, driven primarily by natural selection. Organisms with traits suited to their environment reproduce more successfully, passing those traits on. Darwin and Wallace proposed this mechanism in 1858. Modern synthesis integrated genetics: mutations create variation, recombination shuffles alleles, and drift plus selection shape frequencies. Speciation occurs when populations diverge reproductively. Evolution explains the unity and diversity of all life from a common ancestor.',
+  'gravity': 'Gravity is the attraction between masses. Newton described it as F = G*m1*m2/r^2, accurate for most everyday and planetary mechanics. Einstein\'s general relativity reframes it as spacetime curvature: mass tells spacetime how to curve, and curved spacetime tells matter how to move. Gravity is the weakest of the four fundamental forces yet dominates at astronomical scales because it is always attractive and long-ranged. Gravitational waves were detected directly in 2015 by LIGO.',
+  'thermodynamics': 'Thermodynamics governs energy, heat, and work. The four laws: Zeroth — temperature equilibrium defines thermal systems; First — energy is conserved (dU = Q - W); Second — entropy of an isolated system never decreases; Third — entropy approaches a constant minimum as temperature approaches absolute zero. It underlies engines, refrigerators, chemical reactions, and the arrow of time. The Kelvin and Planck statements forbid perfect conversion of heat entirely into work.',
+  'electromagnetism': 'Electromagnetism unifies electricity and magnetism, described by Maxwell\'s four equations. Electric charges produce electric fields; moving charges produce magnetic fields; changing magnetic fields induce electric fields (Faraday\'s law); and changing electric fields sustain magnetic fields, allowing self-propagating electromagnetic waves — light — at speed c = 1/sqrt(mu0*eps0). The Lorentz force F = q(E + v cross B) governs charged particles. It is one of the four fundamental forces, mediated by photons.',
+  'atom': 'An atom is the smallest unit of an element that retains its chemical properties. It has a dense nucleus of protons (positive) and neutrons (neutral) surrounded by a cloud of electrons (negative) in orbitals defined by quantum mechanics. The number of protons (atomic number) determines the element. Electrons fill shells; the outermost valence electrons govern chemical bonding. Atomic radii are ~1e-10 m while the nucleus is ~1e-15 m, meaning an atom is mostly empty space.',
+  'dna': 'DNA (deoxyribonucleic acid) stores genetic information. Its double helix consists of two strands of nucleotides, each with a sugar, phosphate, and one of four bases: adenine (A), thymine (T), guanine (G), cytosine (C). A pairs with T, G with C via hydrogen bonds. The sequence encodes instructions for building proteins through transcription (to RNA) and translation (at ribosomes). DNA replicates semi-conservatively, enabling heredity.',
+  'cell': 'The cell is the basic unit of life. All cells have a membrane, cytoplasm, and DNA. Prokaryotes (bacteria, archaea) lack a nucleus; eukaryotes (plants, animals, fungi) have a nucleus and organelles such as mitochondria (energy), the endoplasmic reticulum (protein/lipid synthesis), the Golgi apparatus (packaging), and chloroplasts in plants (photosynthesis). The cell cycle governs growth and division (mitosis), while meiosis produces gametes for sexual reproduction.',
+  'big bang': 'The Big Bang is the leading cosmological model: the universe began ~13.8 billion years ago from an extremely hot, dense state and has been expanding ever since. Evidence includes the cosmic microwave background (the afterglow at 2.7 K), the abundance of light elements, and the redshift of distant galaxies (Hubble\'s law). Galaxies formed from density fluctuations; dark matter provides scaffolding, and dark energy drives accelerating expansion.',
+  'light': 'Light is an electromagnetic wave and a stream of photons, exhibiting wave-particle duality. Its speed in vacuum c = 299,792 km/s is the universal speed limit. Wavelength and frequency relate by c = lambda*f; energy of a photon is E = hf. The visible spectrum spans roughly 400-700 nm. Light refracts, reflects, diffracts, and interferes. Spectroscopy of emitted or absorbed light reveals the composition and motion of distant stars and galaxies via redshift.',
+  'energy': 'Energy is the capacity to do work, measured in joules. It takes many interconvertible forms: kinetic (0.5*m*v^2), gravitational potential (mgh), elastic (0.5*k*x^2), thermal, chemical, electrical, electromagnetic, and mass (E=mc^2). The first law of thermodynamics states energy is conserved. Power is the rate of energy transfer (watts = joules/second). Energy quality degrades as entropy rises, limiting useful work.',
+  'climate change': 'Climate change refers to long-term shifts in temperatures and weather patterns, driven since the industrial era primarily by human emission of greenhouse gases (CO2, CH4, N2O) that trap heat via the greenhouse effect. CO2 has risen from ~280 ppm pre-industrial to over 420 ppm. Consequences include warming, sea-level rise, more extreme weather, ocean acidification, and ecosystem disruption. Mitigation requires decarbonizing energy; adaptation requires resilient infrastructure.',
+  'nuclear fusion': 'Nuclear fusion combines light nuclei into heavier ones, releasing energy from the mass defect (E=mc^2). In stars, hydrogen fuses to helium via the proton-proton chain. Fusion powers the sun and hydrogen bombs. Experimental reactors (tokamaks, inertial confinement) aim for controlled fusion on Earth — promising nearly limitless clean energy with helium as the only byproduct — but require temperatures above 100 million K and net-positive energy gain, still an engineering challenge.',
+  'neural network': 'A neural network is a machine-learning model loosely inspired by biological neurons. It consists of layers of nodes that compute weighted sums passed through nonlinear activation functions. Training adjusts weights via backpropagation and gradient descent to minimize a loss function. Deep networks with many layers learn hierarchical representations and power modern AI: image recognition, language models, and scientific prediction. Overfitting, vanishing gradients, and data hunger are key challenges.',
+  'virus': 'A virus is an infectious agent of genetic material (DNA or RNA) wrapped in a protein capsid, sometimes a lipid envelope. Viruses cannot reproduce on their own; they hijack a host cell\'s machinery to replicate. They infect all life forms. Some cause disease (influenza, HIV, SARS-CoV-2). Vaccines train the immune system to recognize viral antigens. Whether viruses are truly alive is debated, as they lack independent metabolism.',
+};
+
+/* ========================= UNIT CONVERSION ============================== */
+const UNITS = {
+  length: { base:'m', u:{ m:1, km:1000, cm:0.01, mm:0.001, um:1e-6, nm:1e-9, mi:1609.344, yd:0.9144, ft:0.3048, in:0.0254, au:1.49597871e11, ly:9.46073e15, pc:3.085678e16, nautical_mile:1852 } },
+  mass: { base:'kg', u:{ kg:1, g:0.001, mg:1e-6, t:1000, lb:0.45359237, oz:0.0283495, ton_us:907.185, tonne:1000, u:1.66053907e-27 } },
+  time: { base:'s', u:{ s:1, ms:0.001, us:1e-6, ns:1e-9, min:60, h:3600, day:86400, week:604800, year:3.15576e7 } },
+  speed: { base:'m/s', u:{ 'm/s':1, 'km/h':1/3.6, mph:0.44704, knot:0.514444, 'ft/s':0.3048, c:299792458 } },
+  area: { base:'m2', u:{ 'm2':1, 'km2':1e6, 'cm2':1e-4, 'ha':1e4, 'acre':4046.86, 'ft2':0.092903, 'mi2':2.58999e6 } },
+  volume: { base:'L', u:{ 'L':1, 'l':1, 'mL':0.001, 'm3':1000, 'cm3':0.001, 'gal_us':3.78541, 'gal_uk':4.54609, 'qt':0.946353, 'pt':0.473176, 'fl_oz':0.0295735 } },
+  energy: { base:'J', u:{ 'J':1, 'kJ':1000, 'cal':4.184, 'kcal':4184, 'Wh':3600, 'kWh':3.6e6, 'eV':1.602176634e-19, 'erg':1e-7, 'BTU':1055.06, 'ft_lbf':1.35582 } },
+  power: { base:'W', u:{ 'W':1, 'kW':1000, 'MW':1e6, 'hp':745.7, 'erg_s':1e-7, 'BTU_h':0.293071 } },
+  pressure: { base:'Pa', u:{ 'Pa':1, 'kPa':1000, 'MPa':1e6, 'bar':1e5, 'atm':101325, 'psi':6894.76, 'torr':133.322, 'mmHg':133.322 } },
+  angle: { base:'rad', u:{ 'rad':1, 'deg':Math.PI/180, 'grad':Math.PI/200, 'turn':Math.PI*2, 'arcmin':Math.PI/10800, 'arcsec':Math.PI/648000 } },
+  data: { base:'B', u:{ 'B':1, 'KB':1024, 'MB':1048576, 'GB':1073741824, 'TB':1.0995e12, 'bit':0.125, 'kb':128, 'Mb':131072, 'Gb':1.342e8 } },
+};
+
+const UNIT_ALIAS = { miles:'mi', mile:'mi', kilometers:'km', kilometer:'km', meters:'m', metre:'m', metres:'m', centimeters:'cm', centimeter:'cm', millimeters:'mm', millimeter:'mm', micrometers:'um', nanometers:'nm', nanometres:'nm', inches:'in', inch:'in', feet:'ft', foot:'ft', yards:'yd', yard:'yd', lightyears:'ly', lightyear:'ly', parsecs:'pc', kilograms:'kg', kilogram:'kg', grams:'g', gram:'g', milligrams:'mg', tonnes:'t', tonne:'t', pounds:'lb', pound:'lb', ounces:'oz', ounce:'oz', hours:'h', hour:'h', minutes:'min', minute:'min', seconds:'s', second:'s', milliseconds:'ms', days:'day', weeks:'week', years:'year', ev:'eV', electronvolts:'eV', electronvolt:'eV', calories:'cal', calorie:'cal', kilocalories:'kcal', joules:'J', joule:'J', kilojoules:'kJ', watt:'W', watts:'W', kilowatts:'kW', megawatts:'MW', pascals:'Pa', kilopascals:'kPa', megapascals:'MPa', bars:'bar', atmospheres:'atm', radians:'rad', degrees:'deg', bits:'bit', bytes:'B', kilobytes:'KB', megabytes:'MB', gigabytes:'GB' };
+
+/* ========================= THE ADAPTIVE ANALYZER ========================= */
+const Analyzer = {
+  trace: [],
+  log(k,m){ this.trace.push({k,m}); },
+  reset(){ this.trace=[]; },
+
+  INTENTS: {
+    plot2d: { w:1, k:{ plot:3, graph:2, curve:2, function:1, 'f(x)':3, 'y=':3, draw:1, sketch:1, visualize:1, trace:1 } },
+    plot3d: { w:1, k:{ '3d':4, surface:4, 'z=':4, terrain:3, topograph:3, heightmap:2, 'three-dimensional':3, plot3d:4 } },
+    simulate: { w:1.4, k:{ simulate:4, simulation:4, animate:2, 'double pendulum':4, pendulum:3, projectile:3, 'n-body':3, nbody:3, gravity:1, orbital:3, orbit:3, wave:2, interference:3, ripple:3, spring:3, oscillat:2, heat:1, diffusion:3, lorenz:4, attractor:3, chaos:2, fluid:2, flow:2, planetary:3, 'two body':3, harmonic:2 } },
+    statistics: { w:1, k:{ statistic:3, analyze:1, data:2, mean:3, median:3, mode:2, 'standard deviation':4, variance:3, stddev:3, average:2, quartile:2, histogram:3, 'summary of':2, dataset:2, distribution:2, normal:1, skew:2 } },
+    convert: { w:1.2, k:{ convert:4, into:1, 'how many':2, units:1 } },
+    constant: { w:1, k:{ constant:3, 'speed of light':3, planck:2, boltzmann:3, avogadro:3, 'gravitational':2, 'electron mass':3, 'elementary charge':3, 'fine-structure':3, 'value of':1 } },
+    periodic: { w:1, k:{ element:2, atomic:2, molar:2, periodic:3, atom:1, 'mass of':1, 'symbol for':2 } },
+    solve: { w:1, k:{ solve:4, equation:3, quadratic:3, root:2, 'find x':3, linear:2, polynomial:2, factor:1 } },
+    knowledge: { w:0.8, k:{ what:1, explain:2, describe:1, define:2, tell:1, how:1, why:1 } },
+  },
+
+  score(text){
+    const scores={};
+    for(const [name,def] of Object.entries(this.INTENTS)){
+      let s=0; const hits=[];
+      for(const [kw,w] of Object.entries(def.k)){
+        if(text.includes(kw)){ s+=w*def.w; hits.push(kw); }
+      }
+      scores[name]={score:s, hits};
     }
+    return scores;
+  },
 
-    // Rotates probability based on linguistic metrics
-    applySemanticRotation(qubit, angularWeight) {
-        const theta = angularWeight * Math.PI;
-        const cosT = Math.cos(theta);
-        const sinT = Math.sin(theta);
-        
-        const matrix = [
-            [new Complex(cosT, 0), new Complex(-sinT, 0)],
-            [new Complex(sinT, 0), new Complex(cosT, 0)]
-        ];
+  extractExpr(text){
+    let m = text.match(/(?:y|f\(x\))\s*=\s*(.+)/i);
+    if(m) return {expr:m[1].trim(), var:'x'};
+    m = text.match(/(?:plot|graph|draw|sketch)\s+(?:the\s+)?(?:function\s+)?(.+)/i);
+    if(m){ let e=m[1].replace(/\s+from\s+.*/i,'').replace(/\s+over\s+.*/i,'').replace(/\s+for\s+.*/i,'').replace(/^\s*3d\s+/i,'').replace(/^\s*surface\s+(?:of\s+(?:the\s+)?)?/i,'').trim(); return {expr:e, var:'x'}; }
+    const stripped = text.replace(/^(calculate|compute|evaluate|what is|whats|what's)\s+/i,'').trim();
+    if(/[0-9]/.test(stripped) && /[+\-*/^()]/.test(stripped)) return {expr:stripped, var:'x'};
+    return null;
+  },
+  extractRange(text, dflt){
+    const m = text.match(/(?:from|over)?\s*(-?\d*\.?\d+)\s*to\s*(-?\d*\.?\d+)/i);
+    if(m) return {min:parseFloat(m[1]), max:parseFloat(m[2])};
+    const m2 = text.match(/\[\s*(-?\d*\.?\d+)\s*,\s*(-?\d*\.?\d+)\s*\]/);
+    if(m2) return {min:parseFloat(m2[1]), max:parseFloat(m2[2])};
+    return dflt;
+  },
+  extractNumbers(text){ const arr=[]; const re=/-?\d+\.?\d*(?:e-?\d+)?/gi; let m; while((m=re.exec(text))) arr.push(parseFloat(m[0])); return arr; },
 
-        const next = new Array(this.size).fill(null).map(() => new Complex(0,0));
-        for (let i = 0; i < this.size; i++) {
-            const bit = (i >> qubit) & 1;
-            const zeroIdx = i & ~(1 << qubit);
-            const oneIdx = i | (1 << qubit);
-            if (bit === 0) {
-                next[i] = matrix[0][0].multiply(this.state[zeroIdx]).add(matrix[0][1].multiply(this.state[oneIdx]));
-            } else {
-                next[i] = matrix[1][0].multiply(this.state[zeroIdx]).add(matrix[1][1].multiply(this.state[oneIdx]));
-            }
-        }
-        this.state = next;
+  detectSim(text){
+    if(/double\s+pendulum/.test(text)) return 'double_pendulum';
+    if(/pendulum/.test(text)) return 'pendulum';
+    if(/projectile/.test(text)) return 'projectile';
+    if(/n[-\s]?body|planetary|solar system/.test(text)) return 'nbody';
+    if(/two[-\s]?body|orbit|satellite|moon/.test(text)) return 'orbit';
+    if(/wave|interference|ripple/.test(text)) return 'waves';
+    if(/spring|oscillat|shm|harmonic/.test(text)) return 'spring';
+    if(/heat|diffusion|temperature field|thermal/.test(text)) return 'heat';
+    if(/lorenz|attractor|chaos/.test(text)) return 'lorenz';
+    if(/fluid|flow|navier/.test(text)) return 'fluid';
+    return 'pendulum';
+  },
+
+  detectElement(text){
+    for(const e of ELEMENTS){ if(new RegExp('\\b'+e[0]+'\\b','i').test(text) || text.includes(e[1].toLowerCase())) return e; }
+    return null;
+  },
+
+  detectConstant(text){
+    const t=text.toLowerCase();
+    // specific phrase checks first (most reliable)
+    if(/speed of light/.test(t)) return CONSTS[0];
+    if(/planck(?:'s)?\s*constant/.test(t)) return CONSTS[1];
+    if(/boltzmann/.test(t)) return CONSTS[4];
+    if(/avogadro/.test(t)) return CONSTS[5];
+    if(/gravitational constant|big g|newton(?:'s)?\s*constant/.test(t)) return CONSTS[7];
+    // then match by full name (length>4) or symbol with word boundaries
+    for(const c of CONSTS){
+      if(c[0].length>4 && t.includes(c[0].toLowerCase())) return c;
+      const sym=c[1].toLowerCase();
+      if(sym.length>=1 && new RegExp('\\b'+sym.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b').test(t)) return c;
     }
+    return null;
+  },
 
-    collapse() {
-        const probs = this.state.map(c => c.magSq());
-        const r = Math.random();
-        let sum = 0;
-        for (let i = 0; i < probs.length; i++) {
-            sum += probs[i];
-            if (r <= sum) return i;
-        }
-        return 0;
+  detectKnowledge(text){
+    let best=null, bs=0;
+    for(const k of Object.keys(KNOWLEDGE)){ if(text.includes(k)){ if(k.length>bs){ bs=k.length; best=k; } } }
+    return best;
+  },
+
+  detectUnits(text){
+    const m = text.match(/(\d+(?:\.\d+)?)\s+([A-Za-zµ²³/·_]+)\s+(?:to|in|into)\s+([A-Za-zµ²³/·_]+)/);
+    if(!m) return null;
+    const val=parseFloat(m[1]); const fromRaw=m[2]; const toRaw=m[3];
+    const resolve=(w)=>{
+      const lw=w.toLowerCase();
+      if(UNIT_ALIAS[lw]) return UNIT_ALIAS[lw];
+      for(const def of Object.values(UNITS)){ for(const u of Object.keys(def.u)){ if(u.toLowerCase()===lw) return u; } }
+      return null;
+    };
+    const fromU=resolve(fromRaw), toU=resolve(toRaw);
+    if(!fromU||!toU) return null;
+    for(const [cat,def] of Object.entries(UNITS)){ if(def.u[fromU]!=null && def.u[toU]!=null) return {category:cat, from:{val, unit:fromU}, to:toU}; }
+    return null;
+  },
+
+  analyze(rawText){
+    this.reset();
+    const text=(rawText||'').trim().toLowerCase();
+    if(!text){ this.log('err','Empty prompt.'); return {intent:'none'}; }
+    this.log('info','Normalized: '+text.slice(0,120)+(text.length>120?'…':''));
+    const scores=this.score(text);
+    const ranked=Object.entries(scores).sort((a,b)=>b[1].score-a[1].score).slice(0,4);
+    this.log('analyze','Intent scores: '+ranked.map(([n,s])=>n+'('+s.score.toFixed(1)+')').join(', '));
+
+    if(text.includes('convert') || /\d+\s*\w+\s*(?:to|in)\s*\w+/.test(text)){
+      const u=this.detectUnits(text); if(u){ this.log('ok','Routed -> unit conversion'); return {intent:'convert', params:u, scores}; }
     }
-}
-
-// Low-Level AI Linguistic Decompiler
-class SyntacticAnalyzer {
-    analyze(sentence) {
-        const rawTokens = sentence.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/);
-        
-        let analysis = {
-            subject: 'system',
-            action: 'processes',
-            descriptor: 'informational',
-            detectedNouns: [],
-            detectedVerbs: [],
-            detectedAdjectives: []
-        };
-
-        rawTokens.forEach(word => {
-            if (Lexicon.nouns.includes(word)) analysis.detectedNouns.push(word);
-            if (Lexicon.verbs.includes(word)) analysis.detectedVerbs.push(word);
-            if (Lexicon.adjectives.includes(word)) analysis.detectedAdjectives.push(word);
-            if (Lexicon.pronouns.includes(word) && analysis.subject === 'system') {
-                analysis.subject = (word === 'you') ? 'humanity' : word;
-            }
-        });
-
-        // Set dominant structural weights
-        if (analysis.detectedNouns.length > 0) analysis.subject = analysis.detectedNouns[0];
-        if (analysis.detectedVerbs.length > 0) analysis.action = analysis.detectedVerbs[0];
-        if (analysis.detectedAdjectives.length > 0) analysis.descriptor = analysis.detectedAdjectives[0];
-
-        return analysis;
+    if(/^plot\b|graph\s+(?:of|the)|y\s*=|f\(x\)\s*=/.test(text)){
+      const e=this.extractExpr(text); if(e && M.isValid(e.expr)){
+        const is3d = /3d|surface|z\s*=/.test(text);
+        this.log('ok','Routed -> '+(is3d?'3D surface':'2D function')+' plot');
+        return {intent:is3d?'plot3d':'plot2d', params:{expr:e.expr, range:this.extractRange(text,{min:-10,max:10})}, scores};
+      }
     }
-}
-
-// Algorithmic Sentence Synthesizer Core
-class ResponseSynthesizer {
-    static generate(analysis, stateDec) {
-        const s = analysis.subject.toUpperCase();
-        const v = analysis.action.toLowerCase();
-        const adj = analysis.descriptor.toLowerCase();
-
-        // Variations based on Quantum Phase state indices (0-7)
-        switch(stateDec) {
-            case 0: return `Observation confirmed. Processing your input reveals that the structural concept of a ${adj} ${s} behaves in a way that allows it to safely ${v} standard computational barriers.`;
-            case 1: return `Quantum vector trajectory shifted. It appears your emphasis on how a ${s} can ${v} remains fundamentally linked to a very ${adj} perspective.`;
-            case 2: return `Fascinating syntax map. If a system allows a ${adj} ${s} to constantly ${v}, structural variables inherently fluctuate.`;
-            case 3: return `The internal state matrix has changed. Analyzing this context indicates that the relationship where a ${s} chooses to ${v} can only be classified as deeply ${adj}.`;
-            case 4: return `Linguistic extraction analysis complete: You brought forward a ${adj} state framework. When a ${s} begins to ${v}, our processing subroutines record a distinctive logical shift.`;
-            case 5: return `Data anomaly detected in the word stream. The concept of trying to ${v} within the framework of a ${adj} ${s} suggests a non-linear path.`;
-            case 6: return `High-entropy thought string observed. The parameters dictate that your target ${s} will not merely ${v}, but will completely manifest in a ${adj} operational space.`;
-            case 7: return `Maximum state superposition collapse. Your linguistic input implies that when a ${s} is forced to ${v}, the resulting digital environment becomes completely ${adj}.`;
-            default: return `Acknowledged. Deconstructing the input framework regarding a ${s} that can ${v} through a ${adj} system.`;
-        }
+    if(/3d|surface|z\s*=|terrain|heightmap/.test(text)){
+      let m=text.match(/z\s*=\s*(.+)/i); let expr=m?m[1].trim():null;
+      if(!expr){ m=text.match(/(?:plot|surface|graph)\s+(.+)/i); expr=m?m[1].trim():'sin(sqrt(x^2+y^2))'; }
+      expr=expr.replace(/\s+from\s+.*/i,'').replace(/^\s*3d\s+/i,'').replace(/^\s*surface\s+(?:of\s+(?:the\s+)?)?/i,'').trim();
+      if(M.isValid(expr)){ this.log('ok','Routed -> 3D surface plot'); return {intent:'plot3d', params:{expr, range:this.extractRange(text,{min:-5,max:5})}, scores}; }
     }
-}
+    if(/simulat|animate|pendulum|projectile|orbital|orbit|wave|interference|spring|diffusion|lorenz|attractor|n[-\s]?body|fluid|harmonic/.test(text)){
+      const sim=this.detectSim(text);
+      const params=this.extractSimParams(text, sim);
+      this.log('ok','Routed -> simulation: '+sim);
+      return {intent:'simulate', params:{sim, ...params}, scores};
+    }
+    if(/mean|median|mode|variance|standard deviation|stddev|average|histogram|quartile|skew|statistics|analyze.*data|data\s*[:=]/.test(text)){
+      const nums=this.extractNumbers(text);
+      if(nums.length>=2){ this.log('ok','Routed -> statistical analysis ('+nums.length+' values)'); return {intent:'statistics', params:{data:nums}, scores}; }
+    }
+    if(/solve|quadratic|root|find x|polynomial|linear equation/.test(text)){
+      const eq=text.replace(/solve|find|the|equation|for|x=|\?/g,' ').trim();
+      this.log('ok','Routed -> equation solver');
+      return {intent:'solve', params:{eq}, scores};
+    }
+    const el=this.detectElement(text);
+    if(el && /element|atomic|periodic|molar mass|mass of|symbol|tell me about|properties/.test(text)){
+      this.log('ok','Routed -> periodic table: '+el[1]); return {intent:'periodic', params:{element:el}, scores};
+    }
+    const c=this.detectConstant(text);
+    if(c && /constant|value of|what is|speed of light|planck|boltzmann|avogadro|gravitational/.test(text)){
+      this.log('ok','Routed -> physical constant: '+c[0]); return {intent:'constant', params:{constant:c}, scores};
+    }
+    const expr=this.extractExpr(text);
+    if(expr && M.isValid(expr.expr) && /\d|[a-z_]+\s*\(/.test(expr.expr)){
+      this.log('ok','Routed -> expression evaluation'); return {intent:'calculate', params:{expr:expr.expr}, scores};
+    }
+    const kb=this.detectKnowledge(text);
+    if(kb){ const v=KNOWLEDGE[kb]; this.log('ok','Routed -> knowledge base: '+kb); return {intent:'knowledge', params:{topic:kb, text:v}, scores}; }
 
-// --- PIPELINE MANAGER ---
-const analyzer = new SyntacticAnalyzer();
-const body = document.getElementById('terminalBody');
-const input = document.getElementById('userInput');
-const button = document.getElementById('sendBtn');
+    try{ const v=M.eval(text.replace(/^(calculate|compute|evaluate|what is|whats|what's|the value of)\s+/i,'').replace(/\?/g,''));
+      if(isFinite(v)){ this.log('ok','Routed -> expression evaluation (fallback)'); return {intent:'calculate', params:{expr:text.replace(/^(calculate|compute|evaluate|what is|whats|what's|the value of)\s+/i,'').replace(/\?/g,''), value:v}, scores}; }
+    }catch(e){}
+    this.log('err','No strong intent matched. Showing capabilities.');
+    return {intent:'help', scores};
+  },
 
-function processPipeline() {
-    const text = input.value.trim();
-    if (!text) return;
+  extractSimParams(text, sim){
+    const nums=this.extractNumbers(text);
+    const p={};
+    if(sim==='pendulum'||sim==='double_pendulum'){ p.length=nums[0]||1; p.gravity=9.81; }
+    if(sim==='projectile'){ p.velocity=nums[0]||30; p.angle=nums[1]||45; }
+    if(sim==='spring'){ p.k=nums[0]||20; p.mass=nums[1]||1; p.amplitude=nums[2]||1; }
+    if(sim==='nbody'){ p.count=Math.min(Math.max(nums[0]||5,2),8); }
+    if(sim==='orbit'){ p.mass1=nums[0]||2e30; p.mass2=nums[1]||6e24; p.distance=nums[2]||1.5e11; }
+    if(sim==='waves'){ p.freq=nums[0]||0.5; }
+    if(sim==='heat'){ p.size=Math.min(Math.max(nums[0]||80,20),160); }
+    if(sim==='lorenz'){ p.sigma=nums[0]||10; p.rho=nums[1]||28; p.beta=nums[2]||8/3; }
+    return p;
+  },
+};
 
-    appendLine(`&gt; ${text}`, 'user-line');
-    input.value = '';
-
-    // Step 1: Lexical Grammatical Breakdown
-    const syntaxAnalysis = analyzer.analyze(text);
-
-    // Step 2: Formulate Quantum Rotation Weights based on word structural frequencies
-    const circuit = new QuantumSemanticCircuit();
-    const nounWeight = (syntaxAnalysis.detectedNouns.length * 0.25) % 1;
-    const verbWeight = (syntaxAnalysis.detectedVerbs.length * 0.33) % 1;
-    
-    circuit.applySemanticRotation(0, nounWeight || 0.1);
-    circuit.applySemanticRotation(1, verbWeight || 0.2);
-
-    // Step 3: Trigger measurement collapse
-    const quantumState = circuit.collapse();
-
-    // Step 4: Render UI Diagnostics to prove processing authenticity
-    const diagnosticHTML = `
-        <strong>[Linguistic Breakdown Metrics]:</strong><br>
-        Identified Nouns: [${syntaxAnalysis.detectedNouns.join(', ') || 'None'}]<br>
-        Identified Verbs: [${syntaxAnalysis.detectedVerbs.join(', ') || 'None'}]<br>
-        Identified Adjectives: [${syntaxAnalysis.detectedAdjectives.join(', ') || 'None'}]<br>
-        Parsed Core Formula: Subject[<strong>${syntaxAnalysis.subject}</strong>] + Action[<strong>${syntaxAnalysis.action}</strong>] + Property[<strong>${syntaxAnalysis.descriptor}</strong>]<br>
-        <strong>[Quantum Influence Phase]:</strong> State vector collapsed into index path: <strong>|${quantumState.toString(2).padStart(3, '0')}></strong>
-    `;
-    appendLine(diagnosticHTML, 'analysis-data');
-
-    // Step 5: Synthesize non-hardcoded customized output string
-    const finalOutput = ResponseSynthesizer.generate(syntaxAnalysis, quantumState);
-
-    setTimeout(() => {
-        appendLine(finalOutput, 'ai-line');
-        body.scrollTop = body.scrollHeight;
-    }, 200);
-}
-
-function appendLine(text, className) {
-    const div = document.createElement('div');
-    div.className = `log-entry ${className}`;
-    div.innerHTML = text;
-    body.appendChild(div);
-    body.scrollTop = body.scrollHeight;
-}
-
-button.addEventListener('click', processPipeline);
-input.addEventListener('keypress', (e) => { if (e.key === 'Enter') processPipeline(); });
 </script>
+<script>
+"use strict";
+/* PART2: rendering engines (plot2d, plot3d, simulations, stats, units, solver) + UI */
+/* ========================= RENDERING & ENGINE LAYER ====================== */
+const Eng = {
+  cssVar(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); },
 
-</body>
+  // ---------- shared canvas helper ----------
+  makeCanvas(w, h){
+    const wrap=document.createElement('div'); wrap.className='out-canvas-wrap';
+    const cv=document.createElement('canvas'); cv.width=w; cv.height=h; wrap.appendChild(cv);
+    return {wrap, cv, ctx: cv.getContext('2d')};
+  },
+
+  // ---------- 2D function plot ----------
+  plot2d(container, params){
+    const {expr, range}=params;
+    const f=M.compile(expr);
+    const W=760,H=440; const {wrap,cv,ctx}=this.makeCanvas(W,H);
+    const title=document.createElement('div'); title.className='out-title'; title.textContent='f(x) = '+expr;
+    container.appendChild(title);
+    const sub=document.createElement('div'); sub.className='out-subtitle'; sub.textContent='domain x ∈ ['+range.min+', '+range.max+']   ·   600 samples';
+    container.appendChild(sub); container.appendChild(wrap);
+    const dpr=window.devicePixelRatio||1; cv.style.width='100%'; cv.height=H; cv.width=W*dpr; cv.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+    const padL=48,padR=20,padT=24,padB=36;
+    const plotW=W-padL-padR, plotH=H-padT-padB;
+    // sample
+    const N=600; const ys=[]; let yMin=Infinity,yMax=-Infinity;
+    for(let i=0;i<=N;i++){ const x=range.min+(range.max-range.min)*i/N; let y; try{ y=f({x}); }catch(e){ y=NaN; } ys.push(y); if(isFinite(y)){ if(y<yMin)yMin=y; if(y>yMax)yMax=y; } }
+    if(!isFinite(yMin)){ yMin=-1; yMax=1; }
+    if(yMin===yMax){ yMin-=1; yMax+=1; }
+    const pad=(yMax-yMin)*0.1; yMin-=pad; yMax+=pad;
+    const X=x=>padL+(x-range.min)/(range.max-range.min)*plotW;
+    const Y=y=>padT+plotH-(y-yMin)/(yMax-yMin)*plotH;
+    // grid
+    const colGrid=this.cssVar('--color-border-soft'), colAxis=this.cssVar('--color-text-faint'), colText=this.cssVar('--color-text-muted');
+    ctx.strokeStyle=colGrid; ctx.lineWidth=1; ctx.font="10px 'JetBrains Mono',monospace"; ctx.fillStyle=colText;
+    // vertical gridlines
+    const xticks=8;
+    for(let i=0;i<=xticks;i++){ const x=range.min+(range.max-range.min)*i/xticks; ctx.beginPath(); ctx.moveTo(X(x),padT); ctx.lineTo(X(x),padT+plotH); ctx.stroke(); ctx.textAlign='center'; ctx.fillText(this.fmt(x), X(x), padT+plotH+16); }
+    // horizontal gridlines
+    const yticks=6;
+    for(let i=0;i<=yticks;i++){ const y=yMin+(yMax-yMin)*i/yticks; ctx.beginPath(); ctx.moveTo(padL,Y(y)); ctx.lineTo(padL+plotW,Y(y)); ctx.stroke(); ctx.textAlign='right'; ctx.fillText(this.fmt(y), padL-6, Y(y)+3); }
+    // axes (x=0, y=0)
+    ctx.strokeStyle=colAxis; ctx.lineWidth=1.4;
+    if(range.min<0&&range.max>0){ ctx.beginPath(); ctx.moveTo(X(0),padT); ctx.lineTo(X(0),padT+plotH); ctx.stroke(); }
+    if(yMin<0&&yMax>0){ ctx.beginPath(); ctx.moveTo(padL,Y(0)); ctx.lineTo(padL+plotW,Y(0)); ctx.stroke(); }
+    // curve
+    ctx.strokeStyle=this.cssVar('--color-cyan'); ctx.lineWidth=2.2; ctx.beginPath(); let started=false;
+    for(let i=0;i<=N;i++){ const x=range.min+(range.max-range.min)*i/N; const y=ys[i]; if(!isFinite(y)||Math.abs(y)>1e6){ started=false; continue; } const px=X(x),py=Y(y); if(!started){ ctx.moveTo(px,py); started=true; } else ctx.lineTo(px,py); }
+    ctx.stroke();
+    // glow
+    ctx.shadowColor=this.cssVar('--color-cyan'); ctx.shadowBlur=8; ctx.stroke(); ctx.shadowBlur=0;
+    return {};
+  },
+
+  // ---------- 3D surface plot (rotating wireframe) ----------
+  plot3d(container, params){
+    const {expr, range}=params;
+    const f=M.compile(expr);
+    const W=760,H=460; const {wrap,cv,ctx}=this.makeCanvas(W,H);
+    const title=document.createElement('div'); title.className='out-title'; title.textContent='z = f(x,y) = '+expr;
+    container.appendChild(title);
+    const sub=document.createElement('div'); sub.className='out-subtitle'; sub.textContent='rotating surface · domain ['+range.min+', '+range.max+']²';
+    container.appendChild(sub); container.appendChild(wrap);
+    const dpr=window.devicePixelRatio||1; cv.style.width='100%'; cv.height=H; cv.width=W*dpr; cv.height=H*dpr;
+    const RES=34; const grid=[];
+    let zMin=Infinity,zMax=-Infinity;
+    for(let i=0;i<RES;i++){ const row=[]; for(let j=0;j<RES;j++){ const x=range.min+(range.max-range.min)*i/(RES-1); const y=range.min+(range.max-range.min)*j/(RES-1); let z; try{ z=f({x,y}); }catch(e){ z=0; } if(!isFinite(z))z=0; row.push(z); if(z<zMin)zMin=z; if(z>zMax)zMax=z; } grid.push(row); }
+    if(!isFinite(zMin)){ zMin=-1; zMax=1; } if(zMin===zMax){ zMin-=1; zMax+=1; }
+    const cx=W/2, cy=H/2, scale=Math.min(W,H)*0.32, zScale=scale*0.5;
+    let angle=0.6;
+    let raf;
+    const colPrimary=this.cssVar('--color-primary'), colCyan=this.cssVar('--color-cyan');
+    function project(x,y,z){
+      const xr=x-range.min-(range.max-range.min)/2, yr=y-range.min-(range.max-range.min)/2;
+      const ca=Math.cos(angle), sa=Math.sin(angle);
+      const rx=xr*ca-yr*sa, ry=xr*sa+yr*ca;
+      const zc=2*(z-zMin)/(zMax-zMin)-1;
+      // iso-ish projection
+      return { x: cx + rx*scale*0.5 + ry*scale*0.0, y: cy + ry*scale*0.35 - zc*zScale };
+    }
+    function draw(){
+      ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H);
+      // draw quads sorted by depth (approx: by average ry)
+      const faces=[];
+      for(let i=0;i<RES-1;i++) for(let j=0;j<RES-1;j++){
+        const p=project(range.min+(range.max-range.min)*i/(RES-1), range.min+(range.max-range.min)*j/(RES-1), grid[i][j]);
+        const p2=project(range.min+(range.max-range.min)*(i+1)/(RES-1), range.min+(range.max-range.min)*j/(RES-1), grid[i+1][j]);
+        const p3=project(range.min+(range.max-range.min)*(i+1)/(RES-1), range.min+(range.max-range.min)*(j+1)/(RES-1), grid[i+1][j+1]);
+        const p4=project(range.min+(range.max-range.min)*i/(RES-1), range.min+(range.max-range.min)*(j+1)/(RES-1), grid[i][j+1]);
+        faces.push({p,p2,p3,p4,depth:(p.y+p2.y+p3.y+p4.y)/4, z:(grid[i][j]+grid[i+1][j]+grid[i+1][j+1]+grid[i][j+1])/4});
+      }
+      faces.sort((a,b)=>a.depth-b.depth);
+      for(const fc of faces){
+        const t=(fc.z-zMin)/(zMax-zMin);
+        ctx.fillStyle=`rgba(${Math.round(124-60*t)},${Math.round(92+80*t)},${Math.round(255-100*t)},0.32)`;
+        ctx.strokeStyle=`rgba(${Math.round(54+80*t)},${Math.round(240-60*t)},${Math.round(200+30*t)},0.55)`;
+        ctx.lineWidth=0.8;
+        ctx.beginPath(); ctx.moveTo(fc.p.x,fc.p.y); ctx.lineTo(fc.p2.x,fc.p2.y); ctx.lineTo(fc.p3.x,fc.p3.y); ctx.lineTo(fc.p4.x,fc.p4.y); ctx.closePath(); ctx.fill(); ctx.stroke();
+      }
+      angle+=0.004;
+      raf=requestAnimationFrame(draw);
+    }
+    draw();
+    return { stop:()=>cancelAnimationFrame(raf) };
+  },
+
+  // ---------- physics simulations ----------
+  simulate(container, params){
+    const sim=params.sim;
+    const W=760,H=440; const {wrap,cv,ctx}=this.makeCanvas(W,H);
+    const title=document.createElement('div'); title.className='out-title'; title.textContent=this.simTitle(sim);
+    container.appendChild(title);
+    const sub=document.createElement('div'); sub.className='out-subtitle'; sub.id='simSub'; sub.textContent='live numerical integration · RK4 / verlet';
+    container.appendChild(sub); container.appendChild(wrap);
+    const dpr=window.devicePixelRatio||1; cv.style.width='100%'; cv.height=H; cv.width=W*dpr; cv.height=H*dpr;
+    const ctrl=document.createElement('div'); ctrl.className='sim-controls'; container.appendChild(ctrl);
+    const stat=document.createElement('div'); stat.className='sim-stat'; stat.id='simStat'; ctrl.appendChild(stat);
+    const runner=this.SIMS[sim] ? this.SIMS[sim](ctx,W,H,dpr,ctrl,stat,params) : null;
+    if(!runner){ return {}; }
+    return { stop:runner.stop };
+  },
+
+  simTitle(sim){
+    return {pendulum:'Simple Pendulum',double_pendulum:'Double Pendulum (chaotic)',projectile:'Projectile Motion',nbody:'N-Body Gravity',orbit:'Two-Body Orbital Mechanics',waves:'Wave Interference (ripple tank)',spring:'Damped Harmonic Oscillator',heat:'2D Heat Diffusion',lorenz:'Lorenz Attractor',fluid:'Fluid Flow (potential)'}[sim]||sim;
+  },
+
+  fmt(v){ if(Math.abs(v)>=1000||Math.abs(v)<0.01&&v!==0) return v.toExponential(2); return (Math.round(v*100)/100).toString(); },
+
+  // simulation implementations
+  SIMS: {
+    pendulum(ctx,W,H,dpr,ctrl,stat,p){
+      let theta=Math.PI/2, omega=0; const L=(p.length||1), g=p.gravity||9.81; const dt=0.02;
+      let raf, paused=false;
+      const speed=Eng.slider(ctrl,'Speed',0.2,3,1,v=>{});
+      const damp=Eng.slider(ctrl,'Damping',0,1,0.02,v=>{});
+      function step(){
+        if(!paused){
+          // RK4 for theta'' = -(g/L)sin(theta)
+          const f=(th,om)=>[-(g/L)*Math.sin(th), om];
+          const k1=f(theta,omega), k2=f(theta+dt*k1[1]/2,omega+dt*k1[0]/2), k3=f(theta+dt*k2[1]/2,omega+dt*k2[0]/2), k4=f(theta+dt*k3[1],omega+dt*k3[0]);
+          omega += dt*(k1[0]+2*k2[0]+2*k3[0]+k4[0])/6 - damp.val()*0.5*omega*dt;
+          theta += dt*(k1[1]+2*k2[1]+2*k3[1]+k4[1])/6;
+        }
+        draw(); raf=requestAnimationFrame(step);
+      }
+      function draw(){
+        ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H);
+        const cx=W/2, cy=80; const px=cx+Math.sin(theta)*L*180, py=cy+Math.cos(theta)*L*180;
+        ctx.strokeStyle='#232a40'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(px,py); ctx.stroke();
+        ctx.fillStyle='#36f0c8'; ctx.beginPath(); ctx.arc(px,py,14,0,Math.PI*2); ctx.fill();
+        ctx.strokeStyle='rgba(124,92,255,0.5)'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(cx,cy,5,0,Math.PI*2); ctx.stroke();
+        // trail arc
+        ctx.strokeStyle='rgba(54,240,200,0.15)'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(cx,cy,L*180,Math.PI/2-theta-0.3,Math.PI/2-theta+0.3); ctx.stroke();
+        stat.textContent='θ='+(theta*180/Math.PI).toFixed(1)+'°  ω='+omega.toFixed(2)+'rad/s';
+      }
+      Eng.pauseBtn(ctrl,()=>{ paused=!paused; return paused; });
+      step();
+      return { stop:()=>cancelAnimationFrame(raf) };
+    },
+    double_pendulum(ctx,W,H,dpr,ctrl,stat,p){
+      const L1=120,L2=120; let th1=Math.PI/2, th2=Math.PI/2, w1=0, w2=0; const g=9.81; const dt=0.004; let raf, paused=false;
+      const trail=[]; const maxTrail=120;
+      function deriv(a,b,c,d){
+        const m1=1,m2=1; const da=a-b;
+        const den1=(m1+m2)*L1 - m2*L1*Math.cos(da)*Math.cos(da);
+        const dw1=(-g*(2*m1+m2)*Math.sin(a)-m2*g*Math.sin(a-2*b)-2*Math.sin(da)*m2*(c*c*L2+d*d*L1*Math.cos(da)))/(den1*L1);
+        const den2=(L2/L1)*den1;
+        const dw2=(2*Math.sin(da)*(c*c*L1*(m1+m2)+g*(m1+m2)*Math.cos(a)+d*d*L2*m2*Math.cos(da)))/den2;
+        return [c,d,dw1,dw2];
+      }
+      function rk4(){
+        const y=[th1,th2,w1,w2];
+        const k1=deriv(...y); const k2=deriv(y[0]+dt*k1[0]/2,y[1]+dt*k1[1]/2,y[2]+dt*k1[2]/2,y[3]+dt*k1[3]/2);
+        const k3=deriv(y[0]+dt*k2[0]/2,y[1]+dt*k2[1]/2,y[2]+dt*k2[2]/2,y[3]+dt*k2[3]/2); const k4=deriv(y[0]+dt*k3[0],y[1]+dt*k3[1],y[2]+dt*k3[2],y[3]+dt*k3[3]);
+        for(let i=0;i<4;i++) y[i]+=dt*(k1[i]+2*k2[i]+2*k3[i]+k4[i])/6;
+        th1=y[0];th2=y[1];w1=y[2];w2=y[3];
+      }
+      function step(){ if(!paused){ for(let i=0;i<8;i++) rk4(); } draw(); raf=requestAnimationFrame(step); }
+      function draw(){
+        ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H);
+        const cx=W/2, cy=120;
+        const x1=cx+L1*Math.sin(th1), y1=cy+L1*Math.cos(th1);
+        const x2=x1+L2*Math.sin(th2), y2=y1+L2*Math.cos(th2);
+        trail.push([x2,y2]); if(trail.length>maxTrail) trail.shift();
+        ctx.strokeStyle='rgba(54,240,200,0.5)'; ctx.lineWidth=1.5; ctx.beginPath(); for(let i=0;i<trail.length;i++){ if(i===0)ctx.moveTo(trail[i][0],trail[i][1]); else ctx.lineTo(trail[i][0],trail[i][1]); } ctx.stroke();
+        ctx.strokeStyle='#232a40'; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+        ctx.fillStyle='#7c5cff'; ctx.beginPath(); ctx.arc(x1,y1,10,0,Math.PI*2); ctx.fill();
+        ctx.fillStyle='#36f0c8'; ctx.beginPath(); ctx.arc(x2,y2,12,0,Math.PI*2); ctx.fill();
+        ctx.strokeStyle='rgba(124,92,255,0.5)'; ctx.beginPath(); ctx.arc(cx,cy,4,0,Math.PI*2); ctx.stroke();
+        stat.textContent='θ1='+(th1*180/Math.PI).toFixed(0)+'° θ2='+(th2*180/Math.PI).toFixed(0)+'°';
+      }
+      Eng.pauseBtn(ctrl,()=>{ paused=!paused; return paused; });
+      step(); return { stop:()=>cancelAnimationFrame(raf) };
+    },
+    projectile(ctx,W,H,dpr,ctrl,stat,p){
+      let v0=p.velocity||30, ang=(p.angle||45)*Math.PI/180; const g=9.81; let raf, paused=false; let t=0;
+      const range=(v0*v0*Math.sin(2*ang))/g; const maxH=(v0*Math.sin(ang))**2/(2*g); const T=2*v0*Math.sin(ang)/g;
+      function step(){
+        if(!paused){ t+=0.04; if(t>T+1) t=0; }
+        draw(); raf=requestAnimationFrame(step);
+      }
+      function draw(){
+        ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H);
+        const margin=40; const sx=(W-2*margin)/Math.max(range,1); const sy=(H-2*margin)/Math.max(maxH,1);
+        // ground
+        ctx.strokeStyle='#232a40'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(margin,H-margin); ctx.lineTo(W-margin,H-margin); ctx.stroke();
+        // trajectory
+        ctx.strokeStyle='rgba(54,240,200,0.4)'; ctx.lineWidth=1.5; ctx.beginPath();
+        for(let tt=0;tt<=T+0.05;tt+=0.05){ const x=v0*Math.cos(ang)*tt; const y=v0*Math.sin(ang)*tt-0.5*g*tt*tt; const px=margin+x*sx; const py=H-margin-y*sy; if(tt===0)ctx.moveTo(px,py); else ctx.lineTo(px,py); } ctx.stroke();
+        // current
+        const x=v0*Math.cos(ang)*t, y=Math.max(0,v0*Math.sin(ang)*t-0.5*g*t*t); const px=margin+x*sx, py=H-margin-y*sy;
+        ctx.fillStyle='#7c5cff'; ctx.beginPath(); ctx.arc(px,py,8,0,Math.PI*2); ctx.fill();
+        stat.textContent='t='+t.toFixed(1)+'s  range='+range.toFixed(1)+'m  peak='+maxH.toFixed(1)+'m';
+      }
+      Eng.slider(ctrl,'Velocity',5,80,v0,()=>{}); Eng.slider(ctrl,'Angle',5,85,(p.angle||45),()=>{});
+      Eng.pauseBtn(ctrl,()=>{ paused=!paused; return paused; });
+      step(); return { stop:()=>cancelAnimationFrame(raf) };
+    },
+    nbody(ctx,W,H,dpr,ctrl,stat,p){
+      const n=Math.min(Math.max(p.count||5,2),8); const G=0.8; const bodies=[]; let raf, paused=false;
+      for(let i=0;i<n;i++){ bodies.push({ x:(Math.random()-0.5)*W*0.5, y:(Math.random()-0.5)*H*0.5, vx:(Math.random()-0.5)*1, vy:(Math.random()-0.5)*1, m:8+Math.random()*22, trail:[] }); }
+      function step(){
+        if(!paused){
+          const ax=new Array(n).fill(0), ay=new Array(n).fill(0);
+          for(let i=0;i<n;i++) for(let j=0;j<n;j++){ if(i===j)continue; const dx=bodies[j].x-bodies[i].x, dy=bodies[j].y-bodies[i].y; const d2=dx*dx+dy*dy+100; const f=G*bodies[j].m/d2; ax[i]+=f*dx/Math.sqrt(d2); ay[i]+=f*dy/Math.sqrt(d2); }
+          for(let i=0;i<n;i++){ bodies[i].vx+=ax[i]*0.5; bodies[i].vy+=ay[i]*0.5; bodies[i].x+=bodies[i].vx; bodies[i].y+=bodies[i].vy; bodies[i].trail.push([bodies[i].x,bodies[i].y]); if(bodies[i].trail.length>60)bodies[i].trail.shift(); }
+        }
+        draw(); raf=requestAnimationFrame(step);
+      }
+      function draw(){
+        ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H);
+        const cols=['#7c5cff','#36f0c8','#ff4d8d','#ffb648','#4d8dff','#5cf08a','#ff8a3d','#9176ff'];
+        for(let i=0;i<n;i++){ const b=bodies[i]; const px=W/2+b.x, py=H/2+b.y;
+          ctx.strokeStyle=cols[i%n]+'55'; ctx.lineWidth=1; ctx.beginPath(); for(let k=0;k<b.trail.length;k++){ if(k===0)ctx.moveTo(W/2+b.trail[k][0],H/2+b.trail[k][1]); else ctx.lineTo(W/2+b.trail[k][0],H/2+b.trail[k][1]); } ctx.stroke();
+          ctx.fillStyle=cols[i%n]; ctx.shadowColor=cols[i%n]; ctx.shadowBlur=12; ctx.beginPath(); ctx.arc(px,py,Math.sqrt(b.m),0,Math.PI*2); ctx.fill(); ctx.shadowBlur=0;
+        }
+        stat.textContent=n+' bodies · Newtonian gravity';
+      }
+      Eng.pauseBtn(ctrl,()=>{ paused=!paused; return paused; });
+      step(); return { stop:()=>cancelAnimationFrame(raf) };
+    },
+    orbit(ctx,W,H,dpr,ctrl,stat,p){
+      const G=6.674e-11; const m1=p.mass1||2e30, m2=p.mass2||6e24; const r0=p.distance||1.5e11;
+      let x=r0, y=0, vx=0; const vc=Math.sqrt(G*m1/r0); let vy=vc*0.95; let raf, paused=false; const dt=200;
+      const trail=[]; const maxTrail=400;
+      function step(){ if(!paused){ for(let i=0;i<5;i++){ const dx=-x,dy=-y; const r=Math.sqrt(x*x+y*y); const f=G*m1/(r*r); const ax=f*dx/r, ay=f*dy/r; vx+=ax*dt; vy+=ay*dt; x+=vx*dt; y+=vy*dt; } trail.push([x,y]); if(trail.length>maxTrail)trail.shift(); } draw(); raf=requestAnimationFrame(step); }
+      function draw(){ ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H); const cx=W/2,cy=H/2; const sc=Math.min(W,H)*0.4/r0;
+        ctx.fillStyle='#ffb648'; ctx.shadowColor='#ffb648'; ctx.shadowBlur=20; ctx.beginPath(); ctx.arc(cx,cy,16,0,Math.PI*2); ctx.fill(); ctx.shadowBlur=0;
+        ctx.strokeStyle='rgba(54,240,200,0.4)'; ctx.lineWidth=1.5; ctx.beginPath(); for(let i=0;i<trail.length;i++){ const px=cx+trail[i][0]*sc, py=cy+trail[i][1]*sc; if(i===0)ctx.moveTo(px,py); else ctx.lineTo(px,py); } ctx.stroke();
+        ctx.fillStyle='#4d8dff'; ctx.shadowColor='#4d8dff'; ctx.shadowBlur=12; ctx.beginPath(); ctx.arc(cx+x*sc,cy+y*sc,7,0,Math.PI*2); ctx.fill(); ctx.shadowBlur=0;
+        stat.textContent='r='+(Math.sqrt(x*x+y*y)/1e9).toFixed(1)+'Gm  v='+Math.sqrt(vx*vx+vy*vy).toFixed(0)+'m/s';
+      }
+      Eng.pauseBtn(ctrl,()=>{ paused=!paused; return paused; });
+      step(); return { stop:()=>cancelAnimationFrame(raf) };
+    },
+    waves(ctx,W,H,dpr,ctrl,stat,p){
+      const freq=p.freq||0.5; let raf, paused=false; let t=0;
+      const sources=[{x:0.3,y:0.5},{x:0.7,y:0.5}]; let img=null;
+      function step(){ if(!paused){ t+=0.05; draw(); } raf=requestAnimationFrame(step); }
+      function draw(){
+        const w=160,h=Math.floor(H*160/W);
+        if(!img||img.width!==w) img=ctx.createImageData(w,h);
+        for(let py=0;py<h;py++) for(let px=0;px<w;px++){ const X=px/w, Y=py/h; let v=0;
+          for(const s of sources){ const dx=X-s.x, dy=Y-s.y; const d=Math.sqrt(dx*dx+dy*dy); v+=Math.sin(d*40-t*4*freq)/Math.max(d*8,1); }
+          const c=Math.max(0,Math.min(255,128+v*120));
+          const idx=(py*w+px)*4; img.data[idx]=c*0.4; img.data[idx+1]=c*0.95; img.data[idx+2]=c*0.8; img.data[idx+3]=255;
+        }
+        ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H);
+        const tmp=document.createElement('canvas'); tmp.width=w; tmp.height=h; tmp.getContext('2d').putImageData(img,0,0); ctx.imageSmoothingEnabled=true; ctx.drawImage(tmp,0,0,W,H);
+        stat.textContent='2 sources · f='+freq+'Hz · t='+t.toFixed(1);
+      }
+      Eng.pauseBtn(ctrl,()=>{ paused=!paused; return paused; });
+      step(); return { stop:()=>cancelAnimationFrame(raf) };
+    },
+    spring(ctx,W,H,dpr,ctrl,stat,p){
+      const k=p.k||20, m=p.mass||1, A=p.amplitude||1; let x=A, v=0; const dt=0.03; let raf, paused=false; const damping=0.3;
+      function step(){ if(!paused){ const a=-k/m*x-damping*v; v+=a*dt; x+=v*dt; } draw(); raf=requestAnimationFrame(step); }
+      function draw(){
+        ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H);
+        const cx=W/2, cy=H/2; const wallX=120; const eq=cx+150; const pos=eq+x*100;
+        // wall
+        ctx.strokeStyle='#5a6280'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(wallX,80); ctx.lineTo(wallX,H-80); ctx.stroke();
+        for(let yy=80;yy<H-80;yy+=12){ ctx.beginPath(); ctx.moveTo(wallX,yy); ctx.lineTo(wallX-10,yy+6); ctx.stroke(); }
+        // spring
+        ctx.strokeStyle='#36f0c8'; ctx.lineWidth=2; ctx.beginPath(); const segs=16; const sw=(pos-wallX)/segs; ctx.moveTo(wallX,cy); for(let i=1;i<=segs;i++){ const yy=cy+(i%2?12:-12); ctx.lineTo(wallX+sw*i- sw/2, yy); } ctx.lineTo(pos,cy); ctx.stroke();
+        // mass
+        ctx.fillStyle='#7c5cff'; ctx.fillRect(pos-8,cy-30,16,60);
+        // equilibrium
+        ctx.strokeStyle='rgba(255,77,141,0.5)'; ctx.setLineDash([4,4]); ctx.beginPath(); ctx.moveTo(eq,80); ctx.lineTo(eq,H-80); ctx.stroke(); ctx.setLineDash([]);
+        stat.textContent='x='+x.toFixed(3)+'m  v='+v.toFixed(2)+'m/s  T='+(2*Math.PI*Math.sqrt(m/k)).toFixed(2)+'s';
+      }
+      Eng.pauseBtn(ctrl,()=>{ paused=!paused; return paused; });
+      step(); return { stop:()=>cancelAnimationFrame(raf) };
+    },
+    heat(ctx,W,H,dpr,ctrl,stat,p){
+      const N=Math.min(Math.max(p.size||80,20),120); const u=new Float32Array(N*N), u2=new Float32Array(N*N);
+      // initial hot spot
+      for(let i=0;i<N;i++)for(let j=0;j<N;j++){ const dx=i-N/2,dy=j-N/2; if(dx*dx+dy*dy<(N*0.12)**2)u[i*N+j]=1; }
+      const alpha=0.2; let raf, paused=false;
+      function step(){ if(!paused){ for(let i=1;i<N-1;i++)for(let j=1;j<N-1;j++){ u2[i*N+j]=u[i*N+j]+alpha*(u[(i+1)*N+j]+u[(i-1)*N+j]+u[i*N+j+1]+u[i*N+j-1]-4*u[i*N+j]); }
+        const tmp=u; u.set? (u2[N/2*N+N/2]=1, u.set(u2)):0; } draw(); raf=requestAnimationFrame(step); }
+      function draw(){
+        ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H);
+        const cell=W/N; for(let i=0;i<N;i++)for(let j=0;j<N;j++){ const v=u[i*N+j]; if(v<0.001)continue; const t=Math.min(1,v); ctx.fillStyle=`rgb(${Math.round(255*t)},${Math.round(60+t*100)},${Math.round(255-255*t)})`; ctx.fillRect(j*cell,i*cell,cell+0.5,cell+0.5); }
+        stat.textContent=N+'×'+N+' grid · diffusion equation';
+      }
+      Eng.pauseBtn(ctrl,()=>{ paused=!paused; return paused; });
+      step(); return { stop:()=>cancelAnimationFrame(raf) };
+    },
+    lorenz(ctx,W,H,dpr,ctrl,stat,p){
+      const s=p.sigma||10, r=p.rho||28, b=p.beta||8/3; let x=0.1,y=0,z=0; const dt=0.008; let raf, paused=false; const pts=[]; const maxPts=2500;
+      function step(){ if(!paused){ for(let i=0;i<10;i++){ const dx=s*(y-x), dy=x*(r-z)-y, dz=x*y-b*z; x+=dx*dt; y+=dy*dt; z+=dz*dt; } pts.push([x,y,z]); if(pts.length>maxPts)pts.shift(); } draw(); raf=requestAnimationFrame(step); }
+      function draw(){ ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H); const cx=W/2,cy=H/2; const sc=8;
+        ctx.lineWidth=1.2; for(let i=1;i<pts.length;i++){ const a=i/pts.length; const p1=pts[i-1],p2=pts[i]; ctx.strokeStyle=`rgba(124,${Math.round(92+120*a)},${Math.round(255-50*a)},${a*0.9})`; ctx.beginPath(); ctx.moveTo(cx+p1[0]*sc,cy+(28-p1[2])*sc*0.8); ctx.lineTo(cx+p2[0]*sc,cy+(28-p2[2])*sc*0.8); ctx.stroke(); }
+        ctx.fillStyle='#36f0c8'; ctx.beginPath(); ctx.arc(cx+x*sc,cy+(28-z)*sc*0.8,4,0,Math.PI*2); ctx.fill();
+        stat.textContent='σ='+s+' ρ='+r+' β='+b.toFixed(2)+' · '+pts.length+' pts';
+      }
+      Eng.pauseBtn(ctrl,()=>{ paused=!paused; return paused; });
+      step(); return { stop:()=>cancelAnimationFrame(raf) };
+    },
+    fluid(ctx,W,H,dpr,ctrl,stat,p){
+      const N=60; const sx=new Float32Array(N*N), sy=new Float32Array(N*N);
+      for(let i=0;i<N;i++)for(let j=0;j<N;j++){ sx[i*N+j]=Math.sin(j*0.3); sy[i*N+j]=Math.cos(i*0.3); }
+      let raf, paused=false; const parts=[]; for(let i=0;i<400;i++) parts.push({x:Math.random(),y:Math.random()});
+      function step(){ if(!paused){ for(const pt of parts){ const ix=Math.min(N-1,Math.floor(pt.x*N)); const iy=Math.min(N-1,Math.floor(pt.y*N)); pt.x+=sx[iy*N+ix]*0.002+0.0008; pt.y+=sy[iy*N+ix]*0.002; if(pt.x>1)pt.x=0; if(pt.y>1)pt.y=0; } } draw(); raf=requestAnimationFrame(step); }
+      function draw(){ ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H); ctx.fillStyle='#36f0c8';
+        for(const pt of parts){ ctx.globalAlpha=0.6; ctx.beginPath(); ctx.arc(pt.x*W,pt.y*H,1.5,0,Math.PI*2); ctx.fill(); } ctx.globalAlpha=1;
+        stat.textContent='potential flow · '+parts.length+' tracers';
+      }
+      Eng.pauseBtn(ctrl,()=>{ paused=!paused; return paused; });
+      step(); return { stop:()=>cancelAnimationFrame(raf) };
+    },
+  },
+
+  slider(parent,label,min,max,val,cb){
+    const wrap=document.createElement('label'); wrap.textContent=label+' ';
+    const inp=document.createElement('input'); inp.type='range'; inp.min=min; inp.max=max; inp.step=(max-min)/100; inp.value=val; inp.style.accentColor='#7c5cff';
+    const valout=document.createElement('span'); valout.style.color='#9aa3c0'; valout.style.marginLeft='6px'; valout.style.fontFamily='var(--font-mono)'; valout.style.fontSize='11px'; valout.textContent=Number(val).toFixed(2);
+    inp.addEventListener('input',()=>{ valout.textContent=parseFloat(inp.value).toFixed(2); cb(parseFloat(inp.value)); });
+    wrap.appendChild(inp); wrap.appendChild(valout); parent.appendChild(wrap);
+    return { val:()=>parseFloat(inp.value) };
+  },
+  pauseBtn(parent,cb){
+    const btn=document.createElement('button'); btn.className='btn btn-ghost'; btn.style.padding='4px 12px'; btn.style.fontSize='11px'; btn.textContent='❚❚ Pause';
+    btn.addEventListener('click',()=>{ const p=cb(); btn.textContent=p?'▶ Resume':'❚❚ Pause'; });
+    parent.appendChild(btn);
+  },
+
+  // ---------- statistics ----------
+  statistics(container, params){
+    const data=params.data; const n=data.length; const sorted=[...data].sort((a,b)=>a-b);
+    const sum=data.reduce((a,b)=>a+b,0); const mean=sum/n;
+    const median = n%2? sorted[(n-1)/2] : (sorted[n/2-1]+sorted[n/2])/2;
+    const variance=data.reduce((a,b)=>a+(b-mean)**2,0)/n; const std=Math.sqrt(variance);
+    const min=sorted[0], max=sorted[n-1]; const range=max-min;
+    const mode=(()=>{ const m={}; data.forEach(v=>m[v]=(m[v]||0)+1); let best=data[0],c=0; for(const k in m) if(m[k]>c){c=m[k];best=+k;} return c<=1?NaN:best; })();
+    const q1=sorted[Math.floor(n*0.25)], q3=sorted[Math.floor(n*0.75)];
+    const skew = std? data.reduce((a,b)=>a+((b-mean)/std)**3,0)/n : 0;
+    const kurt = std? data.reduce((a,b)=>a+((b-mean)/std)**4,0)/n - 3 : 0;
+    const metrics=[['Count',n],['Mean',this.fmt(mean)],['Median',this.fmt(median)],['Mode',isNaN(mode)?'—':this.fmt(mode)],['Std dev',this.fmt(std)],['Variance',this.fmt(variance)],['Min',this.fmt(min)],['Max',this.fmt(max)],['Range',this.fmt(range)],['Q1',this.fmt(q1)],['Q3',this.fmt(q3)],['Skewness',this.fmt(skew)],['Excess kurtosis',this.fmt(kurt)],['Sum',this.fmt(sum)]];
+    const grid=document.createElement('div'); grid.className='metric-grid';
+    metrics.forEach(([k,v])=>{ const m=document.createElement('div'); m.className='metric'; m.innerHTML='<div class="metric-label">'+k+'</div><div class="metric-value accent">'+v+'</div>'; grid.appendChild(m); });
+    container.appendChild(grid);
+    // histogram
+    const W=760,H=240; const {wrap,cv,ctx}=this.makeCanvas(W,H);
+    const title=document.createElement('div'); title.className='out-subtitle'; title.textContent='Distribution histogram'; container.appendChild(title); container.appendChild(wrap);
+    const bins=Math.min(Math.max(Math.ceil(Math.sqrt(n)),5),20); const bw=range/bins; const hist=new Array(bins).fill(0);
+    data.forEach(v=>{ let b=Math.floor((v-min)/bw); if(b>=bins)b=bins-1; if(b<0)b=0; hist[b]++; });
+    const dpr=window.devicePixelRatio||1; cv.style.width='100%'; cv.height=H; cv.width=W*dpr; cv.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+    const padL=44,padR=16,padT=16,padB=40; const pW=W-padL-padR,pH=H-padT-padB; const maxH=Math.max(...hist);
+    ctx.strokeStyle='#1a2033'; ctx.fillStyle='#9aa3c0'; ctx.font="10px 'JetBrains Mono',monospace"; ctx.lineWidth=1;
+    for(let g=0;g<=4;g++){ const y=padT+pH*(1-g/4); ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(padL+pW,y); ctx.stroke(); ctx.textAlign='right'; ctx.fillText((maxH*g/4).toFixed(0),padL-4,y+3); }
+    const bwPix=pW/bins;
+    hist.forEach((h,i)=>{ const x=padL+i*bwPix; const bh=(h/maxH)*pH; const grad=ctx.createLinearGradient(0,padT+pH-bh,0,padT+pH); grad.addColorStop(0,'#36f0c8'); grad.addColorStop(1,'#7c5cff'); ctx.fillStyle=grad; ctx.fillRect(x+2,padT+pH-bh,bwPix-4,bh); });
+    return {};
+  },
+
+  // ---------- unit conversion ----------
+  convert(container, params){
+    const {category, from, to}=params; const def=UNITS[category];
+    const result=from.val*def.u[from.unit]/def.u[to];
+    const grid=document.createElement('div'); grid.className='metric-grid';
+    const metrics=[['Category',category],['From',from.val+' '+from.unit],['To',this.fmt(result)+' '+to],['Base ('+def.base+')',this.fmt(from.val*def.u[from.unit]/def.u[def.base])],['Ratio',this.fmt(def.u[to]/def.u[from.unit])]];
+    metrics.forEach(([k,v])=>{ const m=document.createElement('div'); m.className='metric'; m.innerHTML='<div class="metric-label">'+k+'</div><div class="metric-value '+(k==='To'?'accent':'')+'">'+v+'</div>'; grid.appendChild(m); });
+    container.appendChild(grid);
+    const note=document.createElement('div'); note.className='text-answer'; note.innerHTML='<p><b>'+from.val+' '+from.unit+'</b> = <span style="color:var(--color-cyan);font-family:var(--font-mono);font-size:1.2em;font-weight:700">'+this.fmt(result)+' '+to+'</span></p><p style="color:var(--color-text-muted);font-size:13px">Converted via the base unit ('+def.base+') using standard conversion factors.</p>';
+    container.appendChild(note);
+    return {};
+  },
+
+  // ---------- constant ----------
+  constant(container, params){
+    const c=params.constant; const val=parseFloat(c[2]);
+    const grid=document.createElement('div'); grid.className='metric-grid';
+    const metrics=[['Name',c[0]],['Symbol','<code style="font-family:var(--font-mono)">'+c[1]+'</code>'],['Value',val.toExponential(6).replace('e',' × 10^')],['Units',c[3]||'dimensionless'],['Precision',c[4]||'measured']];
+    metrics.forEach(([k,v])=>{ const m=document.createElement('div'); m.className='metric'; m.innerHTML='<div class="metric-label">'+k+'</div><div class="metric-value '+(k==='Value'?'accent':'')+'">'+v+'</div>'; grid.appendChild(m); });
+    container.appendChild(grid);
+    return {};
+  },
+
+  // ---------- periodic table element ----------
+  periodic(container, params){
+    const e=params.element; const color=CAT_COLORS[e[6]];
+    const card=document.createElement('div'); card.style.cssText='max-width:340px;border:1px solid var(--color-border);border-radius:12px;overflow:hidden;margin-bottom:16px';
+    card.innerHTML='<div style="background:linear-gradient(135deg,'+color+'22,'+color+'08);padding:18px;border-bottom:1px solid var(--color-border-soft)"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-faint)">'+e[2]+'</div><div style="font-family:var(--font-display);font-size:42px;font-weight:700;color:'+color+';line-height:1">'+e[0]+'</div><div style="font-family:var(--font-body);font-size:14px;color:var(--color-text-muted);margin-top:4px">'+e[1]+'</div></div><div style="text-align:right"><div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-faint)">mass</div><div style="font-family:var(--font-mono);font-size:16px;font-weight:700;color:var(--color-cyan)">'+e[3]+'</div></div></div></div>';
+    container.appendChild(card);
+    const grid=document.createElement('div'); grid.className='metric-grid';
+    const metrics=[['Atomic number',e[2]],['Atomic mass',e[3]+' u'],['Group',e[4]],['Period',e[5]],['Category',e[6]],['Electrons (neutral)',e[2]]];
+    metrics.forEach(([k,v])=>{ const m=document.createElement('div'); m.className='metric'; m.innerHTML='<div class="metric-label">'+k+'</div><div class="metric-value accent">'+v+'</div>'; grid.appendChild(m); });
+    container.appendChild(grid);
+    // mini periodic table grid
+    const t=document.createElement('div'); t.style.cssText='margin-top:16px';
+    t.innerHTML='<div class="out-subtitle">Periodic table context</div>';
+    const grid2=document.createElement('div'); grid2.style.cssText='display:grid;grid-template-columns:repeat(18,1fr);gap:2px;font-family:var(--font-mono);font-size:9px';
+    const byKey={}; ELEMENTS.forEach(e2=>byKey[e2[5]+'-'+e2[4]]=e2);
+    for(let per=1;per<=7;per++)for(let g=1;g<=18;g++){ const cell=document.createElement('div'); cell.style.cssText='aspect-ratio:1;display:grid;place-items:center;border-radius:2px;padding:1px'; const el=byKey[per+'-'+g]; if(el){ cell.style.background=CAT_COLORS[el[6]]+'22'; cell.style.color=CAT_COLORS[el[6]]; cell.style.border='1px solid '+CAT_COLORS[el[6]]+'44'; cell.textContent=el[0]; if(el[0]===e[0]){ cell.style.outline='2px solid '+color; cell.style.fontWeight='700'; } } else { cell.style.opacity='0'; } grid2.appendChild(cell); }
+    t.appendChild(grid2); container.appendChild(t);
+    return {};
+  },
+
+  // ---------- equation solver ----------
+  solve(container, params){
+    const eq=params.eq||''; let html='';
+    // detect quadratic ax^2+bx+c
+    const aMatch=eq.match(/(-?\d*\.?\d*)\s*\*?\s*x\s*\^?\s*2/); const bMatch=eq.match(/([+-]?\s*\d*\.?\d*)\s*\*?\s*x(?!\^)/g);
+    let a=0,b=0,c=0;
+    // simpler: collect coefficients via parsing tokens
+    try{
+      // normalize
+      let s=eq.replace(/\s/g,'').replace(/=.*$/,'').replace(/X/g,'x');
+      const qa=s.match(/(-?\d*\.?\d*)x\^2/); if(qa){ a=qa[1]===''||qa[1]==='-'? (qa[1]==='-'?-1:1):parseFloat(qa[1]); s=s.replace(qa[0],''); }
+      const qb=s.match(/(-?\d*\.?\d*)x(?!\^)/); if(qb){ b=qb[1]===''||qb[1]==='-'? (qb[1]==='-'?-1:1):parseFloat(qb[1]); s=s.replace(qb[0],''); }
+      const qc=s.match(/-?\d+\.?\d*/); if(qc){ c=parseFloat(qc[0]); }
+    }catch(e){}
+    const grid=document.createElement('div'); grid.className='metric-grid';
+    if(a!==0){
+      const disc=b*b-4*a*c;
+      const metrics=[['Form','quadratic'],['a',this.fmt(a)],['b',this.fmt(b)],['c',this.fmt(c)],['Discriminant',this.fmt(disc)],['Roots',disc>=0? 'x='+this.fmt((-b+Math.sqrt(disc))/(2*a))+', x='+this.fmt((-b-Math.sqrt(disc))/(2*a)) : 'x='+this.fmt(-b/(2*a))+'±'+this.fmt(Math.sqrt(-disc)/(2*a))+'i']];
+      metrics.forEach(([k,v])=>{ const m=document.createElement('div'); m.className='metric'; m.innerHTML='<div class="metric-label">'+k+'</div><div class="metric-value '+(k==='Roots'?'accent':'')+'">'+v+'</div>'; grid.appendChild(m); });
+      container.appendChild(grid);
+      const f=document.createElement('div'); f.className='text-answer'; f.innerHTML='<div class="formula">'+this.formatPoly([a,b,c],['x²','x',''])+'</div><p>Using the quadratic formula x = (−b ± √(b²−4ac)) / 2a. Discriminant Δ = b²−4ac = <b style="color:var(--color-cyan)">'+this.fmt(disc)+'</b> '+(disc>0?'(two real roots)':disc===0?'(one repeated real root)':'(two complex roots)')+'.</p>';
+      container.appendChild(f);
+    } else if(b!==0){
+      const x=-c/b;
+      const metrics=[['Form','linear'],['b',this.fmt(b)],['c',this.fmt(c)],['Solution','x='+this.fmt(x)]];
+      metrics.forEach(([k,v])=>{ const m=document.createElement('div'); m.className='metric'; m.innerHTML='<div class="metric-label">'+k+'</div><div class="metric-value accent">'+v+'</div>'; grid.appendChild(m); });
+      container.appendChild(grid);
+      const f=document.createElement('div'); f.className='text-answer'; f.innerHTML='<div class="formula">'+this.formatPoly([b,c],['x',''])+'</div><p>Solving: x = −c/b = <b style="color:var(--color-cyan)">'+this.fmt(x)+'</b>.</p>';
+      container.appendChild(f);
+    } else {
+      const f=document.createElement('div'); f.className='text-answer'; f.innerHTML='<p>Could not parse a solvable polynomial from <code>'+this.esc(eq)+'</code>. Try e.g. <code>solve x^2 - 5x + 6 = 0</code> or <code>solve 2x + 8 = 0</code>.</p>';
+      container.appendChild(f);
+    }
+    return {};
+  },
+
+  formatPoly(coeffs, vars){
+    let s=''; let first=true;
+    for(let i=0;i<coeffs.length;i++){
+      const c=coeffs[i]; if(c===0) continue;
+      const mag=Math.abs(c);
+      const coefStr=(mag===1 && vars[i]!=='')?'':this.fmt(mag);
+      s += (first ? (c<0?'−':'') : (c<0?' − ':' + ')) + coefStr + vars[i];
+      first=false;
+    }
+    if(first) s='0';
+    return s + ' = 0';
+  },
+
+  // ---------- expression evaluation ----------
+  calculate(container, params){
+    let val; try{ val = params.value!=null? params.value : M.eval(params.expr); }catch(e){ const f=document.createElement('div'); f.className='text-answer'; f.innerHTML='<p style="color:var(--color-red)">Error: '+this.esc(e.message)+'</p>'; container.appendChild(f); return {}; }
+    const grid=document.createElement('div'); grid.className='metric-grid';
+    const metrics=[['Expression','<code>'+this.esc(params.expr)+'</code>'],['Result',this.fmt(val)],['Scientific',val.toExponential(4)],['Hex','0x'+Math.round(val).toString(16)],['Binary',isFinite(val)?Math.round(val).toString(2):'—']];
+    metrics.forEach(([k,v])=>{ const m=document.createElement('div'); m.className='metric'; m.innerHTML='<div class="metric-label">'+k+'</div><div class="metric-value '+(k==='Result'?'accent':'')+'">'+v+'</div>'; grid.appendChild(m); });
+    container.appendChild(grid);
+    const vars=M.findVars(params.expr);
+    if(vars.length){ const note=document.createElement('div'); note.className='out-subtitle'; note.textContent='detected variables: '+vars.join(', ')+'  (plot with: plot '+params.expr+')'; container.appendChild(note); }
+    return {};
+  },
+
+  // ---------- knowledge base answer ----------
+  knowledge(container, params){
+    const f=document.createElement('div'); f.className='text-answer';
+    f.innerHTML='<h4>'+this.cap(params.topic)+'</h4><p class="lead">'+this.esc(params.text)+'</p><p style="color:var(--color-text-muted);font-size:13px">Source: built-in scientific knowledge base. For deeper coverage, ask about specific quantities, simulations, or plots.</p>';
+    container.appendChild(f);
+    return {};
+  },
+
+  // ---------- help / capabilities ----------
+  help(container){
+    const f=document.createElement('div'); f.className='text-answer';
+    f.innerHTML='<h4>What I can analyze</h4><p class="lead">Type any prompt — the analyzer scores it across intent categories and routes it to the right engine. Here are the engines:</p>'+
+      '<ul>'+
+      '<li><b>Function plotting</b> — <code>plot sin(x)*exp(-x/5)</code>, <code>y = x^2 - 3x + 1</code></li>'+
+      '<li><b>3D surfaces</b> — <code>plot 3d sin(sqrt(x^2+y^2))</code>, <code>z = x^2 - y^2</code></li>'+
+      '<li><b>Simulations</b> — double pendulum, projectile, N-body gravity, orbital mechanics, wave interference, spring, heat diffusion, Lorenz attractor, fluid flow</li>'+
+      '<li><b>Statistics</b> — <code>analyze data 3, 7, 2, 9, 4, 6</code> → mean, median, std, skew, histogram</li>'+
+      '<li><b>Unit conversion</b> — <code>convert 100 km to mi</code>, <code>5 eV to J</code></li>'+
+      '<li><b>Constants</b> — <code>speed of light</code>, <code>Boltzmann constant</code>, <code>Planck constant</code></li>'+
+      '<li><b>Periodic table</b> — <code>tell me about gold</code>, <code>molar mass of carbon</code></li>'+
+      '<li><b>Equation solver</b> — <code>solve x^2 - 5x + 6 = 0</code></li>'+
+      '<li><b>Math evaluation</b> — <code>sin(pi/4) + log(10)</code>, <code>2^10</code></li>'+
+      '<li><b>Concepts</b> — <code>what is a black hole</code>, <code>explain entropy</code></li>'+
+      '</ul>'+
+      '<p style="color:var(--color-text-muted);font-size:13px">Tip: press <span class="kbd">Ctrl</span>+<span class="kbd">Enter</span> to run.</p>';
+    container.appendChild(f);
+    return {};
+  },
+
+  cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); },
+  esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); },
+};
+
+/* ========================= APPLICATION / UI ============================== */
+const App = {
+  currentStop: null,
+  isRunning: false,
+  init(){
+    this.cacheEls(); this.bindEvents(); this.buildChips(); this.renderIntents([]);
+    document.getElementById('constCount').textContent=CONSTS.length;
+    this.log('info','Omniscience ready. 12 engines online. '+CONSTS.length+' physical constants, '+ELEMENTS.length+' elements.');
+    this.log('info','Type a prompt or pick an example. Try: plot sin(x)*exp(-x/5)');
+  },
+  cacheEls(){
+    this.el={ prompt:document.getElementById('promptInput'), runBtn:document.getElementById('runBtn'),
+      clearBtn:document.getElementById('clearBtn'), clearPromptBtn:document.getElementById('clearPromptBtn'),
+      themeToggle:document.getElementById('themeToggle'), outputStage:document.getElementById('outputStage'),
+      log:document.getElementById('log'), analysis:document.getElementById('analysis'), analysisList:document.getElementById('analysisList'),
+      chips:document.getElementById('chips'), intentRow:document.getElementById('intentRow'),
+      outPanelTitle:document.getElementById('outPanelTitle'), outPanelTag:document.getElementById('outPanelTag'),
+      modeBadge:document.getElementById('modeBadge'), modeText:document.getElementById('modeText'),
+      statusVal:document.getElementById('statusVal'), clearLogBtn:document.getElementById('clearLogBtn'),
+      toastWrap:document.getElementById('toastWrap') };
+  },
+  bindEvents(){
+    this.el.runBtn.addEventListener('click',()=>this.run());
+    this.el.clearBtn.addEventListener('click',()=>this.clearOutput());
+    this.el.clearPromptBtn.addEventListener('click',()=>{ this.el.prompt.value=''; this.el.prompt.focus(); });
+    this.el.clearLogBtn.addEventListener('click',()=>{ this.el.log.innerHTML=''; });
+    this.el.prompt.addEventListener('keydown',e=>{ if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){ e.preventDefault(); this.run(); } });
+    this.el.themeToggle.addEventListener('click',()=>this.toggleTheme());
+    window.addEventListener('resize',()=>{ /* plots are static; sims redraw each frame */ });
+  },
+  buildChips(){
+    const ex=['plot sin(x)*exp(-x/5) from 0 to 10','plot 3d sin(sqrt(x^2+y^2))','simulate a double pendulum','simulate projectile motion at 50 m/s 30 degrees','simulate n-body gravity with 6 bodies','analyze data 4,7,2,9,1,8,5,6,3','convert 100 km to miles','what is the speed of light','tell me about gold','solve x^2 - 5x + 6 = 0','sin(pi/4) + log(100)','simulate the lorenz attractor','explain entropy'];
+    this.el.chips.innerHTML='';
+    ex.forEach(t=>{ const c=document.createElement('button'); c.className='chip'; c.textContent=t.length>34?t.slice(0,32)+'…':t; c.title=t; c.addEventListener('click',()=>{ this.el.prompt.value=t; this.run(); }); this.el.chips.appendChild(c); });
+  },
+  renderIntents(scores){
+    if(!scores){ this.el.intentRow.innerHTML=''; return; }
+    const ranked=Object.entries(scores).sort((a,b)=>b[1].score-a[1].score).slice(0,5);
+    this.el.intentRow.innerHTML='';
+    ranked.forEach(([n,s],i)=>{ const t=document.createElement('span'); t.className='intent-tag'+(i===0&&s.score>0?' win':''); t.textContent=n+' '+s.score.toFixed(1); this.el.intentRow.appendChild(t); });
+  },
+  run(){
+    const text=this.el.prompt.value;
+    const result=Analyzer.analyze(text);
+    this.renderTrace(result);
+    this.renderIntents(result.scores);
+    if(result.intent==='none'||result.intent==='help'){ this.setOutput('help',()=>Eng.help(this.el.outputStage)); this.log('warn','No recognized intent — showing capabilities.'); return; }
+    this.log('analyze','Intent: '+result.intent);
+    this.setOutput(result.intent, ()=>this.execute(result));
+  },
+  execute(result){
+    const {intent, params}=result;
+    try{
+      switch(intent){
+        case 'plot2d': Eng.plot2d(this.el.outputStage, params); this.log('ok','Rendered 2D plot.'); break;
+        case 'plot3d': { const r=Eng.plot3d(this.el.outputStage, params); if(r.stop) this.currentStop=r.stop; this.log('ok','Rendered 3D surface.'); break; }
+        case 'simulate': { const r=Eng.simulate(this.el.outputStage, params); if(r.stop) this.currentStop=r.stop; this.log('ok','Started simulation: '+params.sim); break; }
+        case 'statistics': Eng.statistics(this.el.outputStage, params); this.log('result','Computed '+params.data.length+'-point statistics.'); break;
+        case 'convert': Eng.convert(this.el.outputStage, params); this.log('result','Converted '+params.from.val+' '+params.from.unit+' → '+params.to); break;
+        case 'constant': Eng.constant(this.el.outputStage, params); this.log('result','Looked up constant: '+params.constant[0]); break;
+        case 'periodic': Eng.periodic(this.el.outputStage, params); this.log('result','Element: '+params.element[1]); break;
+        case 'solve': Eng.solve(this.el.outputStage, params); this.log('result','Solved equation.'); break;
+        case 'calculate': Eng.calculate(this.el.outputStage, params); this.log('result','Evaluated expression.'); break;
+        case 'knowledge': Eng.knowledge(this.el.outputStage, params); this.log('result','Knowledge base: '+params.topic); break;
+        default: Eng.help(this.el.outputStage);
+      }
+    }catch(e){ this.log('err','Engine error: '+e.message); this.toast(e.message,'err'); }
+  },
+  setOutput(mode, fn){
+    if(this.currentStop){ try{ this.currentStop(); }catch(e){} this.currentStop=null; }
+    this.el.outputStage.innerHTML='';
+    this.el.modeBadge.style.display='inline-flex';
+    this.el.modeText.textContent=mode;
+    this.el.outPanelTag.textContent='engine: '+mode;
+    this.setStatus('RUNNING');
+    setTimeout(()=>{ fn(); this.setStatus('DONE'); }, 30);
+  },
+  clearOutput(){
+    if(this.currentStop){ try{ this.currentStop(); }catch(e){} this.currentStop=null; }
+    this.el.outputStage.innerHTML='<div class="output-empty" id="outputEmpty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="3"/></svg><h3>Ready to analyze</h3><p>Describe a function to plot, a system to simulate, data to crunch, a unit to convert, an element to inspect, or a concept to explain.</p></div>';
+    this.el.analysis.classList.remove('show');
+    this.el.modeBadge.style.display='none';
+    this.el.outPanelTag.textContent='awaiting prompt';
+    this.setStatus('READY');
+  },
+  renderTrace(result){
+    const notes=Analyzer.trace;
+    if(!notes.length){ this.el.analysis.classList.remove('show'); return; }
+    this.el.analysisList.innerHTML='';
+    notes.forEach(n=>{ const li=document.createElement('li'); li.innerHTML='<span class="log-tag '+n.k+'">'+n.k.toUpperCase()+'</span> '+n.m; this.el.analysisList.appendChild(li); });
+    this.el.analysis.classList.add('show');
+  },
+  setStatus(s){ this.el.statusVal.textContent=s; this.el.statusVal.classList.toggle('pulse', s==='READY'||s==='RUNNING'); },
+  log(kind,msg){ const time=new Date().toLocaleTimeString('en-US',{hour12:false}); const line=document.createElement('div'); line.className='log-line'; line.innerHTML='<span class="log-time">'+time+'</span><span class="log-tag '+kind+'">'+kind.toUpperCase()+'</span><span class="log-msg">'+msg+'</span>'; this.el.log.appendChild(line); this.el.log.scrollTop=this.el.log.scrollHeight; },
+  toast(msg,type=''){ const t=document.createElement('div'); t.className='toast '+type; t.textContent=msg; this.el.toastWrap.appendChild(t); setTimeout(()=>{ t.style.opacity='0'; t.style.transition='opacity 240ms'; setTimeout(()=>t.remove(),260); },3200); },
+  toggleTheme(){ const root=document.documentElement; const cur=root.getAttribute('data-theme'); const next=cur==='dark'?'light':'dark'; root.setAttribute('data-theme',next); this.el.themeToggle.innerHTML=next==='dark'?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'; },
+};
+document.addEventListener('DOMContentLoaded',()=>App.init());
+
+</script>
+<script data-pplx-inline-edit>
+(function () {
+  if (window === window.top) return;
+
+  const allowedParentOrigins = ["https://www.perplexity.ai","https://perplexity.ai","https://testing.perplexity.ai","https://staging.perplexity.ai","https://*.preview.i.perplexity.ai","http://localhost:3000","http://127.0.0.1:3000","http://localhost:5173","http://127.0.0.1:5173"];
+  const MAX_FONT_BYTES = 500 * 1024;
+  const MAX_TOTAL_FONT_BYTES = 2 * 1024 * 1024;
+  let scrollForwarding = false;
+  let scrollRaf = 0;
+  let trustedTopOrigin = null;
+
+  // Allow entries like "https://*.preview.i.perplexity.ai" — the wildcard
+  // matches a single DNS label (no dots), so "https://*.foo" cannot stretch
+  // across multiple labels.
+  function matchesAllowedOrigin(origin) {
+    if (!origin) return false;
+    for (const entry of allowedParentOrigins) {
+      if (!entry.includes("*")) {
+        if (entry === origin) return true;
+        continue;
+      }
+      const pattern = new RegExp(
+        "^" +
+          entry.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, "[^.]+") +
+          "$",
+      );
+      if (pattern.test(origin)) return true;
+    }
+    return false;
+  }
+
+  // Trust decision: when the sender is same-origin-visible (event.origin is a
+  // real origin like https://www.perplexity.ai) we trust event.origin directly.
+  // When event.origin is "null" (opaque broker srcdoc), we fall back to the
+  // broker's stamped `parentOrigin` to identify the top window. The fallback
+  // is claim-only — we rely on the browser's native `targetOrigin` enforcement
+  // on the response path (see postToTrustedTop) to ensure replies can't be
+  // delivered to anyone but the actual top window of that claimed origin.
+  function getTrustedParentOrigin(event) {
+    const forwardedParentOrigin =
+      typeof event.data.parentOrigin === "string" ? event.data.parentOrigin : null;
+    const parentOrigin = event.origin === "null" ? forwardedParentOrigin : event.origin;
+    return matchesAllowedOrigin(parentOrigin) ? parentOrigin : null;
+  }
+
+  // All responses go to window.top with targetOrigin = the allowlisted origin.
+  // An attacker that iframes us inside their own null-origin broker can claim
+  // any parentOrigin they like, but the browser will drop the reply whenever
+  // the real top's origin doesn't match — so the screenshot never leaves.
+  function postToTrustedTop(message) {
+    if (!trustedTopOrigin) return;
+    try {
+      window.top.postMessage(message, trustedTopOrigin);
+    } catch (_error) {}
+  }
+
+  function inlineAll(original, clone) {
+    if (original.nodeType !== 1 || clone.nodeType !== 1) return;
+
+    try {
+      const computedStyle = getComputedStyle(original);
+      // cssText on a computed style is the serialized declaration in modern
+      // Chromium/Safari — a single read beats enumerating ~400 longhand
+      // properties. Firefox returns "" here, so we fall back on empty.
+      const serialized = computedStyle.cssText;
+      if (serialized) {
+        clone.style.cssText = serialized;
+      } else {
+        const parts = new Array(computedStyle.length);
+        for (let index = 0; index < computedStyle.length; index += 1) {
+          const property = computedStyle[index];
+          parts[index] = `${property}:${computedStyle.getPropertyValue(property)};`;
+        }
+        clone.style.cssText = parts.join("");
+      }
+    } catch (_error) {}
+
+    const originalChildren = original.children;
+    const clonedChildren = clone.children;
+    for (
+      let index = 0;
+      index < originalChildren.length && index < clonedChildren.length;
+      index += 1
+    ) {
+      inlineAll(originalChildren[index], clonedChildren[index]);
+    }
+  }
+
+  function extractFontUrl(srcValue) {
+    const matches = [
+      ...srcValue.matchAll(
+        /url\(["']?([^"')]+)["']?\)(?:\s*format\(["']?([^"')]+)["']?\))?/gi,
+      ),
+    ];
+    if (matches.length === 0) return null;
+    const woff2 = matches.find((m) => m[2] && m[2].toLowerCase().includes("woff2"));
+    if (woff2) return woff2[1];
+    const woff = matches.find((m) => m[2] && m[2].toLowerCase().includes("woff"));
+    if (woff) return woff[1];
+    return matches[0][1];
+  }
+
+  // Cache resolved font URL -> data URI across captures. Fonts on a page
+  // essentially never change, and a batch run emits multiple captures back to
+  // back — without this we'd refetch + re-base64 every time.
+  const fontDataUriCache = new Map();
+  const SRC_DECLARATION_RE = /src\s*:\s*[^;}]+/i;
+
+  async function fetchAsDataUri(url) {
+    if (fontDataUriCache.has(url)) return fontDataUriCache.get(url);
+    let dataUri = null;
+    try {
+      const response = await fetch(url, { mode: "cors", credentials: "omit" });
+      if (response.ok) {
+        const blob = await response.blob();
+        if (blob.size <= MAX_FONT_BYTES) {
+          dataUri = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () =>
+              resolve(typeof reader.result === "string" ? reader.result : null);
+            reader.onerror = () => resolve(null);
+            reader.readAsDataURL(blob);
+          });
+        }
+      }
+    } catch (_error) {
+      dataUri = null;
+    }
+    fontDataUriCache.set(url, dataUri);
+    return dataUri;
+  }
+
+  function collectFontFaceRuleTexts() {
+    const rules = [];
+    for (const sheet of document.styleSheets) {
+      let cssRules;
+      try {
+        cssRules = sheet.cssRules;
+      } catch (_error) {
+        continue;
+      }
+      if (!cssRules) continue;
+      for (const rule of cssRules) {
+        const cssText = rule.cssText || "";
+        if (cssText.startsWith("@font-face")) rules.push(cssText);
+      }
+    }
+    return rules;
+  }
+
+  async function buildInlinedFontCss() {
+    const ruleTexts = collectFontFaceRuleTexts();
+    if (ruleTexts.length === 0) return null;
+
+    const resolved = ruleTexts.map((cssText) => {
+      if (!SRC_DECLARATION_RE.test(cssText)) return null;
+      const srcMatch = cssText.match(/src\s*:\s*([^;}]+)[;}]/i);
+      if (!srcMatch) return null;
+      const url = extractFontUrl(srcMatch[1]);
+      if (!url) return null;
+      try {
+        return { cssText, url: new URL(url, document.baseURI).href };
+      } catch (_error) {
+        return null;
+      }
+    });
+
+    const dataUris = await Promise.all(
+      resolved.map((entry) => (entry ? fetchAsDataUri(entry.url) : Promise.resolve(null))),
+    );
+
+    const inlined = [];
+    let totalBytes = 0;
+    for (let index = 0; index < resolved.length; index += 1) {
+      const entry = resolved[index];
+      const dataUri = dataUris[index];
+      if (!entry || !dataUri) continue;
+      const approxBytes = dataUri.length * 0.75;
+      if (totalBytes + approxBytes > MAX_TOTAL_FONT_BYTES) break;
+      totalBytes += approxBytes;
+      inlined.push(entry.cssText.replace(SRC_DECLARATION_RE, `src: url("${dataUri}")`));
+    }
+    return inlined.length > 0 ? inlined.join("\n") : null;
+  }
+
+  function stripExternal(clone) {
+    const images = clone.querySelectorAll("img");
+    for (let index = 0; index < images.length; index += 1) {
+      const src = images[index].getAttribute("src");
+      if (src && !src.startsWith("data:")) images[index].removeAttribute("src");
+    }
+
+    const elements = clone.querySelectorAll("*");
+    for (let index = 0; index < elements.length; index += 1) {
+      const style = elements[index].style.cssText;
+      if (style && style.includes("url(")) {
+        elements[index].style.cssText = style.replace(
+          /url\(["']?(?!data:)[^)"']*["']?\)/gi,
+          "none",
+        );
+      }
+    }
+  }
+
+  function emitScroll() {
+    scrollRaf = 0;
+    if (!scrollForwarding) return;
+    postToTrustedTop({
+      type: "INLINE_EDIT_SCROLL",
+      scrollX: window.scrollX,
+      scrollY: window.scrollY,
+    });
+  }
+
+  window.addEventListener(
+    "scroll",
+    function () {
+      if (!scrollForwarding || scrollRaf) return;
+      scrollRaf = requestAnimationFrame(emitScroll);
+    },
+    { passive: true, capture: true },
+  );
+
+  async function handleCaptureRequest(event) {
+    const requestId = event.data.requestId;
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    function postResult(dataUrl) {
+      postToTrustedTop({
+        type: "INLINE_EDIT_SCREENSHOT_RESULT",
+        requestId,
+        dataUrl,
+        scrollX,
+        scrollY,
+      });
+    }
+
+    try {
+      // Wait for any pending web fonts to resolve so both inline metrics and
+      // the @font-face inlining below see the same loaded faces.
+      if (document.fonts && document.fonts.ready) {
+        try {
+          await document.fonts.ready;
+        } catch (_error) {}
+      }
+
+      const clone = document.documentElement.cloneNode(true);
+      inlineAll(document.documentElement, clone);
+
+      const removedNodes = clone.querySelectorAll("script,link[rel=\"stylesheet\"],style");
+      for (let index = 0; index < removedNodes.length; index += 1) {
+        removedNodes[index].remove();
+      }
+
+      stripExternal(clone);
+
+      // Re-embed web fonts as data-URI @font-face rules so the SVG rasterizer
+      // can resolve them — external font URLs aren't fetched during
+      // foreignObject rendering, which would otherwise force a fallback face
+      // and change text metrics.
+      const inlinedFontCss = await buildInlinedFontCss();
+      if (inlinedFontCss) {
+        const styleEl = document.createElement("style");
+        styleEl.textContent = inlinedFontCss;
+        const head = clone.querySelector("head");
+        if (head) head.appendChild(styleEl);
+        else clone.insertBefore(styleEl, clone.firstChild);
+      }
+
+      const html = new XMLSerializer().serializeToString(clone);
+      const svg =
+        `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">` +
+        '<foreignObject width="100%" height="100%">' +
+        `<div xmlns="http://www.w3.org/1999/xhtml" style="width:${width}px;height:${height}px;overflow:hidden">` +
+        `<div style="position:relative;left:-${scrollX}px;top:-${scrollY}px">` +
+        html +
+        "</div></div></foreignObject></svg>";
+      const svgUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+      const image = new Image();
+      image.onload = function () {
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext("2d").drawImage(image, 0, 0);
+        postResult(canvas.toDataURL("image/png"));
+      };
+      image.onerror = function () {
+        postResult(null);
+      };
+      image.src = svgUrl;
+    } catch (_error) {
+      postResult(null);
+    }
+  }
+
+  window.addEventListener("message", function (event) {
+    if (!event.data) return;
+    // Only accept messages from the direct parent frame. Blocks sibling /
+    // unrelated-window postMessage senders that could otherwise reach us.
+    if (event.source !== window.parent) return;
+
+    const trustedParentOrigin = getTrustedParentOrigin(event);
+    if (!trustedParentOrigin) return;
+    trustedTopOrigin = trustedParentOrigin;
+
+    if (event.data.type === "INLINE_EDIT_SCROLL_START") {
+      scrollForwarding = true;
+      emitScroll();
+      return;
+    }
+
+    if (event.data.type === "INLINE_EDIT_SCROLL_STOP") {
+      scrollForwarding = false;
+      if (scrollRaf) cancelAnimationFrame(scrollRaf);
+      scrollRaf = 0;
+      return;
+    }
+
+    if (event.data.type !== "INLINE_EDIT_CAPTURE_REQUEST") return;
+
+    handleCaptureRequest(event);
+  });
+})();
+
+
+</script></body>
 </html>
