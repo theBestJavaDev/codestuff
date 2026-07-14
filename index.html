@@ -1,13 +1,453 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My First Site</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Quantum Statevector Simulator (10 Qubits)</title>
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --bg-card: #151d30;
+            --bg-input: #1e2942;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-success: #10b981;
+            --border: #273554;
+        }
+        body {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 1100px;
+        }
+        header {
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+        }
+        h1 { color: var(--accent); margin: 0 0 10px 0; font-size: 1.8rem; }
+        p { color: var(--text-muted); margin: 0; font-size: 0.95rem; }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+        .panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .panel-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--accent);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        button {
+            background: var(--bg-input);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            padding: 8px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+        button:hover {
+            background: var(--accent);
+            color: var(--bg-main);
+            border-color: var(--accent);
+        }
+        button.primary {
+            background: var(--accent);
+            color: var(--bg-main);
+            border-color: var(--accent);
+        }
+        button.primary:hover {
+            opacity: 0.9;
+        }
+        .code-view {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 15px;
+            height: 300px;
+            overflow-y: auto;
+            white-space: pre;
+            font-size: 0.85rem;
+            color: #a7f3d0;
+        }
+        .output-view {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 15px;
+            height: 395px;
+            overflow-y: auto;
+        }
+        .state-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+            border-bottom: 1px solid #1e293b;
+            font-size: 0.85rem;
+        }
+        .bar-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 50%;
+            justify-content: flex-end;
+        }
+        .bar {
+            height: 8px;
+            background: var(--accent);
+            border-radius: 4px;
+        }
+        .metrics {
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
 </head>
 <body>
-    <h1 id="main-title">Hello World!</h1>
-    <button id="colorBtn">Change Color</button>
 
-    <script src="script.js"></script>
+<div class="container">
+    <header>
+        <h1>Enterprise Core Quantum Simulator</h1>
+        <p>Production Architecture Demo: 10-Qubit Statevector Execution ($2^{10} = 1024$ Amplitudes)</p>
+    </header>
+
+    <div class="grid">
+        <!-- Circuit Definition Panel -->
+        <div class="panel">
+            <div class="panel-title">Circuit Orchestrator</div>
+            <div class="actions">
+                <button class="primary" onclick="runPreset('ghz')">Load 10-Qubit GHZ State</button>
+                <button class="primary" onclick="runPreset('qft')">Load 4-Qubit QFT Engine</button>
+                <button onclick="clearCircuit()">Clear Circuit</button>
+            </div>
+            <div style="margin-bottom: 5px; font-size: 0.85rem; color: var(--text-muted);">IR (Intermediate Representation) Pipeline:</div>
+            <div class="code-view" id="circuitIrDisplay">// No instructions loaded.</div>
+        </div>
+
+        <!-- Simulation Runtime Metrics/Output Panel -->
+        <div class="panel">
+            <div class="panel-title">
+                Execution Statevector Output 
+                <button onclick="triggerMeasurement()" style="padding: 4px 10px; font-size: 0.75rem;">Sample Circuit (Collapse State)</button>
+            </div>
+            <div class="output-view" id="vectorDisplay">
+                <div style="color: var(--text-muted);">Run an execution pipeline to view probabilities.</div>
+            </div>
+            <div class="metrics">
+                <span id="perfMetric">Execution Time: --</span>
+                <span id="quantumMetric">Active Amplitudes: --</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+/**
+ * CORE QUANTUM SIMULATION ENGINE (Enterprise-Patterned Infrastructure)
+ */
+
+// Global Type Definitions & Complex Math Math Utilites
+const Complex = {
+    create: (r = 0, i = 0) => ({ r, i }),
+    clone: (c) => ({ r: c.r, i: c.i })
+};
+
+/**
+ * Dense Statevector Architecture Engine
+ */
+class Statevector {
+    constructor(numQubits) {
+        this.numQubits = numQubits;
+        this.length = 1 << numQubits; // 2^N
+        // Data allocation uses typed Float64 arrays for CPU Cache efficiency
+        this.real = new Float64Array(this.length);
+        this.imag = new Float64Array(this.length);
+        this.reset();
+    }
+
+    reset() {
+        this.real.fill(0);
+        this.imag.fill(0);
+        // Default register definition points to |0...0> ground state
+        this.real[0] = 1.0;
+    }
+
+    /**
+     * Applies an arbitrary single-qubit unitary matrix transformation to a target qubit
+     * Engine uses a matrix-free stride permutation lookup loop to prevent allocations
+     */
+    applySingleQubitGate(target, matrix) {
+        const stride = 1 << target;
+        for (let i = 0; i < this.length; i += (stride << 1)) {
+            for (let j = 0; j < stride; j++) {
+                const idx0 = i + j;
+                const idx1 = idx0 + stride;
+
+                const r0 = this.real[idx0];
+                const i0 = this.imag[idx0];
+                const r1 = this.real[idx1];
+                const i1 = this.imag[idx1];
+
+                // Matrix multiplication unrolled for hardware performance
+                // State 0 line
+                this.real[idx0] = r0 * matrix[0].r - i0 * matrix[0].i + r1 * matrix[1].r - i1 * matrix[1].i;
+                this.imag[idx0] = r0 * matrix[0].i + i0 * matrix[0].r + r1 * matrix[1].i + i1 * matrix[1].r;
+                // State 1 line
+                this.real[idx1] = r0 * matrix[2].r - i0 * matrix[2].i + r1 * matrix[3].r - i1 * matrix[3].i;
+                this.imag[idx1] = r0 * matrix[2].i + i0 * matrix[2].r + r1 * matrix[3].i + i1 * matrix[3].r;
+            }
+        }
+    }
+
+    /**
+     * Applies a controlled single-qubit unitary across the statevector array.
+     */
+    applyControlledGate(control, target, matrix) {
+        const stride = 1 << target;
+        const ctrlMask = 1 << control;
+
+        for (let i = 0; i < this.length; i += (stride << 1)) {
+            for (let j = 0; j < stride; j++) {
+                const idx0 = i + j;
+                const idx1 = idx0 + stride;
+
+                // Both paths must satisfy control bit condition == 1
+                if ((idx0 & ctrlMask) !== 0) {
+                    const r0 = this.real[idx0];
+                    const i0 = this.imag[idx0];
+                    const r1 = this.real[idx1];
+                    const i1 = this.imag[idx1];
+
+                    this.real[idx0] = r0 * matrix[0].r - i0 * matrix[0].i + r1 * matrix[1].r - i1 * matrix[1].i;
+                    this.imag[idx0] = r0 * matrix[0].i + i0 * matrix[0].r + r1 * matrix[1].i + i1 * matrix[1].r;
+                    this.real[idx1] = r0 * matrix[2].r - i0 * matrix[2].i + r1 * matrix[3].r - i1 * matrix[3].i;
+                    this.imag[idx1] = r0 * matrix[2].i + i0 * matrix[2].r + r1 * matrix[3].i + i1 * matrix[3].r;
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Unitary Math Definition Provider
+ */
+const QuantumGates = {
+    H: [
+        Complex.create(Math.SQRT1_2, 0),  Complex.create(Math.SQRT1_2, 0),
+        Complex.create(Math.SQRT1_2, 0),  Complex.create(-Math.SQRT1_2, 0)
+    ],
+    X: [
+        Complex.create(0, 0),  Complex.create(1, 0),
+        Complex.create(1, 0),  Complex.create(0, 0)
+    ],
+    // Parametric Phase Rotation Gate
+    Rk: (k) => {
+        const theta = (2 * Math.PI) / (1 << k);
+        return [
+            Complex.create(1, 0), Complex.create(0, 0),
+            Complex.create(0, 0), Complex.create(Math.cos(theta), Math.sin(theta))
+        ];
+    }
+};
+
+/**
+ * Intermediate Representation (IR) Pipeline & Circuit Compilation Parser
+ */
+class QuantumCircuit {
+    constructor(numQubits) {
+        this.numQubits = numQubits;
+        this.instructions = [];
+    }
+
+    h(target) {
+        this.instructions.push({ type: 'SINGLE', gate: 'H', target });
+        return this;
+    }
+
+    x(target) {
+        this.instructions.push({ type: 'SINGLE', gate: 'X', target });
+        return this;
+    }
+
+    cx(control, target) {
+        this.instructions.push({ type: 'CONTROLLED', gate: 'X', control, target });
+        return this;
+    }
+
+    crk(control, target, k) {
+        this.instructions.push({ type: 'CONTROLLED_PARAMETRIC', gate: 'Rk', control, target, param: k });
+        return this;
+    }
+
+    clear() {
+        this.instructions = [];
+    }
+
+    generateIrDump() {
+        if (this.instructions.length === 0) return "// Pipeline Empty Elements";
+        return this.instructions.map((inst, index) => {
+            const step = String(index).padStart(3, '0');
+            if (inst.type === 'SINGLE') return `STEP[${step}]: Op=SingleGate; Gate=${inst.gate}; TargetQubit=${inst.target};`;
+            if (inst.type === 'CONTROLLED') return `STEP[${step}]: Op=ControlledGate; Gate=${inst.gate}; Ctrl=${inst.control}; TargetQubit=${inst.target};`;
+            if (inst.type === 'CONTROLLED_PARAMETRIC') return `STEP[${step}]: Op=ParametricCtrl; Gate=${inst.gate}(k=${inst.param}); Ctrl=${inst.control}; TargetQubit=${inst.target};`;
+        }).join('\n');
+    }
+}
+
+/**
+ * Execution Engine Orchestrator Pipeline
+ */
+class QuantumEngine {
+    constructor(numQubits) {
+        this.statevector = new Statevector(numQubits);
+    }
+
+    execute(circuit) {
+        this.statevector.reset();
+        const start = performance.now();
+
+        for (const inst of circuit.instructions) {
+            if (inst.type === 'SINGLE') {
+                this.statevector.applySingleQubitGate(inst.target, QuantumGates[inst.gate]);
+            } else if (inst.type === 'CONTROLLED') {
+                this.statevector.applyControlledGate(inst.control, inst.target, QuantumGates[inst.gate]);
+            } else if (inst.type === 'CONTROLLED_PARAMETRIC') {
+                const matrix = QuantumGates.Rk(inst.param);
+                this.statevector.applyControlledGate(inst.control, inst.target, matrix);
+            }
+        }
+
+        const end = performance.now();
+        return (end - start).toFixed(4);
+    }
+
+    /**
+     * Probability sampling matching Copenhagen collapse via a CDF tracking scan.
+     */
+    sample() {
+        const r = Math.random();
+        let cumulative = 0;
+        for (let i = 0; i < this.statevector.length; i++) {
+            const real = this.statevector.real[i];
+            const imag = this.statevector.imag[i];
+            cumulative += (real * real) + (imag * imag);
+            if (r <= cumulative) {
+                return i;
+            }
+        }
+        return this.statevector.length - 1;
+    }
+}
+
+/**
+ * Application Core Interface Controller Runtime Logic
+ */
+const NUM_QUBITS = 10;
+const circuit = new QuantumCircuit(NUM_QUBITS);
+const engine = new QuantumEngine(NUM_QUBITS);
+
+function updateUi(executionTimeMs) {
+    document.getElementById('circuitIrDisplay').textContent = circuit.generateIrDump();
+    
+    const vectorDisplay = document.getElementById('vectorDisplay');
+    let html = '';
+    let nonZeroCount = 0;
+
+    for (let i = 0; i < engine.statevector.length; i++) {
+        const r = engine.statevector.real[i];
+        const img = engine.statevector.imag[i];
+        const prob = (r * r) + (img * img);
+
+        if (prob > 0.0005) { // Filter noise threshold
+            nonZeroCount++;
+            const binary = i.toString(2).padStart(NUM_QUBITS, '0');
+            const pct = (prob * 100).toFixed(2);
+            html += `
+                <div class="state-line">
+                    <span>|${binary}⟩: (${r.toFixed(4)} + ${img.toFixed(4)}i)</span>
+                    <div class="bar-container">
+                        <span>${pct}%</span>
+                        <div class="bar" style="width: ${prob * 100}px;"></div>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    vectorDisplay.innerHTML = html || '<div style="color: var(--text-muted);">Statevector contains pure vacuum configuration.</div>';
+    document.getElementById('perfMetric').textContent = `Execution Time: ${executionTimeMs} ms`;
+    document.getElementById('quantumMetric').textContent = `Active Amplitudes: ${nonZeroCount} / ${engine.statevector.length}`;
+}
+
+function runPreset(type) {
+    circuit.clear();
+    if (type === 'ghz') {
+        // Build 10-Qubit maximally entangled GHZ State pipeline
+        circuit.h(0);
+        for (let i = 0; i < NUM_QUBITS - 1; i++) {
+            circuit.cx(i, i + 1);
+        }
+    } else if (type === 'qft') {
+        // Build Quantum Fourier Transform routine variant targeting 4 active register tracks
+        const activeQubits = 4;
+        for (let i = activeQubits - 1; i >= 0; i--) {
+            circuit.h(i);
+            for (let j = i - 1; j >= 0; j--) {
+                circuit.crk(j, i, i - j + 1);
+            }
+        }
+    }
+    const duration = engine.execute(circuit);
+    updateUi(duration);
+}
+
+function clearCircuit() {
+    circuit.clear();
+    const duration = engine.execute(circuit);
+    updateUi(duration);
+}
+
+function triggerMeasurement() {
+    if (circuit.instructions.length === 0) return;
+    const measurementIndex = engine.sample();
+    const binary = measurementIndex.toString(2).padStart(NUM_QUBITS, '0');
+    
+    alert(`Quantum State collapsed to State Vector outcome index:\n\n|${binary}⟩`);
+}
+</script>
 </body>
 </html>
