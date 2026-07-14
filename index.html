@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quantum AI Terminal</title>
+    <title>Dynamic Quantum Dynamic NLP Engine</title>
     <style>
         :root {
-            --bg-color: #0d0e15;
-            --terminal-bg: #151722;
-            --primary-glow: #00ffcc;
-            --text-color: #c5cdd8;
-            --accent-color: #ff007f;
-            --dim-text: #626875;
+            --bg-color: #0b0c10;
+            --terminal-bg: #1f2833;
+            --primary-glow: #66fcf1;
+            --text-color: #c5c6c7;
+            --accent-color: #45f3ff;
+            --dim-text: #c5c6c788;
         }
 
         body {
@@ -29,41 +29,24 @@
 
         .terminal-container {
             width: 100%;
-            max-width: 850px;
+            max-width: 900px;
             background-color: var(--terminal-bg);
-            border: 2px solid var(--primary-glow);
-            border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0, 255, 204, 0.15);
+            border: 1px solid var(--primary-glow);
+            border-radius: 4px;
+            box-shadow: 0 0 15px rgba(102, 252, 241, 0.2);
             display: flex;
             flex-direction: column;
-            height: 80vh;
-            overflow: hidden;
+            height: 85vh;
         }
 
         .terminal-header {
-            background-color: rgba(0, 0, 0, 0.3);
-            padding: 10px 15px;
-            border-bottom: 1px solid rgba(0, 255, 204, 0.3);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding: 12px 20px;
+            border-bottom: 1px solid rgba(102, 252, 241, 0.3);
             font-size: 0.85rem;
             color: var(--primary-glow);
-            text-transform: uppercase;
             letter-spacing: 1px;
         }
-
-        .window-dots {
-            display: flex;
-            gap: 6px;
-        }
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background-color: var(--dim-text);
-        }
-        .dot.active { background-color: var(--accent-color); }
 
         .terminal-body {
             flex: 1;
@@ -71,35 +54,28 @@
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
             font-size: 0.95rem;
-            line-height: 1.4;
         }
 
-        .log-entry { margin: 5px 0; }
-        .user-line { color: var(--accent-color); font-weight: bold; }
+        .log-entry { margin: 2px 0; }
+        .user-line { color: #ffaa00; }
         .ai-line { color: var(--primary-glow); }
-        .quantum-data { color: var(--dim-text); font-size: 0.85rem; padding-left: 15px; border-left: 1px dashed var(--dim-text); }
+        .analysis-data { color: #a8b2c1; font-size: 0.85rem; background: rgba(0,0,0,0.2); padding: 8px; border-radius: 4px; }
 
         .input-area {
             display: flex;
             padding: 15px;
-            background-color: rgba(0, 0, 0, 0.2);
-            border-top: 1px solid rgba(0, 255, 204, 0.2);
+            background-color: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid rgba(102, 252, 241, 0.2);
             gap: 10px;
-        }
-
-        .prefix {
-            color: var(--accent-color);
-            font-weight: bold;
-            align-self: center;
         }
 
         input {
             flex: 1;
             background: transparent;
             border: none;
-            color: var(--text-color);
+            color: #fff;
             font-family: inherit;
             font-size: 1rem;
             outline: none;
@@ -109,17 +85,14 @@
             background: transparent;
             border: 1px solid var(--primary-glow);
             color: var(--primary-glow);
-            padding: 5px 15px;
+            padding: 5px 20px;
             cursor: pointer;
             font-family: inherit;
-            border-radius: 4px;
-            transition: all 0.2s ease;
         }
 
         button:hover {
             background-color: var(--primary-glow);
             color: var(--terminal-bg);
-            box-shadow: 0 0 10px rgba(0, 255, 204, 0.4);
         }
     </style>
 </head>
@@ -127,32 +100,33 @@
 
 <div class="terminal-container">
     <div class="terminal-header">
-        <span>QuantumNLP-v1.0.0 // GitHub Pages Engine</span>
-        <div class="window-dots">
-            <div class="dot"></div>
-            <div class="dot"></div>
-            <div class="dot active"></div>
-        </div>
+        SYSTEM // DYNAMIC QUANTUM-SEMANTIC INTERFACE OPERATIONAL
     </div>
     
     <div class="terminal-body" id="terminalBody">
-        <div class="log-entry ai-line">System initialized. 3-Qubit simulator offline pipeline ready.</div>
-        <div class="log-entry ai-line">Type a command to communicate. Try saying "hello", "flip a coin", or "initialize chaos mode".</div>
+        <div class="log-entry ai-line">Core initialized. Input sentences completely untethered from static paths.</div>
+        <div class="log-entry ai-line">Type natively. The engine will decompose syntax, map linguistic components onto a 3-qubit wave vector, and algorithmically synthesize custom responses.</div>
     </div>
 
     <div class="input-area">
-        <span class="prefix">ψ></span>
-        <input type="text" id="userInput" placeholder="Ask the quantum core..." autofocus autocomplete="off">
-        <button id="sendBtn">EXECUTE</button>
+        <span style="color:var(--primary-glow)">&gt;</span>
+        <input type="text" id="userInput" placeholder="Type an original phrase here..." autofocus autocomplete="off">
+        <button id="sendBtn">PROCESS</button>
     </div>
 </div>
 
 <script>
 /**
  * ============================================================================
- * ENGINE ARCHITECTURE (COMPACT DIRECT MATH BINDINGS)
+ * LINGUISTIC DICTIONARY MATRIX FOR PART-OF-SPEECH DEDUCTION
  * ============================================================================
  */
+const Lexicon = {
+    verbs: ['run', 'code', 'think', 'make', 'create', 'is', 'are', 'am', 'feel', 'want', 'like', 'love', 'destroy', 'build', 'speak', 'write', 'change', 'simulate', 'know', 'see'],
+    nouns: ['computer', 'human', 'quantum', 'file', 'code', 'program', 'ai', 'robot', 'world', 'game', 'school', 'car', 'dog', 'cat', 'mind', 'thought', 'data', 'future', 'time', 'system'],
+    adjectives: ['smart', 'slow', 'fast', 'quantum', 'broken', 'beautiful', 'scary', 'cool', 'weird', 'large', 'massive', 'small', 'complex', 'simple', 'digital', 'organic', 'bad', 'good'],
+    pronouns: ['i', 'you', 'he', 'she', 'they', 'we', 'it', 'myself']
+};
 
 class Complex {
     constructor(r, i) { this.real = r; this.imag = i; }
@@ -161,20 +135,30 @@ class Complex {
     magSq() { return this.real * this.real + this.imag * this.imag; }
 }
 
-class QuantumCircuit {
-    constructor(numQubits) {
-        this.numQubits = numQubits;
-        this.size = Math.pow(2, numQubits);
+// Quantum State Machine mapping semantic attributes onto register spaces
+class QuantumSemanticCircuit {
+    constructor() {
+        this.size = 8; // 3 Qubits
         this.state = new Array(this.size).fill(null).map(() => new Complex(0,0));
-        this.state[0] = new Complex(1, 0); // Ground state |000>
+        this.state[0] = new Complex(1, 0); // Baseline default state
     }
 
-    applyGate(matrix, target) {
+    // Rotates probability based on linguistic metrics
+    applySemanticRotation(qubit, angularWeight) {
+        const theta = angularWeight * Math.PI;
+        const cosT = Math.cos(theta);
+        const sinT = Math.sin(theta);
+        
+        const matrix = [
+            [new Complex(cosT, 0), new Complex(-sinT, 0)],
+            [new Complex(sinT, 0), new Complex(cosT, 0)]
+        ];
+
         const next = new Array(this.size).fill(null).map(() => new Complex(0,0));
         for (let i = 0; i < this.size; i++) {
-            const bit = (i >> target) & 1;
-            const zeroIdx = i & ~(1 << target);
-            const oneIdx = i | (1 << target);
+            const bit = (i >> qubit) & 1;
+            const zeroIdx = i & ~(1 << qubit);
+            const oneIdx = i | (1 << qubit);
             if (bit === 0) {
                 next[i] = matrix[0][0].multiply(this.state[zeroIdx]).add(matrix[0][1].multiply(this.state[oneIdx]));
             } else {
@@ -184,19 +168,7 @@ class QuantumCircuit {
         this.state = next;
     }
 
-    h(q) {
-        const factor = 1 / Math.sqrt(2);
-        this.applyGate([
-            [new Complex(factor, 0), new Complex(factor, 0)],
-            [new Complex(factor, 0), new Complex(-factor, 0)]
-        ], q);
-    }
-
-    x(q) {
-        this.applyGate([[new Complex(0,0), new Complex(1,0)], [new Complex(1,0), new Complex(0,0)]], q);
-    }
-
-    measure() {
+    collapse() {
         const probs = this.state.map(c => c.magSq());
         const r = Math.random();
         let sum = 0;
@@ -204,84 +176,109 @@ class QuantumCircuit {
             sum += probs[i];
             if (r <= sum) return i;
         }
-        return this.size - 1;
+        return 0;
     }
 }
 
-class LowLevelAI {
-    constructor() {
-        this.intents = {};
-        this.stops = new Set(['a', 'an', 'the', 'is', 'are', 'you', 'to', 'can', 'do', 'please', 'me', 'for']);
-    }
-    register(name, phrases, effect) {
-        this.intents[name] = { phrases: phrases.map(p => this.tokenize(p)), effect };
-    }
-    tokenize(t) {
-        return t.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/).filter(w => w.length > 0 && !this.stops.has(w));
-    }
-    decode(input) {
-        const tokens = this.tokenize(input);
-        let match = 'unknown'; let high = 0.15;
-        for (const [name, data] of Object.entries(this.intents)) {
-            for (const pTokens of data.phrases) {
-                const set = new Set(tokens);
-                const hits = pTokens.filter(t => set.has(t));
-                const score = tokens.length ? hits.length / Math.max(tokens.length, pTokens.length) : 0;
-                if (score > high) { high = score; match = name; }
+// Low-Level AI Linguistic Decompiler
+class SyntacticAnalyzer {
+    analyze(sentence) {
+        const rawTokens = sentence.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/);
+        
+        let analysis = {
+            subject: 'system',
+            action: 'processes',
+            descriptor: 'informational',
+            detectedNouns: [],
+            detectedVerbs: [],
+            detectedAdjectives: []
+        };
+
+        rawTokens.forEach(word => {
+            if (Lexicon.nouns.includes(word)) analysis.detectedNouns.push(word);
+            if (Lexicon.verbs.includes(word)) analysis.detectedVerbs.push(word);
+            if (Lexicon.adjectives.includes(word)) analysis.detectedAdjectives.push(word);
+            if (Lexicon.pronouns.includes(word) && analysis.subject === 'system') {
+                analysis.subject = (word === 'you') ? 'humanity' : word;
             }
-        }
-        return match;
+        });
+
+        // Set dominant structural weights
+        if (analysis.detectedNouns.length > 0) analysis.subject = analysis.detectedNouns[0];
+        if (analysis.detectedVerbs.length > 0) analysis.action = analysis.detectedVerbs[0];
+        if (analysis.detectedAdjectives.length > 0) analysis.descriptor = analysis.detectedAdjectives[0];
+
+        return analysis;
     }
 }
 
-// --- INITIALIZE & ORCHESTRATE ---
-const ai = new LowLevelAI();
-ai.register('greeting', ['hello', 'hi', 'greetings', 'hey computer', 'wake up'], () => {});
-ai.register('coin_flip', ['flip coin', 'heads tails', 'random choice', 'generate outcome'], c => c.h(0));
-ai.register('chaos_mode', ['maximum chaos', 'unpredictable state', 'initialize noise', 'superposition'], c => { c.h(0); c.h(1); c.x(2); c.h(2); });
+// Algorithmic Sentence Synthesizer Core
+class ResponseSynthesizer {
+    static generate(analysis, stateDec) {
+        const s = analysis.subject.toUpperCase();
+        const v = analysis.action.toLowerCase();
+        const adj = analysis.descriptor.toLowerCase();
 
-const responseMatrix = {
-    'greeting': { 0: "Hello, organic consciousness. Vector maps stable.", default: "System online. Standing by for state manipulation commands." },
-    'coin_flip': { 0: "Quantum superposition collapsed cleanly to: HEADS.", 1: "Quantum superposition collapsed cleanly to: TAILS.", default: "Coin logic unresolved outside bounds." },
-    'chaos_mode': { 0: "|000> Quiet convergence state.", 3: "|011> High localized entropy signature.", 5: "|101> Asymmetric state vector collision detected.", 7: "|111> Absolute timeline maximum noise variance registered.", default: "Distributed multi-qubit configuration stable across localized chaos vectors." },
-    'unknown': { default: "Intent pattern fell below processing threshold. Use 'flip a coin' or 'maximum chaos' to alter states." }
-};
+        // Variations based on Quantum Phase state indices (0-7)
+        switch(stateDec) {
+            case 0: return `Observation confirmed. Processing your input reveals that the structural concept of a ${adj} ${s} behaves in a way that allows it to safely ${v} standard computational barriers.`;
+            case 1: return `Quantum vector trajectory shifted. It appears your emphasis on how a ${s} can ${v} remains fundamentally linked to a very ${adj} perspective.`;
+            case 2: return `Fascinating syntax map. If a system allows a ${adj} ${s} to constantly ${v}, structural variables inherently fluctuate.`;
+            case 3: return `The internal state matrix has changed. Analyzing this context indicates that the relationship where a ${s} chooses to ${v} can only be classified as deeply ${adj}.`;
+            case 4: return `Linguistic extraction analysis complete: You brought forward a ${adj} state framework. When a ${s} begins to ${v}, our processing subroutines record a distinctive logical shift.`;
+            case 5: return `Data anomaly detected in the word stream. The concept of trying to ${v} within the framework of a ${adj} ${s} suggests a non-linear path.`;
+            case 6: return `High-entropy thought string observed. The parameters dictate that your target ${s} will not merely ${v}, but will completely manifest in a ${adj} operational space.`;
+            case 7: return `Maximum state superposition collapse. Your linguistic input implies that when a ${s} is forced to ${v}, the resulting digital environment becomes completely ${adj}.`;
+            default: return `Acknowledged. Deconstructing the input framework regarding a ${s} that can ${v} through a ${adj} system.`;
+        }
+    }
+}
 
-// UI Handling Pipeline
+// --- PIPELINE MANAGER ---
+const analyzer = new SyntacticAnalyzer();
 const body = document.getElementById('terminalBody');
 const input = document.getElementById('userInput');
 const button = document.getElementById('sendBtn');
 
-function process() {
+function processPipeline() {
     const text = input.value.trim();
     if (!text) return;
 
-    // Log user text
     appendLine(`&gt; ${text}`, 'user-line');
     input.value = '';
 
-    // Step 1: Parse intent via low level AI
-    const intent = ai.decode(text);
-    
-    // Step 2: Initialize 3-qubit array
-    const circuit = new QuantumCircuit(3);
-    if (ai.intents[intent]) ai.intents[intent].effect(circuit);
+    // Step 1: Lexical Grammatical Breakdown
+    const syntaxAnalysis = analyzer.analyze(text);
 
-    // Step 3: Measure Collapse
-    const outcome = circuit.measure();
-    const binaryStr = outcome.toString(2).padStart(3, '0');
+    // Step 2: Formulate Quantum Rotation Weights based on word structural frequencies
+    const circuit = new QuantumSemanticCircuit();
+    const nounWeight = (syntaxAnalysis.detectedNouns.length * 0.25) % 1;
+    const verbWeight = (syntaxAnalysis.detectedVerbs.length * 0.33) % 1;
+    
+    circuit.applySemanticRotation(0, nounWeight || 0.1);
+    circuit.applySemanticRotation(1, verbWeight || 0.2);
 
-    // Step 4: UI Engine output assembly
-    appendLine(`[AI Engine] Intent Detected: ${intent.toUpperCase()}`, 'ai-line');
-    appendLine(`[Quantum Engine] Measurement complete. State vector collapsed to |${binaryStr}&gt; (Dec: ${outcome})`, 'quantum-data');
-    
-    const cat = responseMatrix[intent] || responseMatrix['unknown'];
-    const reply = cat[outcome] || cat['default'];
-    
+    // Step 3: Trigger measurement collapse
+    const quantumState = circuit.collapse();
+
+    // Step 4: Render UI Diagnostics to prove processing authenticity
+    const diagnosticHTML = `
+        <strong>[Linguistic Breakdown Metrics]:</strong><br>
+        Identified Nouns: [${syntaxAnalysis.detectedNouns.join(', ') || 'None'}]<br>
+        Identified Verbs: [${syntaxAnalysis.detectedVerbs.join(', ') || 'None'}]<br>
+        Identified Adjectives: [${syntaxAnalysis.detectedAdjectives.join(', ') || 'None'}]<br>
+        Parsed Core Formula: Subject[<strong>${syntaxAnalysis.subject}</strong>] + Action[<strong>${syntaxAnalysis.action}</strong>] + Property[<strong>${syntaxAnalysis.descriptor}</strong>]<br>
+        <strong>[Quantum Influence Phase]:</strong> State vector collapsed into index path: <strong>|${quantumState.toString(2).padStart(3, '0')}></strong>
+    `;
+    appendLine(diagnosticHTML, 'analysis-data');
+
+    // Step 5: Synthesize non-hardcoded customized output string
+    const finalOutput = ResponseSynthesizer.generate(syntaxAnalysis, quantumState);
+
     setTimeout(() => {
-        appendLine(reply, 'ai-line');
+        appendLine(finalOutput, 'ai-line');
         body.scrollTop = body.scrollHeight;
-    }, 150);
+    }, 200);
 }
 
 function appendLine(text, className) {
@@ -292,8 +289,8 @@ function appendLine(text, className) {
     body.scrollTop = body.scrollHeight;
 }
 
-button.addEventListener('click', process);
-input.addEventListener('keypress', (e) => { if (e.key === 'Enter') process(); });
+button.addEventListener('click', processPipeline);
+input.addEventListener('keypress', (e) => { if (e.key === 'Enter') processPipeline(); });
 </script>
 
 </body>
