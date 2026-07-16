@@ -172,9 +172,9 @@ button:hover {
 
 <script>
 const SUPABASE_URL = "https://zwsosuqgbcdrrsnodrph.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp3c29zdXFnYmNkcnJzbm9kcnBoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyMjE5MzYsImV4cCI6MjA5OTc5NzkzNn0.10CK9gekKUp8igIkokSOpYccN1ddGMqDOxYIq5jCV-o";
+const SUPABASE_KEY = "YOUR_ANON_KEY_HERE";
 
-const supabase = window.supabase.createClient(zwsosuqgbcdrrsnodrph, eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp3c29zdXFnYmNkcnJzbm9kcnBoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyMjE5MzYsImV4cCI6MjA5OTc5NzkzNn0.10CK9gekKUp8igIkokSOpYccN1ddGMqDOxYIq5jCV-o);
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let currentUser = null;
 let messageChannel = null;
@@ -190,7 +190,6 @@ const messages = document.getElementById("messages");
 const onlineList = document.getElementById("onlineList");
 const msg = document.getElementById("msg");
 const send = document.getElementById("send");
-const typing = document.getElementById("typing");
 
 function escapeHTML(text) {
   return String(text ?? "")
@@ -224,10 +223,13 @@ async function openChat(user) {
 
 window.addEventListener("beforeunload", () => {
   if (currentUser) {
-    navigator.sendBeacon?.(
-      "data:application/json,",
-      ""
-    );
+    supabase
+      .from("profiles")
+      .update({
+        online: false,
+        last_seen: new Date().toISOString()
+      })
+      .eq("id", currentUser.id);
   }
 });
 
@@ -251,11 +253,12 @@ function addMessage(message) {
   div.className = "message";
 
   const time = new Date(message.created_at).toLocaleTimeString();
-  div.innerHTML = `
-    <b>${escapeHTML(message.username)}</b><br>
-    ${escapeHTML(message.message)}
-    <small style="color:#aaa;display:block;margin-top:5px">${escapeHTML(time)}</small>
-  `;
+  div.innerHTML =
+    "<b>" + escapeHTML(message.username) + "</b><br>" +
+    escapeHTML(message.message) +
+    "<small style='color:#aaa;display:block;margin-top:5px'>" +
+    escapeHTML(time) +
+    "</small>";
 
   messages.appendChild(div);
   messages.scrollTop = messages.scrollHeight;
@@ -263,7 +266,6 @@ function addMessage(message) {
 
 async function sendMessage() {
   const text = msg.value.trim();
-
   if (!text || !currentUser) return;
 
   const { error } = await supabase
@@ -322,7 +324,7 @@ async function loadOnlineUsers() {
   data.forEach(user => {
     const div = document.createElement("div");
     div.className = "user";
-    div.innerHTML = `🟢 ${escapeHTML(user.username)}`;
+    div.innerHTML = "🟢 " + escapeHTML(user.username);
     onlineList.appendChild(div);
   });
 }
@@ -435,7 +437,6 @@ async function createAccount() {
   }
 
   alert("Account created");
-
   openChat({
     id: data.user.id,
     username: name
