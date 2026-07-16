@@ -172,9 +172,9 @@ button:hover {
 
 <script>
 const SUPABASE_URL = "https://zwsosuqgbcdrrsnodrph.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp3c29zdXFnYmNkcnJzbm9kcnBoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyMjE5MzYsImV4cCI6MjA5OTc5NzkzNn0.10CK9gekKUp8igIkokSOpYccN1ddGMqDOxYIq5jCV-o";
+const SUPABASE_KEY = "YOUR_ANON_KEY_HERE";
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let currentUser = null;
 let messageChannel = null;
@@ -201,20 +201,16 @@ function escapeHTML(text) {
 }
 
 async function setOnline() {
-  await supabase
-    .from("profiles")
-    .update({
-      online: true,
-      last_seen: new Date().toISOString()
-    })
-    .eq("id", currentUser.id);
+  await sb.from("profiles").update({
+    online: true,
+    last_seen: new Date().toISOString()
+  }).eq("id", currentUser.id);
 }
 
 async function openChat(user) {
   currentUser = user;
   login.style.display = "none";
   chat.style.display = "block";
-
   await setOnline();
   await loadMessages();
   await subscribeMessages();
@@ -223,27 +219,19 @@ async function openChat(user) {
 
 window.addEventListener("beforeunload", () => {
   if (currentUser) {
-    supabase
-      .from("profiles")
-      .update({
-        online: false,
-        last_seen: new Date().toISOString()
-      })
-      .eq("id", currentUser.id);
+    sb.from("profiles").update({
+      online: false,
+      last_seen: new Date().toISOString()
+    }).eq("id", currentUser.id);
   }
 });
 
 async function loadMessages() {
-  const { data, error } = await supabase
-    .from("messages")
-    .select("*")
-    .order("created_at", { ascending: true });
-
+  const { data, error } = await sb.from("messages").select("*").order("created_at", { ascending: true });
   if (error) {
     console.log(error);
     return;
   }
-
   messages.innerHTML = "";
   data.forEach(message => addMessage(message));
 }
@@ -251,7 +239,6 @@ async function loadMessages() {
 function addMessage(message) {
   const div = document.createElement("div");
   div.className = "message";
-
   const time = new Date(message.created_at).toLocaleTimeString();
   div.innerHTML =
     "<b>" + escapeHTML(message.username) + "</b><br>" +
@@ -259,7 +246,6 @@ function addMessage(message) {
     "<small style='color:#aaa;display:block;margin-top:5px'>" +
     escapeHTML(time) +
     "</small>";
-
   messages.appendChild(div);
   messages.scrollTop = messages.scrollHeight;
 }
@@ -268,13 +254,11 @@ async function sendMessage() {
   const text = msg.value.trim();
   if (!text || !currentUser) return;
 
-  const { error } = await supabase
-    .from("messages")
-    .insert({
-      user_id: currentUser.id,
-      username: currentUser.username,
-      message: text
-    });
+  const { error } = await sb.from("messages").insert({
+    user_id: currentUser.id,
+    username: currentUser.username,
+    message: text
+  });
 
   if (error) {
     console.log(error);
@@ -295,10 +279,10 @@ msg.addEventListener("keydown", e => {
 
 async function subscribeMessages() {
   if (messageChannel) {
-    await supabase.removeChannel(messageChannel);
+    await sb.removeChannel(messageChannel);
   }
 
-  messageChannel = supabase
+  messageChannel = sb
     .channel("messages-room")
     .on(
       "postgres_changes",
@@ -309,10 +293,7 @@ async function subscribeMessages() {
 }
 
 async function loadOnlineUsers() {
-  const { data, error } = await supabase
-    .from("profiles")
-    .select("username")
-    .eq("online", true);
+  const { data, error } = await sb.from("profiles").select("username").eq("online", true);
 
   if (error) {
     console.log(error);
@@ -333,10 +314,10 @@ async function subscribeUsers() {
   await loadOnlineUsers();
 
   if (usersChannel) {
-    await supabase.removeChannel(usersChannel);
+    await sb.removeChannel(usersChannel);
   }
 
-  usersChannel = supabase
+  usersChannel = sb
     .channel("online-users")
     .on(
       "postgres_changes",
@@ -348,13 +329,10 @@ async function subscribeUsers() {
 
 setInterval(async () => {
   if (currentUser) {
-    await supabase
-      .from("profiles")
-      .update({
-        online: true,
-        last_seen: new Date().toISOString()
-      })
-      .eq("id", currentUser.id);
+    await sb.from("profiles").update({
+      online: true,
+      last_seen: new Date().toISOString()
+    }).eq("id", currentUser.id);
   }
 }, 30000);
 
@@ -369,7 +347,7 @@ async function loginUser() {
 
   const fakeEmail = name.toLowerCase() + "@chat.local";
 
-  const { data, error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await sb.auth.signInWithPassword({
     email: fakeEmail,
     password: pass
   });
@@ -379,7 +357,7 @@ async function loginUser() {
     return;
   }
 
-  const { data: profile, error: profileError } = await supabase
+  const { data: profile, error: profileError } = await sb
     .from("profiles")
     .select("*")
     .eq("id", data.user.id)
@@ -407,7 +385,7 @@ async function createAccount() {
 
   const fakeEmail = name.toLowerCase() + "@chat.local";
 
-  const { data, error } = await supabase.auth.signUp({
+  const { data, error } = await sb.auth.signUp({
     email: fakeEmail,
     password: pass
   });
@@ -422,14 +400,12 @@ async function createAccount() {
     return;
   }
 
-  const { error: profileError } = await supabase
-    .from("profiles")
-    .insert({
-      id: data.user.id,
-      username: name,
-      online: true,
-      last_seen: new Date().toISOString()
-    });
+  const { error: profileError } = await sb.from("profiles").insert({
+    id: data.user.id,
+    username: name,
+    online: true,
+    last_seen: new Date().toISOString()
+  });
 
   if (profileError) {
     alert(profileError.message);
@@ -447,10 +423,10 @@ register.onclick = createAccount;
 signin.onclick = loginUser;
 
 async function checkSession() {
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { session } } = await sb.auth.getSession();
 
   if (session) {
-    const { data: profile } = await supabase
+    const { data: profile } = await sb
       .from("profiles")
       .select("*")
       .eq("id", session.user.id)
