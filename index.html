@@ -198,7 +198,10 @@
   <script>
     const SUPABASE_URL = "https://vvavdtlhrxeksyvmndpr.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2YXZkdGxocnhla3N5dm1uZHByIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyMjI4NzIsImV4cCI6MjA5OTc5ODg3Mn0.SInEYYuBOMEuOgeFOkFB1DyuEJplz9rDfgnA18qcb3Q";
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabaseClient = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    );
 
     const authView = document.getElementById("authView");
     const appView = document.getElementById("appView");
@@ -236,11 +239,11 @@
     }
 
     async function loadProfile() {
-      const { data: userData } = await supabase.auth.getUser();
+      const { data: userData } = await supabaseClient.auth.getUser();
       currentUser = userData.user || null;
       if (!currentUser) return null;
 
-      const { data, error } = await supabase
+      const { data, error } = await supabaseClient
         .from("profiles")
         .select("*")
         .eq("id", currentUser.id)
@@ -252,7 +255,7 @@
     }
 
     async function refreshUsers() {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseClient
         .from("profiles")
         .select("id, username, created_at")
         .order("username", { ascending: true });
@@ -289,7 +292,7 @@
     }
 
     async function loadMessages() {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseClient
         .from("messages")
         .select("id, sender_id, content, created_at, sender_username")
         .order("created_at", { ascending: true });
@@ -303,9 +306,9 @@
       data.forEach(renderMessage);
       messagesEl.scrollTop = messagesEl.scrollHeight;
 
-      if (channel) await supabase.removeChannel(channel);
+      if (channel) await supabaseClient.removeChannel(channel);
 
-      channel = supabase
+      channel = supabaseClient
         .channel("public-chat")
         .on("postgres_changes", {
           event: "INSERT",
@@ -326,7 +329,7 @@
 
       if (!username || !email || !password) return setMsg("Fill in username, email, and password.");
 
-      const { data, error } = await supabase.auth.signUp({
+      const { data, error } = await supabaseClient.auth.signUp({
         email,
         password,
         options: { data: { username } }
@@ -337,7 +340,7 @@
       const user = data.user;
       if (!user) return setMsg("Signup succeeded, but no user was returned.");
 
-      const { error: profileError } = await supabase.from("profiles").insert({
+      const { error: profileError } = await supabaseClient.from("profiles").insert({
         id: user.id,
         username
       });
@@ -357,13 +360,13 @@
 
       if (!email || !password) return setMsg("Enter email and password.");
 
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
       if (error) return setMsg(error.message);
     }
 
     async function handleLogout() {
-      if (channel) await supabase.removeChannel(channel);
-      await supabase.auth.signOut();
+      if (channel) await supabaseClient.removeChannel(channel);
+      await supabaseClient.auth.signOut();
       clearMessages();
       myProfile = null;
       currentUser = null;
@@ -398,7 +401,7 @@
       const content = input.value.trim();
       if (!content) return;
 
-      const { error } = await supabase.from("messages").insert({
+      const { error } = await supabaseClient.from("messages").insert({
         sender_id: myProfile.id,
         sender_username: myProfile.username,
         content
@@ -408,7 +411,7 @@
       if (error) console.error(error);
     });
 
-    supabase.auth.onAuthStateChange(() => syncAuth());
+    supabaseClient.auth.onAuthStateChange(() => syncAuth());
     syncAuth();
   </script>
 </body>
