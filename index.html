@@ -1,772 +1,498 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Supabase Chat</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,Helvetica,sans-serif;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-body{
-
-background:#1e1f22;
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-color:white;
-
+body {
+  background: #1e1f22;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
 }
 
-#login{
-
-width:350px;
-background:#2b2d31;
-padding:25px;
-border-radius:10px;
-
+#login {
+  width: 350px;
+  background: #2b2d31;
+  padding: 25px;
+  border-radius: 10px;
 }
 
-#chat{
-
-display:none;
-width:95%;
-height:95vh;
-background:#2b2d31;
-border-radius:10px;
-overflow:hidden;
-
+#chat {
+  display: none;
+  width: 95%;
+  height: 95vh;
+  background: #2b2d31;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
-h2{
-
-margin-bottom:20px;
-text-align:center;
-
+h2 {
+  margin-bottom: 20px;
+  text-align: center;
 }
 
-input{
-
-width:100%;
-padding:12px;
-margin-top:10px;
-border:none;
-border-radius:5px;
-outline:none;
-font-size:15px;
-
+input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+  font-size: 15px;
 }
 
-button{
-
-width:100%;
-padding:12px;
-margin-top:10px;
-border:none;
-border-radius:5px;
-background:#5865F2;
-color:white;
-cursor:pointer;
-font-size:16px;
-
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  background: #5865F2;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
 }
 
-button:hover{
-
-background:#4752c4;
-
+button:hover {
+  background: #4752c4;
 }
 
-#container{
-
-display:flex;
-height:100%;
-
+#container {
+  display: flex;
+  height: 100%;
 }
 
-#users{
-
-width:220px;
-background:#232428;
-padding:15px;
-overflow-y:auto;
-
+#users {
+  width: 220px;
+  background: #232428;
+  padding: 15px;
+  overflow-y: auto;
 }
 
-#users h3{
-
-margin-bottom:15px;
-
+#users h3 {
+  margin-bottom: 15px;
 }
 
-.user{
-
-padding:8px;
-margin-bottom:6px;
-background:#313338;
-border-radius:5px;
-
+.user {
+  padding: 8px;
+  margin-bottom: 6px;
+  background: #313338;
+  border-radius: 5px;
 }
 
-#main{
-
-flex:1;
-display:flex;
-flex-direction:column;
-
+#main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-#messages{
-
-flex:1;
-overflow-y:auto;
-padding:20px;
-
+#messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
 }
 
-.message{
-
-background:#313338;
-padding:10px;
-border-radius:8px;
-margin-bottom:10px;
-
+.message {
+  background: #313338;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
 }
 
-.message b{
-
-color:#6aa7ff;
-
+.message b {
+  color: #6aa7ff;
 }
 
-#bottom{
-
-display:flex;
-padding:15px;
-background:#232428;
-
+#bottom {
+  display: flex;
+  padding: 15px;
+  background: #232428;
 }
 
-#msg{
-
-flex:1;
-margin:0;
-
+#msg {
+  flex: 1;
+  margin: 0;
 }
 
-#send{
-
-width:120px;
-margin-left:10px;
-
+#send {
+  width: 120px;
+  margin-left: 10px;
 }
 
-#typing{
-
-padding-left:20px;
-padding-bottom:10px;
-font-size:13px;
-color:#aaa;
-
+#typing {
+  padding-left: 20px;
+  padding-bottom: 10px;
+  font-size: 13px;
+  color: #aaa;
 }
-
 </style>
-
 </head>
 
 <body>
-
 <div id="login">
+  <h2>Supabase Chat</h2>
 
-<h2>Supabase Chat</h2>
+  <input id="username" placeholder="Username">
+  <input id="password" type="password" placeholder="Password">
 
-<input
-id="username"
-placeholder="Username">
-
-<input
-id="password"
-type="password"
-placeholder="Password">
-
-<button id="register">
-Create Account
-</button>
-
-<button id="signin">
-Login
-</button>
-
+  <button id="register">Create Account</button>
+  <button id="signin">Login</button>
 </div>
 
 <div id="chat">
+  <div id="container">
+    <div id="users">
+      <h3>Online</h3>
+      <div id="onlineList"></div>
+    </div>
 
-<div id="container">
+    <div id="main">
+      <div id="messages"></div>
+      <div id="typing"></div>
 
-<div id="users">
-
-<h3>Online</h3>
-
-<div id="onlineList"></div>
-
-</div>
-
-<div id="main">
-
-<div id="messages"></div>
-
-<div id="typing"></div>
-
-<div id="bottom">
-
-<input
-id="msg"
-placeholder="Type a message...">
-
-<button id="send">
-Send
-</button>
-
-</div>
-
-</div>
-
-</div>
-
+      <div id="bottom">
+        <input id="msg" placeholder="Type a message...">
+        <button id="send">Send</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
+const SUPABASE_URL = "https://YOUR_PROJECT_ID.supabase.co";
+const SUPABASE_KEY = "YOUR_ANON_KEY";
 
-// Replace these with yours
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const SUPABASE_URL="https://supabase.com/dashboard/project/zwsosuqgbcdrrsnodrph";
+let currentUser = null;
+let messageChannel = null;
+let usersChannel = null;
 
-const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp3c29zdXFnYmNkcnJzbm9kcnBoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyMjE5MzYsImV4cCI6MjA5OTc5NzkzNn0.10CK9gekKUp8igIkokSOpYccN1ddGMqDOxYIq5jCV-o";
+const login = document.getElementById("login");
+const chat = document.getElementById("chat");
 
-const supabase=supabase.createClient(
-https://supabase.com/dashboard/project/zwsosuqgbcdrrsnodrph,
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp3c29zdXFnYmNkcnJzbm9kcnBoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyMjE5MzYsImV4cCI6MjA5OTc5NzkzNn0.10CK9gekKUp8igIkokSOpYccN1ddGMqDOxYIq5jCV-o
-);
+const username = document.getElementById("username");
+const password = document.getElementById("password");
 
-let currentUser=null;
+const register = document.getElementById("register");
+const signin = document.getElementById("signin");
 
-const login=document.getElementById("login");
-const chat=document.getElementById("chat");
+const messages = document.getElementById("messages");
+const onlineList = document.getElementById("onlineList");
 
-const username=document.getElementById("username");
-const password=document.getElementById("password");
+const msg = document.getElementById("msg");
+const send = document.getElementById("send");
 
-const register=document.getElementById("register");
-const signin=document.getElementById("signin");
+const typing = document.getElementById("typing");
 
-const messages=document.getElementById("messages");
-const onlineList=document.getElementById("onlineList");
+async function openChat(user) {
+  currentUser = user;
 
-const msg=document.getElementById("msg");
-const send=document.getElementById("send");
+  login.style.display = "none";
+  chat.style.display = "block";
 
-const typing=document.getElementById("typing");
-let channel;
-
-
-// Load chat after login
-async function openChat(user){
-
-    currentUser=user;
-
-    login.style.display="none";
-    chat.style.display="block";
-
-    await setOnline();
-
-    loadMessages();
-
-    subscribeMessages();
-
-    subscribeUsers();
-
+  await setOnline();
+  await loadMessages();
+  await subscribeMessages();
+  await subscribeUsers();
 }
 
-
-// Set user online
-async function setOnline(){
-
-    await supabase
+async function setOnline() {
+  await supabase
     .from("profiles")
     .update({
-        online:true,
-        last_seen:new Date()
+      online: true,
+      last_seen: new Date().toISOString()
     })
-    .eq("id",currentUser.id);
-
+    .eq("id", currentUser.id);
 }
 
-
-// Logout / leaving page
-window.addEventListener("beforeunload",async()=>{
-
-    if(currentUser){
-
-        await supabase
-        .from("profiles")
-        .update({
-            online:false,
-            last_seen:new Date()
-        })
-        .eq("id",currentUser.id);
-
-    }
-
+window.addEventListener("beforeunload", async () => {
+  if (currentUser) {
+    await supabase
+      .from("profiles")
+      .update({
+        online: false,
+        last_seen: new Date().toISOString()
+      })
+      .eq("id", currentUser.id);
+  }
 });
-// Load existing messages
-async function loadMessages(){
 
-    const {data,error}=await supabase
+async function loadMessages() {
+  const { data, error } = await supabase
     .from("messages")
     .select("*")
-    .order("created_at",{ascending:true});
+    .order("created_at", { ascending: true });
 
+  if (error) {
+    console.log(error);
+    return;
+  }
 
-    if(error){
-        console.log(error);
-        return;
-    }
+  messages.innerHTML = "";
 
-
-    messages.innerHTML="";
-
-
-    data.forEach(message=>{
-
-        addMessage(message);
-
-    });
-
+  data.forEach(message => {
+    addMessage(message);
+  });
 }
 
+function addMessage(message) {
+  const div = document.createElement("div");
+  div.className = "message";
 
-// Display a message
-function addMessage(message){
+  div.innerHTML = `
+    <b>${escapeHTML(message.username)}</b><br>
+    ${escapeHTML(message.message)}
+    <small style="color:#aaa;display:block;margin-top:5px">
+      ${new Date(message.created_at).toLocaleTimeString()}
+    </small>
+  `;
 
-    const div=document.createElement("div");
-
-    div.className="message";
-
-    div.innerHTML=`
-        <b>${escapeHTML(message.username)}</b><br>
-        ${escapeHTML(message.message)}
-        <small style="color:#aaa;display:block;margin-top:5px">
-        ${new Date(message.created_at).toLocaleTimeString()}
-        </small>
-    `;
-
-
-    messages.appendChild(div);
-
-    messages.scrollTop=messages.scrollHeight;
-
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
 }
 
-
-
-// Prevent HTML injection
-function escapeHTML(text){
-
-    return text
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-
+function escapeHTML(text) {
+  return String(text ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
+async function sendMessage() {
+  const text = msg.value.trim();
 
+  if (!text || !currentUser) {
+    return;
+  }
 
-// Send message
-async function sendMessage(){
-
-    const text=msg.value.trim();
-
-
-    if(!text || !currentUser){
-        return;
-    }
-
-
-    const {data,error}=await supabase
+  const { error } = await supabase
     .from("messages")
     .insert({
-
-        user_id:currentUser.id,
-
-        username:currentUser.username,
-
-        message:text
-
+      user_id: currentUser.id,
+      username: currentUser.username,
+      message: text
     });
 
+  if (error) {
+    console.log(error);
+    return;
+  }
 
-    if(error){
-
-        console.log(error);
-
-        return;
-
-    }
-
-
-    msg.value="";
-
+  msg.value = "";
 }
 
+send.onclick = sendMessage;
 
-
-send.onclick=sendMessage;
-
-
-
-msg.addEventListener("keydown",e=>{
-
-    if(e.key==="Enter"){
-
-        sendMessage();
-
-    }
-
+msg.addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    sendMessage();
+  }
 });
 
+async function subscribeMessages() {
+  if (messageChannel) {
+    await supabase.removeChannel(messageChannel);
+  }
 
-
-
-// Realtime message listener
-function subscribeMessages(){
-
-    supabase
+  messageChannel = supabase
     .channel("messages-room")
-
     .on(
-        "postgres_changes",
-        {
-            event:"INSERT",
-            schema:"public",
-            table:"messages"
-        },
-
-        payload=>{
-
-            addMessage(payload.new);
-
-        }
-
+      "postgres_changes",
+      {
+        event: "INSERT",
+        schema: "public",
+        table: "messages"
+      },
+      payload => {
+        addMessage(payload.new);
+      }
     )
-
     .subscribe();
-
 }
 
-// Load and update online users
-async function loadOnlineUsers(){
-
-    const {data,error}=await supabase
+async function loadOnlineUsers() {
+  const { data, error } = await supabase
     .from("profiles")
     .select("username")
-    .eq("online",true);
+    .eq("online", true);
 
+  if (error) {
+    console.log(error);
+    return;
+  }
 
-    if(error){
+  onlineList.innerHTML = "";
 
-        console.log(error);
-        return;
-
-    }
-
-
-    onlineList.innerHTML="";
-
-
-    data.forEach(user=>{
-
-        const div=document.createElement("div");
-
-        div.className="user";
-
-        div.innerHTML=`
-        🟢 ${escapeHTML(user.username)}
-        `;
-
-        onlineList.appendChild(div);
-
-    });
-
+  data.forEach(user => {
+    const div = document.createElement("div");
+    div.className = "user";
+    div.innerHTML = `🟢 ${escapeHTML(user.username)}`;
+    onlineList.appendChild(div);
+  });
 }
 
+async function subscribeUsers() {
+  await loadOnlineUsers();
 
+  if (usersChannel) {
+    await supabase.removeChannel(usersChannel);
+  }
 
-// Realtime online users
-function subscribeUsers(){
-
-    loadOnlineUsers();
-
-
-    supabase
+  usersChannel = supabase
     .channel("online-users")
-
     .on(
-        "postgres_changes",
-        {
-            event:"*",
-            schema:"public",
-            table:"profiles"
-        },
-
-        ()=>{
-
-            loadOnlineUsers();
-
-        }
-
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "profiles"
+      },
+      () => {
+        loadOnlineUsers();
+      }
     )
-
     .subscribe();
-
 }
 
+setInterval(async () => {
+  if (currentUser) {
+    await supabase
+      .from("profiles")
+      .update({
+        online: true,
+        last_seen: new Date().toISOString()
+      })
+      .eq("id", currentUser.id);
+  }
+}, 30000);
 
+async function loginUser() {
+  const name = username.value.trim();
+  const pass = password.value.trim();
 
-// Update online status when tab closes
-setInterval(async()=>{
+  if (!name || !pass) {
+    alert("Enter username and password");
+    return;
+  }
 
-    if(currentUser){
+  const fakeEmail = name.toLowerCase() + "@chat.local";
 
-        await supabase
-        .from("profiles")
-        .update({
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: fakeEmail,
+    password: pass
+  });
 
-            online:true,
+  if (error) {
+    alert(error.message);
+    return;
+  }
 
-            last_seen:new Date()
-
-        })
-
-        .eq(
-            "id",
-            currentUser.id
-        );
-
-    }
-
-},30000);
-
-
-
-// Login button placeholder
-signin.onclick=async()=>{
-
-    alert(
-        "Connect this button to your Supabase Auth login."
-    );
-
-};
-
-
-
-// Register button placeholder
-register.onclick=async()=>{
-
-    alert(
-        "Connect this button to your Supabase Auth signup."
-    );
-
-};
-// ===============================
-// SUPABASE AUTH CONNECTION
-// ===============================
-
-// Example login using hidden email mapping.
-// User only enters a username.
-// The email is generated internally.
-
-async function loginUser(){
-
-    const name = username.value.trim();
-    const pass = password.value.trim();
-
-
-    if(!name || !pass){
-
-        alert("Enter username and password");
-        return;
-
-    }
-
-
-    const fakeEmail = 
-        name.toLowerCase() + "@chat.local";
-
-
-    const {data,error}=await supabase.auth.signInWithPassword({
-
-        email:fakeEmail,
-
-        password:pass
-
-    });
-
-
-    if(error){
-
-        alert(error.message);
-        return;
-
-    }
-
-
-    const {data:profile}=await supabase
+  const { data: profile, error: profileError } = await supabase
     .from("profiles")
     .select("*")
-    .eq("id",data.user.id)
+    .eq("id", data.user.id)
     .single();
 
+  if (profileError) {
+    alert(profileError.message);
+    return;
+  }
 
-    openChat({
-
-        id:data.user.id,
-
-        username:profile.username
-
-    });
-
+  openChat({
+    id: data.user.id,
+    username: profile.username
+  });
 }
 
+async function createAccount() {
+  const name = username.value.trim();
+  const pass = password.value.trim();
 
+  if (!name || !pass) {
+    alert("Enter username and password");
+    return;
+  }
 
-// Create account
+  const fakeEmail = name.toLowerCase() + "@chat.local";
 
-async function createAccount(){
+  const { data, error } = await supabase.auth.signUp({
+    email: fakeEmail,
+    password: pass
+  });
 
-    const name=username.value.trim();
-    const pass=password.value.trim();
+  if (error) {
+    alert(error.message);
+    return;
+  }
 
+  if (!data.user) {
+    alert("Account created, but no user was returned.");
+    return;
+  }
 
-    if(!name || !pass){
-
-        alert("Enter username and password");
-        return;
-
-    }
-
-
-    const fakeEmail=
-        name.toLowerCase()+"@chat.local";
-
-
-    const {data,error}=await supabase.auth.signUp({
-
-        email:fakeEmail,
-
-        password:pass
-
-    });
-
-
-    if(error){
-
-        alert(error.message);
-        return;
-
-    }
-
-
-
-    await supabase
+  const { error: profileError } = await supabase
     .from("profiles")
     .insert({
-
-        id:data.user.id,
-
-        username:name,
-
-        online:true
-
+      id: data.user.id,
+      username: name,
+      online: true,
+      last_seen: new Date().toISOString()
     });
 
+  if (profileError) {
+    alert(profileError.message);
+    return;
+  }
 
+  alert("Account created");
 
-    alert("Account created");
-
-
-    openChat({
-
-        id:data.user.id,
-
-        username:name
-
-    });
-
+  openChat({
+    id: data.user.id,
+    username: name
+  });
 }
 
+register.onclick = createAccount;
+signin.onclick = loginUser;
 
+async function checkSession() {
+  const { data: { session } } = await supabase.auth.getSession();
 
-register.onclick=createAccount;
+  if (session) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", session.user.id)
+      .single();
 
-signin.onclick=loginUser;
-
-
-
-// Restore session after refresh
-
-async function checkSession(){
-
-    const {
-
-        data:{session}
-
-    }=await supabase.auth.getSession();
-
-
-
-    if(session){
-
-
-        const {data:profile}=await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id",session.user.id)
-        .single();
-
-
-
-        if(profile){
-
-            openChat({
-
-                id:session.user.id,
-
-                username:profile.username
-
-            });
-
-        }
-
+    if (profile) {
+      openChat({
+        id: session.user.id,
+        username: profile.username
+      });
     }
-
+  }
 }
-
 
 checkSession();
 </script>
-
 </body>
 </html>
