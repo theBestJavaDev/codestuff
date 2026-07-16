@@ -340,11 +340,6 @@
       const user = data.user;
       if (!user) return setMsg("Signup succeeded, but no user was returned.");
 
-      const { error: profileError } = await supabaseClient.from("profiles").insert({
-        id: user.id,
-        username
-      });
-
       if (profileError && !profileError.message.includes("duplicate")) {
         return setMsg(profileError.message);
       }
