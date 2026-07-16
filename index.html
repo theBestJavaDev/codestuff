@@ -340,8 +340,8 @@
       const user = data.user;
       if (!user) return setMsg("Signup succeeded, but no user was returned.");
 
-      if (profileError && !profileError.message.includes("duplicate")) {
-        return setMsg(profileError.message);
+      if (!user) {
+        return setMsg("Signup succeeded, but no user was returned.");
       }
 
       setMsg("Account created. Log in now.", true);
