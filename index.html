@@ -1,447 +1,415 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Supabase Chat</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-body {
-  background: #1e1f22;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-}
-
-#login {
-  width: 350px;
-  background: #2b2d31;
-  padding: 25px;
-  border-radius: 10px;
-}
-
-#chat {
-  display: none;
-  width: 95%;
-  height: 95vh;
-  background: #2b2d31;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-h2 {
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-input {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 5px;
-  outline: none;
-  font-size: 15px;
-}
-
-button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 5px;
-  background: #5865F2;
-  color: white;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-button:hover {
-  background: #4752c4;
-}
-
-#container {
-  display: flex;
-  height: 100%;
-}
-
-#users {
-  width: 220px;
-  background: #232428;
-  padding: 15px;
-  overflow-y: auto;
-}
-
-#users h3 {
-  margin-bottom: 15px;
-}
-
-.user {
-  padding: 8px;
-  margin-bottom: 6px;
-  background: #313338;
-  border-radius: 5px;
-}
-
-#main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-#messages {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px;
-}
-
-.message {
-  background: #313338;
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-}
-
-.message b {
-  color: #6aa7ff;
-}
-
-#bottom {
-  display: flex;
-  padding: 15px;
-  background: #232428;
-}
-
-#msg {
-  flex: 1;
-  margin: 0;
-}
-
-#send {
-  width: 120px;
-  margin-left: 10px;
-}
-
-#typing {
-  padding-left: 20px;
-  padding-bottom: 10px;
-  font-size: 13px;
-  color: #aaa;
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Supabase Public Chat</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0f172a;
+      --panel: #111827;
+      --panel2: #1f2937;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border: #374151;
+      --accent: #22c55e;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: linear-gradient(180deg, #0f172a, #020617);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .app {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px;
+      display: grid;
+      gap: 16px;
+    }
+    .topbar, .panel {
+      background: rgba(17,24,39,0.92);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 16px;
+      min-height: 72vh;
+    }
+    .hidden { display: none !important; }
+    .split {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    h1, h2, p { margin: 0 0 12px; }
+    .muted { color: var(--muted); }
+    .status {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    input, textarea, button {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #0b1220;
+      color: var(--text);
+      padding: 12px;
+      font: inherit;
+    }
+    textarea { min-height: 54px; resize: vertical; }
+    button {
+      cursor: pointer;
+      border: none;
+      font-weight: 700;
+      background: #1d4ed8;
+    }
+    button.secondary { background: #334155; }
+    button.success { background: #16a34a; }
+    button.danger { background: #b91c1c; }
+    .row { display: grid; gap: 10px; }
+    .two { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .messages {
+      overflow: auto;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(15,23,42,0.75);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 420px;
+    }
+    .msg {
+      max-width: 70%;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--panel2);
+    }
+    .msg.me {
+      margin-left: auto;
+      background: rgba(34,197,94,0.15);
+      border-color: rgba(34,197,94,0.35);
+    }
+    .meta {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .users {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 70vh;
+      overflow: auto;
+    }
+    .user {
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(31,41,55,0.8);
+      border: 1px solid var(--border);
+    }
+    .error { color: #fca5a5; }
+    .ok { color: #86efac; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-
 <body>
-<div id="login">
-  <h2>Supabase Chat</h2>
-  <input id="username" placeholder="Username">
-  <input id="password" type="password" placeholder="Password">
-  <button id="register">Create Account</button>
-  <button id="signin">Login</button>
-</div>
-
-<div id="chat">
-  <div id="container">
-    <div id="users">
-      <h3>Online</h3>
-      <div id="onlineList"></div>
+  <div class="app">
+    <div class="topbar split">
+      <div>
+        <h1>Public Chat</h1>
+        <div class="muted">Username profile + realtime messages in one room.</div>
+      </div>
+      <div id="sessionStatus" class="status">Not signed in</div>
     </div>
 
-    <div id="main">
-      <div id="messages"></div>
-      <div id="typing"></div>
+    <div id="authView" class="panel">
+      <div class="auth-tabs">
+        <button id="showLoginBtn" class="secondary">Login</button>
+        <button id="showSignupBtn">Sign Up</button>
+      </div>
 
-      <div id="bottom">
-        <input id="msg" placeholder="Type a message...">
-        <button id="send">Send</button>
+      <div id="loginForm" class="row">
+        <h2>Login</h2>
+        <input id="loginEmail" type="email" placeholder="Email" />
+        <input id="loginPassword" type="password" placeholder="Password" />
+        <button id="loginBtn">Login</button>
+      </div>
+
+      <div id="signupForm" class="row hidden">
+        <h2>Sign Up</h2>
+        <input id="signupUsername" type="text" placeholder="Username" />
+        <input id="signupEmail" type="email" placeholder="Email" />
+        <input id="signupPassword" type="password" placeholder="Password" />
+        <button id="signupBtn">Create Account</button>
+      </div>
+
+      <p id="authMsg" class="muted"></p>
+    </div>
+
+    <div id="appView" class="grid hidden">
+      <div class="panel">
+        <div class="split">
+          <h2>Online Users</h2>
+          <button id="refreshUsersBtn" class="secondary" style="width:auto;">Refresh</button>
+        </div>
+        <div id="usersList" class="users"></div>
+      </div>
+
+      <div class="panel" style="display:grid; grid-template-rows:auto 1fr auto; gap:12px;">
+        <div class="split">
+          <div>
+            <h2>Global Room</h2>
+            <div class="muted">Everyone sees the same messages.</div>
+          </div>
+          <button id="logoutBtn" class="danger" style="width:auto;">Logout</button>
+        </div>
+
+        <div id="messages" class="messages"></div>
+
+        <form id="messageForm" class="row">
+          <textarea id="messageInput" placeholder="Type a message..."></textarea>
+          <button type="submit" class="success">Send</button>
+        </form>
       </div>
     </div>
   </div>
-</div>
 
-<script>
-const SUPABASE_URL = "https://zwsosuqgbcdrrsnodrph.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp3c29zdXFnYmNkcnJzbm9kcnBoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyMjE5MzYsImV4cCI6MjA5OTc5NzkzNn0.10CK9gekKUp8igIkokSOpYccN1ddGMqDOxYIq5jCV-o";
+  <script>
+    const SUPABASE_URL = "https://vvavdtlhrxeksyvmndpr.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2YXZkdGxocnhla3N5dm1uZHByIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyMjI4NzIsImV4cCI6MjA5OTc5ODg3Mn0.SInEYYuBOMEuOgeFOkFB1DyuEJplz9rDfgnA18qcb3Q";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const authView = document.getElementById("authView");
+    const appView = document.getElementById("appView");
+    const authMsg = document.getElementById("authMsg");
+    const sessionStatus = document.getElementById("sessionStatus");
+    const usersList = document.getElementById("usersList");
+    const messagesEl = document.getElementById("messages");
 
-let currentUser = null;
-let messageChannel = null;
-let usersChannel = null;
+    let currentUser = null;
+    let myProfile = null;
+    let channel = null;
 
-const login = document.getElementById("login");
-const chat = document.getElementById("chat");
-const username = document.getElementById("username");
-const password = document.getElementById("password");
-const register = document.getElementById("register");
-const signin = document.getElementById("signin");
-const messages = document.getElementById("messages");
-const onlineList = document.getElementById("onlineList");
-const msg = document.getElementById("msg");
-const send = document.getElementById("send");
-
-function escapeHTML(text) {
-  return String(text ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-async function setOnline() {
-  await sb.from("profiles").update({
-    online: true,
-    last_seen: new Date().toISOString()
-  }).eq("id", currentUser.id);
-}
-
-async function openChat(user) {
-  currentUser = user;
-  login.style.display = "none";
-  chat.style.display = "block";
-  await setOnline();
-  await loadMessages();
-  await subscribeMessages();
-  await subscribeUsers();
-}
-
-window.addEventListener("beforeunload", () => {
-  if (currentUser) {
-    sb.from("profiles").update({
-      online: false,
-      last_seen: new Date().toISOString()
-    }).eq("id", currentUser.id);
-  }
-});
-
-async function loadMessages() {
-  const { data, error } = await sb.from("messages").select("*").order("created_at", { ascending: true });
-  if (error) {
-    console.log(error);
-    return;
-  }
-  messages.innerHTML = "";
-  data.forEach(message => addMessage(message));
-}
-
-function addMessage(message) {
-  const div = document.createElement("div");
-  div.className = "message";
-  const time = new Date(message.created_at).toLocaleTimeString();
-  div.innerHTML =
-    "<b>" + escapeHTML(message.username) + "</b><br>" +
-    escapeHTML(message.message) +
-    "<small style='color:#aaa;display:block;margin-top:5px'>" +
-    escapeHTML(time) +
-    "</small>";
-  messages.appendChild(div);
-  messages.scrollTop = messages.scrollHeight;
-}
-
-async function sendMessage() {
-  const text = msg.value.trim();
-  if (!text || !currentUser) return;
-
-  const { error } = await sb.from("messages").insert({
-    user_id: currentUser.id,
-    username: currentUser.username,
-    message: text
-  });
-
-  if (error) {
-    console.log(error);
-    return;
-  }
-
-  msg.value = "";
-}
-
-send.onclick = sendMessage;
-
-msg.addEventListener("keydown", e => {
-  if (e.key === "Enter") {
-    e.preventDefault();
-    sendMessage();
-  }
-});
-
-async function subscribeMessages() {
-  if (messageChannel) {
-    await sb.removeChannel(messageChannel);
-  }
-
-  messageChannel = sb
-    .channel("messages-room")
-    .on(
-      "postgres_changes",
-      { event: "INSERT", schema: "public", table: "messages" },
-      payload => addMessage(payload.new)
-    )
-    .subscribe();
-}
-
-async function loadOnlineUsers() {
-  const { data, error } = await sb.from("profiles").select("username").eq("online", true);
-
-  if (error) {
-    console.log(error);
-    return;
-  }
-
-  onlineList.innerHTML = "";
-
-  data.forEach(user => {
-    const div = document.createElement("div");
-    div.className = "user";
-    div.innerHTML = "🟢 " + escapeHTML(user.username);
-    onlineList.appendChild(div);
-  });
-}
-
-async function subscribeUsers() {
-  await loadOnlineUsers();
-
-  if (usersChannel) {
-    await sb.removeChannel(usersChannel);
-  }
-
-  usersChannel = sb
-    .channel("online-users")
-    .on(
-      "postgres_changes",
-      { event: "*", schema: "public", table: "profiles" },
-      () => loadOnlineUsers()
-    )
-    .subscribe();
-}
-
-setInterval(async () => {
-  if (currentUser) {
-    await sb.from("profiles").update({
-      online: true,
-      last_seen: new Date().toISOString()
-    }).eq("id", currentUser.id);
-  }
-}, 30000);
-
-async function loginUser() {
-  const name = username.value.trim();
-  const pass = password.value.trim();
-
-  if (!name || !pass) {
-    alert("Enter username and password");
-    return;
-  }
-
-  const fakeEmail = name.toLowerCase() + "@chat.local";
-
-  const { data, error } = await sb.auth.signInWithPassword({
-    email: fakeEmail,
-    password: pass
-  });
-
-  if (error) {
-    alert(error.message);
-    return;
-  }
-
-  const { data: profile, error: profileError } = await sb
-    .from("profiles")
-    .select("*")
-    .eq("id", data.user.id)
-    .single();
-
-  if (profileError) {
-    alert(profileError.message);
-    return;
-  }
-
-  openChat({
-    id: data.user.id,
-    username: profile.username
-  });
-}
-
-async function createAccount() {
-  const name = username.value.trim();
-  const pass = password.value.trim();
-
-  if (!name || !pass) {
-    alert("Enter username and password");
-    return;
-  }
-
-  const fakeEmail = name.toLowerCase() + "@chat.local";
-
-  const { data, error } = await sb.auth.signUp({
-    email: fakeEmail,
-    password: pass
-  });
-
-  if (error) {
-    alert(error.message);
-    return;
-  }
-
-  if (!data.user) {
-    alert("Account created, but no user was returned.");
-    return;
-  }
-
-  const { error: profileError } = await sb.from("profiles").insert({
-    id: data.user.id,
-    username: name,
-    online: true,
-    last_seen: new Date().toISOString()
-  });
-
-  if (profileError) {
-    alert(profileError.message);
-    return;
-  }
-
-  alert("Account created");
-  openChat({
-    id: data.user.id,
-    username: name
-  });
-}
-
-register.onclick = createAccount;
-signin.onclick = loginUser;
-
-async function checkSession() {
-  const { data: { session } } = await sb.auth.getSession();
-
-  if (session) {
-    const { data: profile } = await sb
-      .from("profiles")
-      .select("*")
-      .eq("id", session.user.id)
-      .single();
-
-    if (profile) {
-      openChat({
-        id: session.user.id,
-        username: profile.username
-      });
+    function setMsg(text, ok = false) {
+      authMsg.textContent = text;
+      authMsg.className = ok ? "muted ok" : "muted error";
     }
-  }
-}
 
-checkSession();
-</script>
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function showLogin() {
+      loginForm.classList.remove("hidden");
+      signupForm.classList.add("hidden");
+    }
+
+    function showSignup() {
+      signupForm.classList.remove("hidden");
+      loginForm.classList.add("hidden");
+    }
+
+    async function loadProfile() {
+      const { data: userData } = await supabase.auth.getUser();
+      currentUser = userData.user || null;
+      if (!currentUser) return null;
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", currentUser.id)
+        .single();
+
+      if (error) return null;
+      myProfile = data;
+      return data;
+    }
+
+    async function refreshUsers() {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, username, created_at")
+        .order("username", { ascending: true });
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      usersList.innerHTML = "";
+      data.forEach(u => {
+        const div = document.createElement("div");
+        div.className = "user";
+        div.innerHTML = `<strong>@${escapeHtml(u.username)}</strong><div class="muted">${new Date(u.created_at).toLocaleString()}</div>`;
+        usersList.appendChild(div);
+      });
+
+      if (!data.length) usersList.innerHTML = `<div class="muted">No users found.</div>`;
+    }
+
+    function clearMessages() {
+      messagesEl.innerHTML = "";
+    }
+
+    function renderMessage(m) {
+      const el = document.createElement("div");
+      const mine = myProfile && m.sender_id === myProfile.id;
+      el.className = "msg" + (mine ? " me" : "");
+      el.innerHTML = `
+        <div class="meta">@${escapeHtml(m.sender_username || "user")} • ${new Date(m.created_at).toLocaleString()}</div>
+        <div>${escapeHtml(m.content)}</div>
+      `;
+      messagesEl.appendChild(el);
+    }
+
+    async function loadMessages() {
+      const { data, error } = await supabase
+        .from("messages")
+        .select("id, sender_id, content, created_at, sender_username")
+        .order("created_at", { ascending: true });
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      clearMessages();
+      data.forEach(renderMessage);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+
+      if (channel) await supabase.removeChannel(channel);
+
+      channel = supabase
+        .channel("public-chat")
+        .on("postgres_changes", {
+          event: "INSERT",
+          schema: "public",
+          table: "messages"
+        }, payload => {
+          renderMessage(payload.new);
+          messagesEl.scrollTop = messagesEl.scrollHeight;
+        })
+        .subscribe();
+    }
+
+    async function handleSignup() {
+      setMsg("");
+      const username = document.getElementById("signupUsername").value.trim();
+      const email = document.getElementById("signupEmail").value.trim();
+      const password = document.getElementById("signupPassword").value;
+
+      if (!username || !email || !password) return setMsg("Fill in username, email, and password.");
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { username } }
+      });
+
+      if (error) return setMsg(error.message);
+
+      const user = data.user;
+      if (!user) return setMsg("Signup succeeded, but no user was returned.");
+
+      const { error: profileError } = await supabase.from("profiles").insert({
+        id: user.id,
+        username
+      });
+
+      if (profileError && !profileError.message.includes("duplicate")) {
+        return setMsg(profileError.message);
+      }
+
+      setMsg("Account created. Log in now.", true);
+      showLogin();
+    }
+
+    async function handleLogin() {
+      setMsg("");
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value;
+
+      if (!email || !password) return setMsg("Enter email and password.");
+
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) return setMsg(error.message);
+    }
+
+    async function handleLogout() {
+      if (channel) await supabase.removeChannel(channel);
+      await supabase.auth.signOut();
+      clearMessages();
+      myProfile = null;
+      currentUser = null;
+    }
+
+    async function syncAuth() {
+      const profile = await loadProfile();
+      if (profile) {
+        sessionStatus.textContent = `Signed in as @${profile.username}`;
+        authView.classList.add("hidden");
+        appView.classList.remove("hidden");
+        await refreshUsers();
+        await loadMessages();
+      } else {
+        sessionStatus.textContent = "Not signed in";
+        authView.classList.remove("hidden");
+        appView.classList.add("hidden");
+      }
+    }
+
+    document.getElementById("showLoginBtn").onclick = showLogin;
+    document.getElementById("showSignupBtn").onclick = showSignup;
+    document.getElementById("signupBtn").onclick = handleSignup;
+    document.getElementById("loginBtn").onclick = handleLogin;
+    document.getElementById("logoutBtn").onclick = handleLogout;
+    document.getElementById("refreshUsersBtn").onclick = refreshUsers;
+
+    document.getElementById("messageForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!myProfile) return;
+      const input = document.getElementById("messageInput");
+      const content = input.value.trim();
+      if (!content) return;
+
+      const { error } = await supabase.from("messages").insert({
+        sender_id: myProfile.id,
+        sender_username: myProfile.username,
+        content
+      });
+
+      if (!error) input.value = "";
+      if (error) console.error(error);
+    });
+
+    supabase.auth.onAuthStateChange(() => syncAuth());
+    syncAuth();
+  </script>
 </body>
 </html>
