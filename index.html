@@ -561,6 +561,29 @@
       chatTagEl.textContent = "DM";
       messageInput.placeholder = "Message @" + username;
     }
+    async function selectServer(server) {
+      activeServer = server;
+      activeChannel = null;
+      activeDmThread = null;
+
+      renderServersActiveState();
+
+      chatTagEl.textContent = "Server: " + server.name;
+
+      await loadChannels();
+
+      // If there are channels, load the first one
+      if (activeChannel) {
+        setChatHeaderChannel(activeChannel.name, server.name);
+        await loadMessages();
+      } else {
+        messagesEl.innerHTML = `
+          <div class="muted" style="padding:20px;">
+            No channels in this server yet.
+          </div>
+    `    ;
+      }
+    }
 
     async function loadProfile() {
       const { data: userData } = await supabaseClient.auth.getUser();
@@ -888,9 +911,23 @@
         .single();
       if (error) return alert(error.message);
       // Add membership
+      // Add yourself as owner
       await supabaseClient
         .from("server_members")
-        .insert({ server_id: data.id, user_id: currentUser.id, role: "owner" });
+        .insert({
+          server_id: data.id,
+          user_id: currentUser.id,
+          role: "owner"
+        });
+
+      // Create default channel
+      await supabaseClient
+        .from("channels")
+        .insert({
+          server_id: data.id,
+          name: "general"
+        });
+
       await loadServers();
     };
 
