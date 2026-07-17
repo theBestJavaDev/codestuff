@@ -584,47 +584,50 @@
     async function loadServers() {
       if (!currentUser) return;
 
-      const { data: memberships, error } = await supabaseClient
+      // 1) Get memberships for the current user
+      const { data: memberships, error: memError } = await supabaseClient
         .from("server_members")
         .select("server_id")
         .eq("user_id", currentUser.id);
 
-      if (error) {
-        console.error(error);
+      if (memError) {
+        console.error(memError);
         return;
       }
 
-      const serverIds = Array.isArray(memberships)
-        ? memberships.map(m => m.server_id)
-        : [];
-
-      if (serverIds.length === 0) {
+      const serverIds = memberships.map(m => m.server_id);
+      if (!serverIds.length) {
         serverListEl.innerHTML = "";
+        activeServer = null;
+        activeChannel = null;
+        chatTagEl.textContent = "Server: none";
         return;
       }
 
-      console.log(serverIds);
-
+      // 2) Fetch servers with those IDs
       const { data: servers, error: serverError } = await supabaseClient
         .from("servers")
-        .select("*")
-        .in("id", serverIds);
+        .select("id, name, owner_id")
+        .in("id", serverIds);   // <- now an array of UUIDs
 
       if (serverError) {
         console.error(serverError);
         return;
       }
 
-      console.log(servers);
-    }
-    async function selectServer(server) {
-      activeServer = server;
-      activeChannel = null;
-      activeDmThread = null;
-      await loadChannels();
-      setChatHeaderChannel(activeChannel?.name || "general", activeServer.name);
-      renderServersActiveState();
-      await loadMessages();
+      serverListEl.innerHTML = "";
+      servers.forEach(s => {
+        const el = document.createElement("div");
+        el.className = "server-icon" + (activeServer && activeServer.id === s.id ? " active" : "");
+        el.textContent = initialAvatarText(s.name);
+        el.title = s.name;
+        el.onclick = () => selectServer(s);
+        serverListEl.appendChild(el);
+      });
+
+      if (!activeServer && servers.length) {
+        selectServer(servers[0]);
+      }
     }
 
     function renderServersActiveState() {
