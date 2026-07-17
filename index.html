@@ -435,6 +435,8 @@
       </div>
 
       <div class="sidebar-footer">
+        <button id="deleteChannelBtn" class="sidebar-btn">Delete Channel</button>
+        <button id="deleteServerBtn" class="sidebar-btn">Delete Server</button>
         Nebula • realtime chat on Supabase.
       </div>
     </div>
@@ -929,6 +931,46 @@
         });
 
       await loadServers();
+    };
+    
+    document.getElementById("deleteServerBtn").onclick = async () => {
+      if (!activeServer) return;
+
+      if (!confirm(`Delete "${activeServer.name}"?`)) return;
+
+      const { error } = await supabaseClient
+        .from("servers")
+        .delete()
+        .eq("id", activeServer.id);
+
+      if (error) {
+        alert(error.message);
+        return;
+      }
+
+      activeServer = null;
+      activeChannel = null;
+      messagesEl.innerHTML = "";
+      await loadServers();
+    };
+
+    document.getElementById("deleteChannelBtn").onclick = async () => {
+      if (!activeChannel) return;
+
+      if (!confirm(`Delete #${activeChannel.name}?`)) return;
+
+      const { error } = await supabaseClient
+        .from("channels")
+        .delete()
+        .eq("id", activeChannel.id);
+
+      if (error) {
+        alert(error.message);
+        return;
+      }
+
+      activeChannel = null;
+      await loadChannels();
     };
 
     document.getElementById("createChannelBtn").onclick = async () => {
