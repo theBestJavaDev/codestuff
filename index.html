@@ -3,220 +3,531 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Supabase Public Chat</title>
+  <title>Nebula</title>
   <style>
     :root {
       color-scheme: dark;
-      --bg: #0f172a;
-      --panel: #111827;
-      --panel2: #1f2937;
+      --rail: #050816;
+      --sidebar: #0b1120;
+      --chat: #020617;
+      --accent: #8b5cf6;  /* nebula purple */
+      --accent-soft: rgba(139,92,246,0.25);
+      --accent-hard: rgba(139,92,246,0.5);
       --text: #e5e7eb;
       --muted: #9ca3af;
-      --border: #374151;
-      --accent: #22c55e;
-      --danger: #ef4444;
+      --border: #1f2937;
+      --bg-gradient: radial-gradient(circle at 10% 0%, #1f2937 0, #020617 55%, #000 100%);
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: system-ui, sans-serif;
-      background: linear-gradient(180deg, #0f172a, #020617);
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: var(--bg-gradient);
       color: var(--text);
       min-height: 100vh;
+      overflow: hidden;
     }
-    .app {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 24px;
+    .nebula-app {
       display: grid;
-      gap: 16px;
+      grid-template-columns: 80px 260px minmax(0, 1fr);
+      height: 100vh;
     }
-    .topbar, .panel {
-      background: rgba(17,24,39,0.92);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: 320px 1fr;
-      gap: 16px;
-      min-height: 72vh;
-    }
-    .hidden { display: none !important; }
-    .split {
+
+    /* Server rail (left) */
+    .nebula-rail {
+      background: var(--rail);
+      border-right: 1px solid #020617;
+      padding: 12px 8px;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
       gap: 12px;
-      flex-wrap: wrap;
+      align-items: center;
     }
-    h1, h2, p { margin: 0 0 12px; }
-    .muted { color: var(--muted); }
-    .status {
-      padding: 8px 12px;
+    .nebula-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, #22c55e, var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      box-shadow: 0 0 20px rgba(139,92,246,0.7);
+    }
+    .server-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 24px;
+      background: #111827;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: border-radius .18s, background .18s, transform .12s;
+    }
+    .server-icon.active {
+      background: var(--accent-soft);
+      color: var(--text);
+      border: 2px solid var(--accent-hard);
+    }
+    .server-icon:hover {
+      border-radius: 16px;
+      transform: translateY(-1px);
+      background: #1f2937;
+    }
+    .server-add {
+      border-radius: 24px;
+      background: #16a34a;
+      color: #ecfdf5;
+    }
+
+    /* Sidebar (channels + DMs) */
+    .nebula-sidebar {
+      background: var(--sidebar);
+      border-right: 1px solid #020617;
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+      gap: 10px;
+    }
+    .sidebar-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .sidebar-scroller {
+      overflow-y: auto;
+      flex: 1;
+      padding-right: 2px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .channel-list, .dm-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .channel-row {
+      padding: 6px 8px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .channel-row.active {
+      background: #1f2937;
+      color: var(--text);
+    }
+    .channel-row:hover {
+      background: #0f172a;
+    }
+    .channel-hash {
+      color: #6b7280;
+    }
+    .dm-row {
+      padding: 5px 7px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .dm-row:hover {
+      background: #0f172a;
+    }
+    .dm-avatar {
+      width: 22px;
+      height: 22px;
       border-radius: 999px;
-      background: rgba(15,23,42,0.9);
-      border: 1px solid var(--border);
+      background: #111827;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding-top: 6px;
+      border-top: 1px solid #020617;
+      font-size: 11px;
       color: var(--muted);
     }
-    input, textarea, button {
-      width: 100%;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: #0b1220;
-      color: var(--text);
-      padding: 12px;
-      font: inherit;
+
+    .sidebar-buttons {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 4px;
     }
-    textarea { min-height: 54px; resize: vertical; }
-    button {
+    .sidebar-btn {
+      flex: 1;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid #1f2937;
+      background: #020617;
+      color: var(--muted);
+      font-size: 11px;
       cursor: pointer;
-      border: none;
-      font-weight: 700;
-      background: #1d4ed8;
     }
-    button.secondary { background: #334155; }
-    button.success { background: #16a34a; }
-    button.danger { background: #b91c1c; }
-    .row { display: grid; gap: 10px; }
-    .two { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .sidebar-btn.primary {
+      border-color: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    /* Chat column */
+    .nebula-chat {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      background: var(--chat);
+    }
+    .chat-header {
+      background: rgba(15,23,42,0.9);
+      border-bottom: 1px solid #020617;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      backdrop-filter: blur(10px);
+    }
+    .chat-header-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .chat-header-name {
+      font-weight: 600;
+      font-size: 15px;
+    }
+    .chat-header-desc {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .chat-header-tag {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid #1f2937;
+      color: var(--muted);
+    }
+    .status-pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: #020617;
+      border: 1px solid #1f2937;
+      color: var(--muted);
+    }
+    .logout-btn {
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      background: #dc2626;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* Messages */
+    .messages {
+      padding: 10px 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      scroll-behavior: smooth;
+    }
+    .msg-row {
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr);
+      padding: 4px 4px;
+      border-radius: 8px;
+      align-items: flex-start;
+    }
+    .msg-row:hover {
+      background: rgba(15,23,42,0.75);
+    }
+    .msg-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: #111827;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    .msg-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .msg-header {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      font-size: 14px;
+    }
+    .msg-username {
+      font-weight: 600;
+    }
+    .msg-timestamp {
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .msg-body {
+      font-size: 14px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .msg-row.me .msg-username {
+      color: var(--accent);
+    }
+
+    /* Composer */
+    .composer {
+      border-top: 1px solid #020617;
+      padding: 8px 16px 12px;
+    }
+    .composer-input {
+      background: #020617;
+      border-radius: 8px;
+      border: 1px solid #1f2937;
+      padding: 10px 12px;
+      font-size: 14px;
+      width: 100%;
+      color: var(--text);
+      resize: none;
+      min-height: 48px;
+    }
+    .composer-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 6px;
+    }
+    .composer-send {
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      background: var(--accent);
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* Auth overlay */
+    #authOverlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 0 0, rgba(139,92,246,0.35), rgba(15,23,42,0.95));
+      backdrop-filter: blur(18px);
+      z-index: 40;
+    }
+    .auth-card {
+      width: 380px;
+      background: #020617;
+      border-radius: 18px;
+      border: 1px solid #1f2937;
+      padding: 18px 18px 16px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+    }
     .auth-tabs {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
       margin-bottom: 12px;
     }
-    .messages {
-      overflow: auto;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      background: rgba(15,23,42,0.75);
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      min-height: 420px;
+    .auth-tab-btn {
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      background: #0b1120;
+      color: var(--muted);
     }
-    .msg {
-      max-width: 70%;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: var(--panel2);
+    .auth-tab-btn.active {
+      background: var(--accent);
+      color: white;
     }
-    .msg.me {
-      margin-left: auto;
-      background: rgba(34,197,94,0.15);
-      border-color: rgba(34,197,94,0.35);
+    .auth-input {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #1f2937;
+      background: #020617;
+      color: var(--text);
+      padding: 10px;
+      font-size: 14px;
+      margin-bottom: 8px;
     }
-    .meta {
+    .auth-btn {
+      width: 100%;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      background: var(--accent);
+      padding: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    .auth-msg {
       font-size: 12px;
       color: var(--muted);
-      margin-bottom: 6px;
+      margin-top: 6px;
+      min-height: 16px;
     }
-    .users {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 70vh;
-      overflow: auto;
-    }
-    .user {
-      padding: 10px 12px;
-      border-radius: 12px;
-      background: rgba(31,41,55,0.8);
-      border: 1px solid var(--border);
-    }
-    .error { color: #fca5a5; }
-    .ok { color: #86efac; }
+    .auth-msg.error { color: #fda4af; }
+    .auth-msg.ok { color: #bbf7d0; }
+
+    .muted { color: var(--muted); }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-  <div class="app">
-    <div class="topbar split">
-      <div>
-        <h1>Public Chat</h1>
-        <div class="muted">Username profile + realtime messages in one room.</div>
-      </div>
-      <div id="sessionStatus" class="status">Not signed in</div>
+  <div class="nebula-app">
+    <!-- Nebula rail -->
+    <div class="nebula-rail">
+      <div class="nebula-logo">N</div>
+      <div id="serverList"></div>
+      <div class="server-icon server-add" id="createServerBtn">+</div>
     </div>
 
-    <div id="authView" class="panel">
-      <div class="auth-tabs">
-        <button id="showLoginBtn" class="secondary">Login</button>
-        <button id="showSignupBtn">Sign Up</button>
+    <!-- Sidebar: channels + DMs -->
+    <div class="nebula-sidebar">
+      <div class="sidebar-buttons">
+        <button id="createChannelBtn" class="sidebar-btn primary">New channel</button>
+        <button id="inviteBtn" class="sidebar-btn">Invite</button>
       </div>
 
-      <div id="loginForm" class="row">
-        <h2>Login</h2>
-        <input id="loginEmail" type="email" placeholder="Email" />
-        <input id="loginPassword" type="password" placeholder="Password" />
-        <button id="loginBtn">Login</button>
-      </div>
-
-      <div id="signupForm" class="row hidden">
-        <h2>Sign Up</h2>
-        <input id="signupUsername" type="text" placeholder="Username" />
-        <input id="signupEmail" type="email" placeholder="Email" />
-        <input id="signupPassword" type="password" placeholder="Password" />
-        <button id="signupBtn">Create Account</button>
-      </div>
-
-      <p id="authMsg" class="muted"></p>
-    </div>
-
-    <div id="appView" class="grid hidden">
-      <div class="panel">
-        <div class="split">
-          <h2>Online Users</h2>
-          <button id="refreshUsersBtn" class="secondary" style="width:auto;">Refresh</button>
+      <div class="sidebar-scroller">
+        <div>
+          <div class="sidebar-section-title">Channels</div>
+          <div id="channelList" class="channel-list"></div>
         </div>
-        <div id="usersList" class="users"></div>
+
+        <div>
+          <div class="sidebar-section-title" style="margin-top:8px;">Direct messages</div>
+          <div id="dmList" class="dm-list"></div>
+        </div>
       </div>
 
-      <div class="panel" style="display:grid; grid-template-rows:auto 1fr auto; gap:12px;">
-        <div class="split">
+      <div class="sidebar-footer">
+        Nebula • realtime chat on Supabase.
+      </div>
+    </div>
+
+    <!-- Chat column -->
+    <div class="nebula-chat">
+      <div class="chat-header">
+        <div class="chat-header-title">
+          <span id="chatIcon" class="channel-hash">#</span>
           <div>
-            <h2>Global Room</h2>
-            <div class="muted">Everyone sees the same messages.</div>
+            <div id="chatName" class="chat-header-name">general</div>
+            <div id="chatDesc" class="chat-header-desc">Welcome to Nebula.</div>
           </div>
-          <button id="logoutBtn" class="danger" style="width:auto;">Logout</button>
         </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div id="chatTag" class="chat-header-tag">Server: none</div>
+          <div id="sessionStatus" class="status-pill">Not signed in</div>
+          <button id="logoutBtn" class="logout-btn">Logout</button>
+        </div>
+      </div>
 
-        <div id="messages" class="messages"></div>
+      <div id="messages" class="messages"></div>
 
-        <form id="messageForm" class="row">
-          <textarea id="messageInput" placeholder="Type a message..."></textarea>
-          <button type="submit" class="success">Send</button>
-        </form>
+      <div class="composer">
+        <textarea id="messageInput" class="composer-input" placeholder="Message Nebula"></textarea>
+        <div class="composer-row">
+          <button id="sendBtn" class="composer-send">Send</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <script>
-    const SUPABASE_URL = "https://vvavdtlhrxeksyvmndpr.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2YXZkdGxocnhla3N5dm1uZHByIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyMjI4NzIsImV4cCI6MjA5OTc5ODg3Mn0.SInEYYuBOMEuOgeFOkFB1DyuEJplz9rDfgnA18qcb3Q";
-    const supabaseClient = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_ANON_KEY
-    );
+  <!-- Auth -->
+  <div id="authOverlay">
+    <div class="auth-card">
+      <h2 style="margin:0 0 8px;">Welcome to Nebula</h2>
+      <p style="margin:0 0 12px; font-size:13px;" class="muted">
+        Drift into the chat cloud. Log in or sign up to join a server.
+      </p>
 
-    const authView = document.getElementById("authView");
-    const appView = document.getElementById("appView");
-    const authMsg = document.getElementById("authMsg");
+      <div class="auth-tabs">
+        <button id="showLoginBtn" class="auth-tab-btn active">Login</button>
+        <button id="showSignupBtn" class="auth-tab-btn">Sign Up</button>
+      </div>
+
+      <div id="loginForm">
+        <input id="loginEmail" class="auth-input" type="email" placeholder="Email" />
+        <input id="loginPassword" class="auth-input" type="password" placeholder="Password" />
+        <button id="loginBtn" class="auth-btn">Login</button>
+      </div>
+
+      <div id="signupForm" style="display:none;">
+        <input id="signupUsername" class="auth-input" type="text" placeholder="Username" />
+        <input id="signupEmail" class="auth-input" type="email" placeholder="Email" />
+        <input id="signupPassword" class="auth-input" type="password" placeholder="Password" />
+        <button id="signupBtn" class="auth-btn">Create account</button>
+      </div>
+
+      <div id="authMsg" class="auth-msg"></div>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "YOUR_SUPABASE_URL";
+    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const authOverlay = document.getElementById("authOverlay");
+    const authMsgEl = document.getElementById("authMsg");
     const sessionStatus = document.getElementById("sessionStatus");
-    const usersList = document.getElementById("usersList");
+
+    const serverListEl = document.getElementById("serverList");
+    const channelListEl = document.getElementById("channelList");
+    const dmListEl = document.getElementById("dmList");
     const messagesEl = document.getElementById("messages");
+    const messageInput = document.getElementById("messageInput");
+
+    const chatNameEl = document.getElementById("chatName");
+    const chatDescEl = document.getElementById("chatDesc");
+    const chatTagEl = document.getElementById("chatTag");
+    const chatIconEl = document.getElementById("chatIcon");
 
     let currentUser = null;
     let myProfile = null;
+    let activeServer = null;
+    let activeChannel = null;   // { id, name }
+    let activeDmThread = null;  // { id, otherUsername }
     let channel = null;
+    let viewType = "channel";   // "channel" or "dm"
 
-    function setMsg(text, ok = false) {
-      authMsg.textContent = text;
-      authMsg.className = ok ? "muted ok" : "muted error";
+    function setAuthMsg(text, type = "") {
+      authMsgEl.textContent = text;
+      authMsgEl.className = "auth-msg" + (type ? " " + type : "");
     }
 
     function escapeHtml(str) {
@@ -228,14 +539,27 @@
         .replaceAll("'", "&#039;");
     }
 
-    function showLogin() {
-      loginForm.classList.remove("hidden");
-      signupForm.classList.add("hidden");
+    function initialAvatarText(name) {
+      if (!name) return "?";
+      return name.trim().charAt(0).toUpperCase();
     }
 
-    function showSignup() {
-      signupForm.classList.remove("hidden");
-      loginForm.classList.add("hidden");
+    function setChatHeaderChannel(name, serverName) {
+      viewType = "channel";
+      chatIconEl.textContent = "#";
+      chatNameEl.textContent = name;
+      chatDescEl.textContent = "Channel in " + (serverName || "Nebula");
+      chatTagEl.textContent = "Server: " + (serverName || "none");
+      messageInput.placeholder = "Message #" + name;
+    }
+
+    function setChatHeaderDm(username) {
+      viewType = "dm";
+      chatIconEl.textContent = "@";
+      chatNameEl.textContent = username;
+      chatDescEl.textContent = "Direct messages";
+      chatTagEl.textContent = "DM";
+      messageInput.placeholder = "Message @" + username;
     }
 
     async function loadProfile() {
@@ -249,52 +573,95 @@
         .eq("id", currentUser.id)
         .single();
 
-      if (error) return null;
+      if (error) {
+        console.error(error);
+        return null;
+      }
       myProfile = data;
       return data;
     }
 
-    async function refreshUsers() {
+    async function loadServers() {
       const { data, error } = await supabaseClient
-        .from("profiles")
-        .select("id, username, created_at")
-        .order("username", { ascending: true });
+        .from("servers")
+        .select("id, name, owner_id")
+        .in("id",
+          supabaseClient
+            .from("server_members")
+            .select("server_id")
+        );
 
-      if (error) {
-        console.error(error);
+      // Simpler: fetch memberships then servers
+      const { data: memberships, error: memError } = await supabaseClient
+        .from("server_members")
+        .select("server_id")
+        .eq("user_id", currentUser.id);
+
+      if (memError) {
+        console.error(memError);
         return;
       }
 
-      usersList.innerHTML = "";
-      data.forEach(u => {
-        const div = document.createElement("div");
-        div.className = "user";
-        div.innerHTML = `<strong>@${escapeHtml(u.username)}</strong><div class="muted">${new Date(u.created_at).toLocaleString()}</div>`;
-        usersList.appendChild(div);
+      const serverIds = memberships.map(m => m.server_id);
+      if (!serverIds.length) {
+        serverListEl.innerHTML = "";
+        activeServer = null;
+        activeChannel = null;
+        chatTagEl.textContent = "Server: none";
+        return;
+      }
+
+      const { data: servers, error: serverError } = await supabaseClient
+        .from("servers")
+        .select("id, name, owner_id")
+        .in("id", serverIds);
+
+      if (serverError) {
+        console.error(serverError);
+        return;
+      }
+
+      serverListEl.innerHTML = "";
+      servers.forEach(s => {
+        const el = document.createElement("div");
+        el.className = "server-icon" + (activeServer && activeServer.id === s.id ? " active" : "");
+        el.textContent = initialAvatarText(s.name);
+        el.title = s.name;
+        el.onclick = () => selectServer(s);
+        serverListEl.appendChild(el);
       });
 
-      if (!data.length) usersList.innerHTML = `<div class="muted">No users found.</div>`;
+      if (!activeServer && servers.length) {
+        selectServer(servers[0]);
+      }
     }
 
-    function clearMessages() {
-      messagesEl.innerHTML = "";
+    async function selectServer(server) {
+      activeServer = server;
+      activeChannel = null;
+      activeDmThread = null;
+      await loadChannels();
+      setChatHeaderChannel(activeChannel?.name || "general", activeServer.name);
+      renderServersActiveState();
+      await loadMessages();
     }
 
-    function renderMessage(m) {
-      const el = document.createElement("div");
-      const mine = myProfile && m.sender_id === myProfile.id;
-      el.className = "msg" + (mine ? " me" : "");
-      el.innerHTML = `
-        <div class="meta">@${escapeHtml(m.sender_username || "user")} • ${new Date(m.created_at).toLocaleString()}</div>
-        <div>${escapeHtml(m.content)}</div>
-      `;
-      messagesEl.appendChild(el);
+    function renderServersActiveState() {
+      Array.from(serverListEl.children).forEach((el, idx) => {
+        const s = el.title;
+        el.classList.toggle("active", activeServer && initialAvatarText(activeServer.name) === el.textContent);
+      });
     }
 
-    async function loadMessages() {
+    async function loadChannels() {
+      if (!activeServer) {
+        channelListEl.innerHTML = `<div class="muted" style="font-size:13px;">Join or create a server.</div>`;
+        return;
+      }
       const { data, error } = await supabaseClient
-        .from("messages")
-        .select("id, sender_id, content, created_at, sender_username")
+        .from("channels")
+        .select("id, name")
+        .eq("server_id", activeServer.id)
         .order("created_at", { ascending: true });
 
       if (error) {
@@ -302,32 +669,176 @@
         return;
       }
 
-      clearMessages();
-      data.forEach(renderMessage);
-      messagesEl.scrollTop = messagesEl.scrollHeight;
+      channelListEl.innerHTML = "";
+      data.forEach(ch => {
+        const el = document.createElement("div");
+        el.className = "channel-row" + (activeChannel && activeChannel.id === ch.id ? " active" : "");
+        el.innerHTML = `<span class="channel-hash">#</span><span>${escapeHtml(ch.name)}</span>`;
+        el.onclick = () => {
+          activeChannel = ch;
+          activeDmThread = null;
+          setChatHeaderChannel(ch.name, activeServer.name);
+          renderChannelActiveState();
+          loadMessages();
+        };
+        channelListEl.appendChild(el);
+      });
 
+      if (!data.length) {
+        channelListEl.innerHTML = `<div class="muted" style="font-size:13px;">No channels. Create one.</div>`;
+      } else if (!activeChannel) {
+        activeChannel = data[0];
+        setChatHeaderChannel(activeChannel.name, activeServer.name);
+      }
+      renderChannelActiveState();
+    }
+
+    function renderChannelActiveState() {
+      Array.from(channelListEl.children).forEach((el) => {
+        const name = el.textContent.trim().replace("#", "").trim();
+        el.classList.toggle("active", activeChannel && activeChannel.name === name);
+      });
+    }
+
+    async function loadDmThreads() {
+      if (!currentUser) return;
+      const { data, error } = await supabaseClient
+        .from("dm_threads")
+        .select("id, user_a, user_b");
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      dmListEl.innerHTML = "";
+      for (const t of data) {
+        const otherId = t.user_a === currentUser.id ? t.user_b : t.user_a;
+        const { data: profile, error: pErr } = await supabaseClient
+          .from("profiles")
+          .select("username")
+          .eq("id", otherId)
+          .single();
+        if (pErr) continue;
+        const username = profile.username;
+        const el = document.createElement("div");
+        el.className = "dm-row";
+        el.innerHTML = `
+          <div class="dm-avatar">${escapeHtml(initialAvatarText(username))}</div>
+          <div>@${escapeHtml(username)}</div>
+        `;
+        el.onclick = () => {
+          activeDmThread = { id: t.id, otherUsername: username };
+          activeChannel = null;
+          setChatHeaderDm(username);
+          loadMessages();
+        };
+        dmListEl.appendChild(el);
+      }
+
+      if (!dmListEl.children.length) {
+        dmListEl.innerHTML = `<div class="muted" style="font-size:13px;">No DMs yet.</div>`;
+      }
+    }
+
+    function clearMessages() {
+      messagesEl.innerHTML = "";
+    }
+
+    function renderMessage(m) {
+      const me = myProfile && m.sender_id === myProfile.id;
+      const row = document.createElement("div");
+      row.className = "msg-row" + (me ? " me" : "");
+      const username = m.sender_username || "user";
+      const ts = new Date(m.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+      row.innerHTML = `
+        <div class="msg-avatar">${escapeHtml(initialAvatarText(username))}</div>
+        <div class="msg-content">
+          <div class="msg-header">
+            <span class="msg-username">${escapeHtml(username)}</span>
+            <span class="msg-timestamp">${escapeHtml(ts)}</span>
+          </div>
+          <div class="msg-body">${escapeHtml(m.content)}</div>
+        </div>
+      `;
+      messagesEl.appendChild(row);
+    }
+
+    async function loadMessages() {
+      clearMessages();
       if (channel) await supabaseClient.removeChannel(channel);
 
-      channel = supabaseClient
-        .channel("public-chat")
-        .on("postgres_changes", {
-          event: "INSERT",
-          schema: "public",
-          table: "messages"
-        }, payload => {
-          renderMessage(payload.new);
-          messagesEl.scrollTop = messagesEl.scrollHeight;
-        })
-        .subscribe();
+      if (viewType === "channel") {
+        if (!activeChannel) return;
+        const { data, error } = await supabaseClient
+          .from("messages")
+          .select("id, sender_id, sender_username, content, created_at, channel_id")
+          .eq("channel_id", activeChannel.id)
+          .order("created_at", { ascending: true });
+
+        if (error) {
+          console.error(error);
+          return;
+        }
+        data.forEach(renderMessage);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+
+        channel = supabaseClient
+          .channel("nebula-channel-" + activeChannel.id)
+          .on("postgres_changes", {
+            event: "INSERT",
+            schema: "public",
+            table: "messages"
+          }, payload => {
+            const m = payload.new;
+            if (m.channel_id === activeChannel.id) {
+              renderMessage(m);
+              messagesEl.scrollTop = messagesEl.scrollHeight;
+            }
+          })
+          .subscribe();
+      } else if (viewType === "dm") {
+        if (!activeDmThread) return;
+        const { data, error } = await supabaseClient
+          .from("dm_messages")
+          .select("id, sender_id, sender_username, content, created_at, thread_id")
+          .eq("thread_id", activeDmThread.id)
+          .order("created_at", { ascending: true });
+
+        if (error) {
+          console.error(error);
+          return;
+        }
+        data.forEach(renderMessage);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+
+        channel = supabaseClient
+          .channel("nebula-dm-" + activeDmThread.id)
+          .on("postgres_changes", {
+            event: "INSERT",
+            schema: "public",
+            table: "dm_messages"
+          }, payload => {
+            const m = payload.new;
+            if (m.thread_id === activeDmThread.id) {
+              renderMessage(m);
+              messagesEl.scrollTop = messagesEl.scrollHeight;
+            }
+          })
+          .subscribe();
+      }
     }
 
     async function handleSignup() {
-      setMsg("");
+      setAuthMsg("");
       const username = document.getElementById("signupUsername").value.trim();
       const email = document.getElementById("signupEmail").value.trim();
       const password = document.getElementById("signupPassword").value;
 
-      if (!username || !email || !password) return setMsg("Fill in username, email, and password.");
+      if (!username || !email || !password) {
+        return setAuthMsg("Fill in username, email, and password.", "error");
+      }
 
       const { data, error } = await supabaseClient.auth.signUp({
         email,
@@ -335,28 +846,26 @@
         options: { data: { username } }
       });
 
-      if (error) return setMsg(error.message);
+      if (error) return setAuthMsg(error.message, "error");
 
       const user = data.user;
-      if (!user) return setMsg("Signup succeeded, but no user was returned.");
+      if (!user) return setAuthMsg("Signup succeeded, but no user was returned.", "error");
 
-      if (!user) {
-        return setMsg("Signup succeeded, but no user was returned.");
-      }
-
-      setMsg("Account created. Log in now.", true);
+      setAuthMsg("Account created. Log in now.", "ok");
       showLogin();
     }
 
     async function handleLogin() {
-      setMsg("");
+      setAuthMsg("");
       const email = document.getElementById("loginEmail").value.trim();
       const password = document.getElementById("loginPassword").value;
 
-      if (!email || !password) return setMsg("Enter email and password.");
+      if (!email || !password) {
+        return setAuthMsg("Enter email and password.", "error");
+      }
 
       const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-      if (error) return setMsg(error.message);
+      if (error) return setAuthMsg(error.message, "error");
     }
 
     async function handleLogout() {
@@ -365,21 +874,111 @@
       clearMessages();
       myProfile = null;
       currentUser = null;
+      sessionStatus.textContent = "Not signed in";
+      authOverlay.style.display = "flex";
     }
 
     async function syncAuth() {
       const profile = await loadProfile();
       if (profile) {
-        sessionStatus.textContent = `Signed in as @${profile.username}`;
-        authView.classList.add("hidden");
-        appView.classList.remove("hidden");
-        await refreshUsers();
+        sessionStatus.textContent = `@${profile.username}`;
+        authOverlay.style.display = "none";
+        await loadServers();
+        await loadChannels();
+        await loadDmThreads();
         await loadMessages();
       } else {
-        sessionStatus.textContent = "Not signed in";
-        authView.classList.remove("hidden");
-        appView.classList.add("hidden");
+        authOverlay.style.display = "flex";
       }
+    }
+
+    // Server / channel / invite creation
+    document.getElementById("createServerBtn").onclick = async () => {
+      if (!currentUser) return;
+      const name = prompt("Server name?");
+      if (!name) return;
+      const { data, error } = await supabaseClient
+        .from("servers")
+        .insert({ name, owner_id: currentUser.id })
+        .select()
+        .single();
+      if (error) return alert(error.message);
+      // Add membership
+      await supabaseClient
+        .from("server_members")
+        .insert({ server_id: data.id, user_id: currentUser.id, role: "owner" });
+      await loadServers();
+    };
+
+    document.getElementById("createChannelBtn").onclick = async () => {
+      if (!activeServer) return alert("Select a server first.");
+      const name = prompt("Channel name?");
+      if (!name) return;
+      const { error } = await supabaseClient
+        .from("channels")
+        .insert({ server_id: activeServer.id, name });
+      if (error) return alert(error.message);
+      await loadChannels();
+    };
+
+    document.getElementById("inviteBtn").onclick = async () => {
+      if (!activeServer) return alert("Select a server first.");
+      const username = prompt("Invite username?");
+      if (!username) return;
+      const { data: profile, error: pErr } = await supabaseClient
+        .from("profiles")
+        .select("id")
+        .eq("username", username)
+        .single();
+      if (pErr) return alert("User not found.");
+      const { error } = await supabaseClient
+        .from("server_members")
+        .insert({ server_id: activeServer.id, user_id: profile.id, role: "member" });
+      if (error) return alert(error.message);
+      alert("Invited @" + username + " to " + activeServer.name);
+    };
+
+    // Sending messages (channel or DM)
+    document.getElementById("sendBtn").addEventListener("click", async () => {
+      if (!myProfile) return;
+      const content = messageInput.value.trim();
+      if (!content) return;
+
+      if (viewType === "channel") {
+        if (!activeChannel) return;
+        const { error } = await supabaseClient.from("messages").insert({
+          channel_id: activeChannel.id,
+          sender_id: myProfile.id,
+          sender_username: myProfile.username,
+          content
+        });
+        if (!error) messageInput.value = "";
+        if (error) console.error(error);
+      } else if (viewType === "dm") {
+        if (!activeDmThread) return;
+        const { error } = await supabaseClient.from("dm_messages").insert({
+          thread_id: activeDmThread.id,
+          sender_id: myProfile.id,
+          sender_username: myProfile.username,
+          content
+        });
+        if (!error) messageInput.value = "";
+        if (error) console.error(error);
+      }
+    });
+
+    // Auth UI toggles
+    function showLogin() {
+      document.getElementById("loginForm").style.display = "block";
+      document.getElementById("signupForm").style.display = "none";
+      document.getElementById("showLoginBtn").classList.add("active");
+      document.getElementById("showSignupBtn").classList.remove("active");
+    }
+    function showSignup() {
+      document.getElementById("loginForm").style.display = "none";
+      document.getElementById("signupForm").style.display = "block";
+      document.getElementById("showSignupBtn").classList.add("active");
+      document.getElementById("showLoginBtn").classList.remove("active");
     }
 
     document.getElementById("showLoginBtn").onclick = showLogin;
@@ -387,24 +986,6 @@
     document.getElementById("signupBtn").onclick = handleSignup;
     document.getElementById("loginBtn").onclick = handleLogin;
     document.getElementById("logoutBtn").onclick = handleLogout;
-    document.getElementById("refreshUsersBtn").onclick = refreshUsers;
-
-    document.getElementById("messageForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      if (!myProfile) return;
-      const input = document.getElementById("messageInput");
-      const content = input.value.trim();
-      if (!content) return;
-
-      const { error } = await supabaseClient.from("messages").insert({
-        sender_id: myProfile.id,
-        sender_username: myProfile.username,
-        content
-      });
-
-      if (!error) input.value = "";
-      if (error) console.error(error);
-    });
 
     supabaseClient.auth.onAuthStateChange(() => syncAuth());
     syncAuth();
