@@ -584,50 +584,38 @@
     async function loadServers() {
       if (!currentUser) return;
 
-      // 1) Get memberships for the current user
-      const { data: memberships, error: memError } = await supabaseClient
+      const { data: memberships, error } = await supabaseClient
         .from("server_members")
         .select("server_id")
         .eq("user_id", currentUser.id);
 
-      if (memError) {
-        console.error(memError);
+      if (error) {
+        console.error(error);
         return;
       }
 
-      const serverIds = memberships.map(m => m.server_id);
-      if (!serverIds.length) {
+      const serverIds = Array.isArray(memberships)
+        ? memberships.map(m => m.server_id)
+        : [];
+
+      if (serverIds.length === 0) {
         serverListEl.innerHTML = "";
-        activeServer = null;
-        activeChannel = null;
-        chatTagEl.textContent = "Server: none";
         return;
       }
 
-      // 2) Fetch servers with those IDs
+      console.log(serverIds);
+
       const { data: servers, error: serverError } = await supabaseClient
         .from("servers")
-        .select("id, name, owner_id")
-        .in("id", serverIds);   // <- now an array of UUIDs
+        .select("*")
+        .in("id", serverIds);
 
       if (serverError) {
         console.error(serverError);
         return;
       }
 
-      serverListEl.innerHTML = "";
-      servers.forEach(s => {
-        const el = document.createElement("div");
-        el.className = "server-icon" + (activeServer && activeServer.id === s.id ? " active" : "");
-        el.textContent = initialAvatarText(s.name);
-        el.title = s.name;
-        el.onclick = () => selectServer(s);
-        serverListEl.appendChild(el);
-      });
-
-      if (!activeServer && servers.length) {
-        selectServer(servers[0]);
-      }
+      console.log(servers);
     }
     async function selectServer(server) {
       activeServer = server;
